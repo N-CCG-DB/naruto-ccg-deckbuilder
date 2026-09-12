@@ -8,10 +8,10 @@
     body { display: flex; height: 100vh; margin: 0; background: #1e1e24; color: #fff; }
     #search-panel { flex: 3; padding: 20px; overflow-y: auto; border-right: 2px solid #333; }
     #deck-panel { flex: 1; padding: 20px; background: #18181c; display: flex; flex-direction: column; }
-    .controls { display: flex; gap: 10px; margin-bottom: 20px; }
+    .controls { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
     input, select { padding: 10px; background: #2a2a32; color: #fff; border: 1px solid #444; border-radius: 4px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-    .card-item { background: #2a2a32; padding: 8px; border-radius: 6px; text-align: center; }
+    .card-item { background: #2a2a32; padding: 8px; border-radius: 6px; text-align: center; display: flex; flex-direction: column; justify: space-between; }
     .card-item img { width: 100%; border-radius: 4px; height: 190px; object-fit: cover; }
     .card-item button { margin-top: 5px; width: 100%; padding: 6px; background: #ff9900; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; }
     .deck-list { flex: 1; overflow-y: auto; list-style: none; padding: 0; }
@@ -22,15 +22,28 @@
 </head>
 <body>
 
-  <!-- LEFT PANEL: Card Search & Gallery -->
+  <!-- LEFT PANEL: Card Search & Filtering -->
   <div id="search-panel">
     <h2>Naruto CCG Database</h2>
     <div class="controls">
+      <!-- Search Input -->
       <input type="text" id="search-input" placeholder="Search card by name..." oninput="filterCards()">
+      
+      <!-- Set Filter -->
       <select id="set-filter" onchange="filterCards()">
         <option value="ALL">All Sets</option>
       </select>
+
+      <!-- Card Type Filter -->
+      <select id="type-filter" onchange="filterCards()">
+        <option value="ALL">All Card Types</option>
+        <option value="Ninja">Ninja</option>
+        <option value="Jutsu">Jutsu</option>
+        <option value="Mission">Mission</option>
+        <option value="Client">Client</option>
+      </select>
     </div>
+
     <div class="card-grid" id="card-grid"></div>
   </div>
 
@@ -42,17 +55,56 @@
   </div>
 
   <script>
+    // ==========================================
+    // CARD DATABASE PLACEHOLDERS
+    // Replace folder names, image names, and values below!
+    // ==========================================
     let cardDatabase = [
-      { id: "N-001", name: "Naruto Uzumaki", setFolder: "set_01_path_to_hokage", imgName: "N-001.jpg" },
-      { id: "N-002", name: "Sasuke Uchiha", setFolder: "set_01_path_to_hokage", imgName: "N-002.jpg" }
+      { 
+        id: "N-001", 
+        name: "Naruto Uzumaki", 
+        type: "Ninja", 
+        setFolder: "Set_1_Path_of_the_Hokage", 
+        imgName: "n001.jpg" 
+      },
+      { 
+        id: "N-002", 
+        name: "Sasuke Uchiha", 
+        type: "Ninja", 
+        setFolder: "Set_1_Path_of_the_Hokage", 
+        imgName: "n002.jpg" 
+      },
+      { 
+        id: "J-001", 
+        name: "Kunai", 
+        type: "Jutsu", 
+        setFolder:  "Set_1_Path_of_the_Hokage", 
+        imgName: "j001.jpg" 
+      },
+      { 
+        id: "M-001", 
+        name: "Ichiraku Noodle Shop", 
+        type: "Mission", 
+        setFolder: "Set_1_Path_of_the_Hokage", 
+        imgName: "m001.jpg" 
+      },
+      { 
+        id: "C-001", 
+        name: "Inari", 
+        type: "Client", 
+        setFolder: "Set_2_Coils_of_the_Snake", 
+        imgName: "c001.jpg" 
+      }
     ];
 
     let currentDeck = [];
 
+    // Construct image URL pointing to Naruto_CCG_Sets_Database
     function getCardImageUrl(card) {
-      return `./cards/${card.setFolder}/${card.imgName}`;
+      return `./Naruto_CCG_Sets_Database/${card.setFolder}/${card.imgName}`;
     }
 
+    // Populate the Set Dropdown automatically based on the database
     function initSetFilter() {
       const setSelect = document.getElementById('set-filter');
       const sets = [...new Set(cardDatabase.map(c => c.setFolder))];
@@ -64,39 +116,48 @@
       });
     }
 
+    // Render cards to the UI
     function renderCards(cards) {
       const grid = document.getElementById('card-grid');
       grid.innerHTML = '';
-      if(cards.length === 0) {
-        grid.innerHTML = '<p>No cards found.</p>';
+      
+      if (cards.length === 0) {
+        grid.innerHTML = '<p>No cards match your filter criteria.</p>';
         return;
       }
+
       cards.forEach(card => {
         const imgUrl = getCardImageUrl(card);
         const div = document.createElement('div');
         div.className = 'card-item';
         div.innerHTML = `
-          <img src="${imgUrl}" alt="${card.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/140x200?text=Card+Scan';">
-          <br><small>${card.name}</small>
+          <img src="${imgUrl}" alt="${card.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/140x200?text=Card+Image+Missing';">
+          <small><strong>${card.name}</strong></small>
+          <small style="color: #aaa;">${card.type}</small>
           <button onclick="addToDeck('${card.id}')">+ Add</button>
         `;
         grid.appendChild(div);
       });
     }
 
+    // Filter cards by Search Query, Set Folder, and Card Type
     function filterCards() {
       const query = document.getElementById('search-input').value.toLowerCase();
       const selectedSet = document.getElementById('set-filter').value;
+      const selectedType = document.getElementById('type-filter').value;
 
       const filtered = cardDatabase.filter(card => {
         const matchesName = card.name.toLowerCase().includes(query);
         const matchesSet = (selectedSet === 'ALL') || (card.setFolder === selectedSet);
-        return matchesName && matchesSet;
+        const matchesType = (selectedType === 'ALL') || (card.type === selectedType);
+        
+        return matchesName && matchesSet && matchesType;
       });
 
       renderCards(filtered);
     }
 
+    // Add card to current deck
     function addToDeck(cardId) {
       const card = cardDatabase.find(c => c.id === cardId);
       if (card) {
@@ -105,6 +166,7 @@
       }
     }
 
+    // Update Deck Sidebar UI
     function updateDeckUI() {
       const list = document.getElementById('deck-list');
       document.getElementById('deck-count').innerText = currentDeck.length;
@@ -113,18 +175,20 @@
         const li = document.createElement('li');
         li.className = 'deck-item';
         li.innerHTML = `
-          <span>${card.name}</span> 
+          <span>${card.name} (${card.type})</span> 
           <button class="remove-btn" onclick="removeFromDeck(${index})">❌</button>
         `;
         list.appendChild(li);
       });
     }
 
+    // Remove card from current deck
     function removeFromDeck(index) {
       currentDeck.splice(index, 1);
       updateDeckUI();
     }
 
+    // Export current deck to Tabletop Simulator JSON format
     function exportToTTS() {
       if (currentDeck.length === 0) return alert("Add at least 1 card to export!");
 
@@ -132,22 +196,30 @@
       const containedObjects = [];
       const deckIDs = [];
 
+      // Get base URL for live GitHub Pages deployment
       const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
 
       currentDeck.forEach((card, i) => {
         const deckIdNumber = i + 1;
         const fullCardId = deckIdNumber * 100;
-        const fullOnlineImgUrl = baseUrl + `cards/${card.setFolder}/${card.imgName}`;
+        
+        // Exact online link for TTS image loading
+        const fullOnlineImgUrl = baseUrl + `Naruto_CCG_Sets_Database/${card.setFolder}/${card.imgName}`;
 
         customDeckMap[deckIdNumber] = {
           FaceURL: fullOnlineImgUrl,
-          BackURL: "https://i.imgur.com/2bXfA9M.jpg",
-          NumWidth: 1, NumHeight: 1, BackIsHidden: true, UniqueBack: false
+          BackURL: "https://i.imgur.com/2bXfA9M.jpg", // Default Naruto CCG card back
+          NumWidth: 1, 
+          NumHeight: 1, 
+          BackIsHidden: true, 
+          UniqueBack: false
         };
 
         deckIDs.push(fullCardId);
         containedObjects.push({
-          Name: "Card", Nickname: card.name, CardID: fullCardId,
+          Name: "Card", 
+          Nickname: card.name, 
+          CardID: fullCardId,
           Transform: { posX: 0, posY: 1, posZ: 0, rotX: 0, rotY: 180, rotZ: 0, scaleX: 1, scaleY: 1, scaleZ: 1 },
           CustomDeck: { [deckIdNumber]: customDeckMap[deckIdNumber] }
         });
@@ -171,7 +243,7 @@
       a.click();
     }
 
-    // Initialize layout on load
+    // Initialize layout on DOM ready
     document.addEventListener("DOMContentLoaded", () => {
       initSetFilter();
       renderCards(cardDatabase);
