@@ -12,7 +12,7 @@
     input, select { padding: 10px; background: #2a2a32; color: #fff; border: 1px solid #444; border-radius: 4px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
     .card-item { background: #2a2a32; padding: 8px; border-radius: 6px; text-align: center; }
-    .card-item img { width: 100%; border-radius: 4px; }
+    .card-item img { width: 100%; border-radius: 4px; height: 190px; object-fit: cover; }
     .card-item button { margin-top: 5px; width: 100%; padding: 6px; background: #ff9900; border: none; font-weight: bold; cursor: pointer; border-radius: 4px; }
     .deck-list { flex: 1; overflow-y: auto; list-style: none; padding: 0; }
     .deck-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #333; }
@@ -42,18 +42,14 @@
   </div>
 
   <script>
-    // Master Database - This can be populated from your cards.json file later!
     let cardDatabase = [
       { id: "N-001", name: "Naruto Uzumaki", setFolder: "set_01_path_to_hokage", imgName: "N-001.jpg" },
-      { id: "N-002", name: "Sasuke Uchiha", setFolder: "set_01_path_to_hokage", imgName: "N-002.jpg" },
-      { id: "M-012", name: "Rasengan", setFolder: "set_17.5_tournament_pack_1", imgName: "M-012.jpg" }
+      { id: "N-002", name: "Sasuke Uchiha", setFolder: "set_01_path_to_hokage", imgName: "N-002.jpg" }
     ];
 
     let currentDeck = [];
 
-    // Builds direct image path matching your GitHub Pages structure
     function getCardImageUrl(card) {
-      // Relative path works both locally and on GitHub Pages!
       return `./cards/${card.setFolder}/${card.imgName}`;
     }
 
@@ -71,13 +67,17 @@
     function renderCards(cards) {
       const grid = document.getElementById('card-grid');
       grid.innerHTML = '';
+      if(cards.length === 0) {
+        grid.innerHTML = '<p>No cards found.</p>';
+        return;
+      }
       cards.forEach(card => {
         const imgUrl = getCardImageUrl(card);
         const div = document.createElement('div');
         div.className = 'card-item';
         div.innerHTML = `
-          <img src="${imgUrl}" alt="${card.name}" onerror="this.src='https://via.placeholder.com/140x200?text=Image+Missing'">
-          <small>${card.name}</small>
+          <img src="${imgUrl}" alt="${card.name}" onerror="this.onerror=null; this.src='https://via.placeholder.com/140x200?text=Card+Scan';">
+          <br><small>${card.name}</small>
           <button onclick="addToDeck('${card.id}')">+ Add</button>
         `;
         grid.appendChild(div);
@@ -132,16 +132,16 @@
       const containedObjects = [];
       const deckIDs = [];
 
+      const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+
       currentDeck.forEach((card, i) => {
         const deckIdNumber = i + 1;
         const fullCardId = deckIdNumber * 100;
-        
-        // Constructs full online URL for TTS to load the image remotely
-        const fullOnlineImgUrl = window.location.href.replace('index.html', '') + getCardImageUrl(card);
+        const fullOnlineImgUrl = baseUrl + `cards/${card.setFolder}/${card.imgName}`;
 
         customDeckMap[deckIdNumber] = {
           FaceURL: fullOnlineImgUrl,
-          BackURL: "https://i.imgur.com/2bXfA9M.jpg", // Naruto CCG card back
+          BackURL: "https://i.imgur.com/2bXfA9M.jpg",
           NumWidth: 1, NumHeight: 1, BackIsHidden: true, UniqueBack: false
         };
 
@@ -171,9 +171,11 @@
       a.click();
     }
 
-    // Startup
-    initSetFilter();
-    renderCards(cardDatabase);
+    // Initialize layout on load
+    document.addEventListener("DOMContentLoaded", () => {
+      initSetFilter();
+      renderCards(cardDatabase);
+    });
   </script>
 </body>
 </html>
