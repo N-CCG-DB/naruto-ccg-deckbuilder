@@ -345,7 +345,6 @@
     function populateSetFilter() {
       const setSelect = document.getElementById('set-filter');
       
-      // Get unique sets using the clean 'set' property or fallback to 'setfolder'
       const setMap = new Map();
       cardDatabase.forEach(c => {
         if (c.setfolder) {
@@ -445,8 +444,8 @@
           <p><strong>Type:</strong> ${card.cardtype || '-'}</p>
           <p><strong>Set:</strong> ${card.set || card.setfolder || '-'}</p>
           ${card.symbol ? `<p><strong>Symbol:</strong> ${card.symbol}</p>` : ''}
-          ${card.entrancecost !== '' ? `<p><strong>Entrance Cost:</strong> ${card.entrancecost}</p>` : ''}
-          ${card.handcost !== '' ? `<p><strong>Hand Cost:</strong> ${card.handcost}</p>` : ''}
+          ${card.entrancecost !== '' && card.entrancecost !== undefined ? `<p><strong>Entrance Cost:</strong> ${card.entrancecost}</p>` : ''}
+          ${card.handcost !== '' && card.handcost !== undefined ? `<p><strong>Hand Cost:</strong> ${card.handcost}</p>` : ''}
           ${(card.combath || card.supporth) ? `
             <div class="stat-row">
               <span><strong>Healthy:</strong> ${card.combath || '-'}/${card.supporth || '-'}</span>
@@ -454,6 +453,7 @@
             </div>
           ` : ''}
           ${card.attribute ? `<p><strong>Attributes:</strong> ${card.attribute}</p>` : ''}
+          ${card.characteristics ? `<p><strong>Characteristics:</strong> ${card.characteristics}</p>` : ''}
           ${card.effect ? `<p><strong>Effect:</strong> ${card.effect}</p>` : ''}
           ${card.flavor ? `<p><em>"${card.flavor}"</em></p>` : ''}
         </div>
