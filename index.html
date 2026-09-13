@@ -147,7 +147,7 @@
     }
 
     .card-controls button:hover { background-color: var(--accent-color); color: #000; }
-    .card-qty { font-weight: bold; color: var(--accent-color); font-size: 13px; }
+    .card-qty { font-weight: bold; color: var(--accent-color); font-size: 12px; }
 
     /* Right Decklist Sidebar */
     .decklist-sidebar {
@@ -175,12 +175,13 @@
       background: transparent;
       border: none;
       color: #888;
-      padding: 6px 4px;
-      font-size: 11px;
+      padding: 6px 2px;
+      font-size: 10px;
       font-weight: bold;
       border-radius: 4px;
       cursor: pointer;
       text-align: center;
+      white-space: nowrap;
     }
 
     .target-btn.active {
@@ -301,13 +302,11 @@
     </section>
 
     <aside class="decklist-sidebar">
-      <h3>Deck (<span id="deck-count">0</span>)</h3>
-
       <!-- Target Destination Selector -->
       <div class="target-selector">
-        <button id="target-main" class="target-btn active" onclick="setAddTarget('main')">+ Main Deck</button>
-        <button id="target-side" class="target-btn" onclick="setAddTarget('side')">+ Sideboard</button>
+        <button id="target-main" class="target-btn active" onclick="setAddTarget('main')">+ Mainboard</button>
         <button id="target-reinf" class="target-btn" onclick="setAddTarget('reinf')">+ Reinforcements</button>
+        <button id="target-side" class="target-btn" onclick="setAddTarget('side')">+ Sideboard</button>
       </div>
 
       <div style="display: flex; gap: 6px;">
@@ -326,6 +325,9 @@
         </button>
       </div>
 
+      <!-- Counter positioned directly below controls -->
+      <h3 style="margin-top: 2px;">Deck (<span id="deck-count">0M</span>)</h3>
+
       <div id="deck-items" class="deck-items"></div>
     </aside>
 
@@ -334,20 +336,19 @@
   <script>
     let cardDatabase = [];
     
-    // Separate pools for each section
     let currentDeck = {
       main: {},
-      side: {},
-      reinf: {}
+      reinf: {},
+      side: {}
     };
 
-    let activeAddTarget = 'main'; // 'main', 'side', or 'reinf'
+    let activeAddTarget = 'main'; // 'main', 'reinf', or 'side'
 
     function setAddTarget(target) {
       activeAddTarget = target;
       document.getElementById('target-main').classList.toggle('active', target === 'main');
-      document.getElementById('target-side').classList.toggle('active', target === 'side');
       document.getElementById('target-reinf').classList.toggle('active', target === 'reinf');
+      document.getElementById('target-side').classList.toggle('active', target === 'side');
     }
 
     function getCardImageUrl(card) {
@@ -415,12 +416,12 @@
         cardEl.onclick = () => inspectCard(card);
 
         const mainCount = currentDeck.main[card.cardnumber] ? currentDeck.main[card.cardnumber].count : 0;
-        const sideCount = currentDeck.side[card.cardnumber] ? currentDeck.side[card.cardnumber].count : 0;
         const reinfCount = currentDeck.reinf[card.cardnumber] ? currentDeck.reinf[card.cardnumber].count : 0;
+        const sideCount = currentDeck.side[card.cardnumber] ? currentDeck.side[card.cardnumber].count : 0;
         
-        let qtyLabel = `${mainCount}`;
-        if (sideCount > 0 || reinfCount > 0) {
-          qtyLabel += ` (S:${sideCount}|R:${reinfCount})`;
+        let qtyLabel = `${mainCount}M`;
+        if (reinfCount > 0 || sideCount > 0) {
+          qtyLabel += ` (R:${reinfCount}|S:${sideCount})`;
         }
 
         cardEl.innerHTML = `
@@ -519,10 +520,9 @@
       container.innerHTML = '';
 
       let mainTotal = 0;
-      let sideTotal = 0;
       let reinfTotal = 0;
+      let sideTotal = 0;
 
-      // Helper to render entry lines
       const createEntryHTML = (entry, targetKey) => {
         return `
           <div class="deck-entry">
@@ -538,7 +538,7 @@
         `;
       };
 
-      // 1. MAIN DECK CATEGORIES
+      // 1. MAINBOARD CATEGORIES
       const categories = { 'Ninja': [], 'Jutsu': [], 'Mission': [], 'Client': [], 'Other': [] };
 
       Object.values(currentDeck.main).forEach(entry => {
@@ -568,24 +568,7 @@
         }
       });
 
-      // 2. SIDEBOARD
-      const sideEntries = Object.values(currentDeck.side);
-      sideTotal = sideEntries.reduce((sum, e) => sum + e.count, 0);
-      if (sideEntries.length > 0 || activeAddTarget === 'side') {
-        const sideHeader = document.createElement('div');
-        sideHeader.className = 'deck-section-title';
-        sideHeader.style.color = '#4fc3f7';
-        sideHeader.innerText = `Sideboard (${sideTotal})`;
-        container.appendChild(sideHeader);
-
-        sideEntries.forEach(entry => {
-          const div = document.createElement('div');
-          div.innerHTML = createEntryHTML(entry, 'side');
-          container.appendChild(div.firstElementChild);
-        });
-      }
-
-      // 3. REINFORCEMENTS
+      // 2. REINFORCEMENTS
       const reinfEntries = Object.values(currentDeck.reinf);
       reinfTotal = reinfEntries.reduce((sum, e) => sum + e.count, 0);
       if (reinfEntries.length > 0 || activeAddTarget === 'reinf') {
@@ -602,7 +585,29 @@
         });
       }
 
-      countEl.innerText = `${mainTotal}` + (sideTotal || reinfTotal ? ` + ${sideTotal}S / ${reinfTotal}R` : '');
+      // 3. SIDEBOARD
+      const sideEntries = Object.values(currentDeck.side);
+      sideTotal = sideEntries.reduce((sum, e) => sum + e.count, 0);
+      if (sideEntries.length > 0 || activeAddTarget === 'side') {
+        const sideHeader = document.createElement('div');
+        sideHeader.className = 'deck-section-title';
+        sideHeader.style.color = '#4fc3f7';
+        sideHeader.innerText = `Sideboard (${sideTotal})`;
+        container.appendChild(sideHeader);
+
+        sideEntries.forEach(entry => {
+          const div = document.createElement('div');
+          div.innerHTML = createEntryHTML(entry, 'side');
+          container.appendChild(div.firstElementChild);
+        });
+      }
+
+      // Format count string (e.g., 50M + 15R + 10S)
+      let countParts = [`${mainTotal}M`];
+      if (reinfTotal > 0 || activeAddTarget === 'reinf') countParts.push(`${reinfTotal}R`);
+      if (sideTotal > 0 || activeAddTarget === 'side') countParts.push(`${sideTotal}S`);
+
+      countEl.innerText = countParts.join(' + ');
     }
 
     function updateUI() {
@@ -617,7 +622,7 @@
       });
 
       if (allMainCards.length === 0) {
-        alert("Main deck is empty!");
+        alert("Mainboard is empty!");
         return;
       }
 
@@ -662,14 +667,7 @@
         };
       };
 
-      const objectStates = [createTTSDeckObject(allMainCards, "Main Deck")];
-
-      // Sideboard to TTS
-      const sideCards = [];
-      Object.values(currentDeck.side).forEach(entry => {
-        for (let i = 0; i < entry.count; i++) sideCards.push(entry.card);
-      });
-      if (sideCards.length > 0) objectStates.push(createTTSDeckObject(sideCards, "Sideboard"));
+      const objectStates = [createTTSDeckObject(allMainCards, "Mainboard")];
 
       // Reinforcements to TTS
       const reinfCards = [];
@@ -677,6 +675,13 @@
         for (let i = 0; i < entry.count; i++) reinfCards.push(entry.card);
       });
       if (reinfCards.length > 0) objectStates.push(createTTSDeckObject(reinfCards, "Reinforcements"));
+
+      // Sideboard to TTS
+      const sideCards = [];
+      Object.values(currentDeck.side).forEach(entry => {
+        for (let i = 0; i < entry.count; i++) sideCards.push(entry.card);
+      });
+      if (sideCards.length > 0) objectStates.push(createTTSDeckObject(sideCards, "Sideboard"));
 
       const ttsSaveObject = { "SaveName": "", "GameMode": "", "Date": "", "ObjectStates": objectStates };
 
@@ -690,21 +695,21 @@
     }
 
     function exportTextDeck() {
-      let textData = "// Main Deck\n";
+      let textData = "// Mainboard\n";
       Object.values(currentDeck.main).forEach(entry => {
         textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
       });
 
-      if (Object.keys(currentDeck.side).length > 0) {
-        textData += "\n// Sideboard\n";
-        Object.values(currentDeck.side).forEach(entry => {
+      if (Object.keys(currentDeck.reinf).length > 0) {
+        textData += "\n// Reinforcements\n";
+        Object.values(currentDeck.reinf).forEach(entry => {
           textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
         });
       }
 
-      if (Object.keys(currentDeck.reinf).length > 0) {
-        textData += "\n// Reinforcements\n";
-        Object.values(currentDeck.reinf).forEach(entry => {
+      if (Object.keys(currentDeck.side).length > 0) {
+        textData += "\n// Sideboard\n";
+        Object.values(currentDeck.side).forEach(entry => {
           textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
         });
       }
@@ -725,13 +730,13 @@
       reader.onload = function(e) {
         try {
           const data = JSON.parse(e.target.result);
-          currentDeck = { main: {}, side: {}, reinf: {} };
+          currentDeck = { main: {}, reinf: {}, side: {} };
 
           if (data.ObjectStates) {
             data.ObjectStates.forEach(deckObj => {
               let targetKey = 'main';
-              if (deckObj.Nickname === 'Sideboard') targetKey = 'side';
               if (deckObj.Nickname === 'Reinforcements') targetKey = 'reinf';
+              if (deckObj.Nickname === 'Sideboard') targetKey = 'side';
 
               if (deckObj.ContainedObjects) {
                 deckObj.ContainedObjects.forEach(obj => {
@@ -759,7 +764,7 @@
       const input = prompt("Paste your decklist here (supports section headers like // Sideboard):");
       if (!input) return;
 
-      currentDeck = { main: {}, side: {}, reinf: {} };
+      currentDeck = { main: {}, reinf: {}, side: {} };
       let currentSection = 'main';
       const lines = input.split('\n');
 
@@ -767,12 +772,12 @@
         const cleanLine = line.trim();
         if (!cleanLine) return;
 
-        if (cleanLine.toLowerCase().includes('sideboard')) {
-          currentSection = 'side';
-          return;
-        }
         if (cleanLine.toLowerCase().includes('reinforcement')) {
           currentSection = 'reinf';
+          return;
+        }
+        if (cleanLine.toLowerCase().includes('sideboard')) {
+          currentSection = 'side';
           return;
         }
         if (cleanLine.toLowerCase().includes('main')) {
