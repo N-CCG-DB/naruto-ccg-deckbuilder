@@ -8,7 +8,7 @@
     "set": "Promos",
     "entrancecost": "0",
     "handcost": "0",
-    "symbol": "Lighting",
+    "symbol": "Lightning",
     "combath": "1",
     "supporth": "0",
     "combati": "3",
@@ -16,8 +16,8 @@
     "attribute": "Oil",
     "effect": "[PERVY SAGE'S TRAINING]<br>When this Ninja is put into play, except by the effect of \"Growth\", discard all Chakras in both player's Chakra areas.",
     "jutsucost": "",
-    "rarity": "*",
-    "flavor": "\"I'm doing my best, believe me!\"",
+    "rarity": "",
+    "flavor": "I'm doing my best, believe me!",
     "characteristics": "Leaf / Genin / Male / Growth"
   },
   {
@@ -43,20 +43,20 @@
   },
   {
     "cardnumber": "M621",
-    "name": "M621",
+    "name": "Fierce Ambition",
     "cardtype": "Mission",
     "setfolder": "promos",
     "imgname": "m621.webp",
     "set": "Promos",
-    "entrancecost": "",
-    "handcost": "",
-    "symbol": "",
+    "entrancecost": "3",
+    "handcost": "1",
+    "symbol": "Fire / Earth",
     "combath": "",
     "supporth": "",
     "combati": "",
     "supporti": "",
     "attribute": "",
-    "effect": "",
+    "effect": "Permanent<br>Effect: When you put an \"Akatsuki\" Ninja card in play, it gets the following effect texts during that turn:<br>\"When this Ninja is put in play, draw 1 card.\" \"When this Ninja's Team wins a Victory or an Outstanding Victory, you win 1 Battle Reward.\"",
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
@@ -80,7 +80,7 @@
     "effect": "",
     "jutsucost": "",
     "rarity": "",
-    "flavor": "",
+    "flavor": "I hate the way they look at us as if we're monsters or something!!",
     "characteristics": ""
   },
   {
@@ -290,7 +290,7 @@
     "effect": "Requirements: \"The Fourth Hokage\" or \"Jaraya\" or \"Naruto Uzumaki\" + \"Clone Status\"<br>Target: User<br>Effect: The Target gets +7/+0 during this turn. At the end of the turn, give 1 damage to every Ninja in this Ninja's Team.",
     "jutsucost": "Lightning / Lightning / 1",
     "rarity": "*",
-    "flavor": "\"It's time for that Jutsu...\"",
+    "flavor": "It's time for that Jutsu...",
     "characteristics": ""
   },
   {
