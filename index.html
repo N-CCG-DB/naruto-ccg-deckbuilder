@@ -318,7 +318,7 @@
     let cardDatabase = [];
     let currentDeck = {}; // Format: { "cardNumber": { card: cardObj, count: 2 } }
 
-    // Path builder for lowecase WebP assets
+    // Path builder for lowercase WebP assets
     function getCardImageUrl(card) {
       return `./naruto_ccg_sets_database/${card.setFolder}/${card.imgName}`;
     }
@@ -473,7 +473,7 @@
       renderCards(getFilteredCards());
     }
 
-    // Tabletop Simulator JSON Exporter
+    // Tabletop Simulator JSON Exporter (Absolute URL & Transform Formatted)
     function exportToTTS() {
       const deckArray = [];
       
@@ -488,32 +488,60 @@
         return;
       }
 
+      const baseURL = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+      const customDeckDict = {};
+      const containedObjects = [];
+      const deckIDs = [];
+
+      deckArray.forEach((card, index) => {
+        const cardId = (index + 1) * 100;
+        const cleanImgPath = getCardImageUrl(card).replace(/^\.\//, '');
+        const fullImageUrl = `${baseURL}/${cleanImgPath}`;
+
+        deckIDs.push(cardId);
+
+        customDeckDict[index + 1] = {
+          "FaceURL": fullImageUrl,
+          "BackURL": "https://i.imgur.com/v8tZ48h.png",
+          "NumWidth": 1,
+          "NumHeight": 1,
+          "BackIsHidden": true,
+          "UniqueBack": false
+        };
+
+        containedObjects.push({
+          "Name": "Card",
+          "Transform": {
+            "posX": 0, "posY": 0, "posZ": 0,
+            "rotX": 0, "rotY": 180, "rotZ": 180,
+            "scaleX": 1, "scaleY": 1, "scaleZ": 1
+          },
+          "Nickname": card.name,
+          "Description": card.cardNumber,
+          "CardID": cardId,
+          "CustomDeck": {
+            [index + 1]: customDeckDict[index + 1]
+          }
+        });
+      });
+
       const ttsSaveObject = {
+        "SaveName": "",
+        "GameMode": "",
+        "Date": "",
         "ObjectStates": [
           {
             "Name": "DeckCustom",
-            "ContainedObjects": deckArray.map((card, index) => ({
-              "Name": "Card",
-              "CardID": (index + 1) * 100,
-              "CustomDeck": {
-                [index + 1]: {
-                  "FaceURL": window.location.origin + window.location.pathname.replace('index.html', '') + getCardImageUrl(card).replace('./', ''),
-                  "BackURL": "https://i.imgur.com/v8tZ48h.png",
-                  "NumWidth": 1,
-                  "NumHeight": 1
-                }
-              }
-            })),
-            "DeckIDs": deckArray.map((_, index) => (index + 1) * 100),
-            "CustomDeck": deckArray.reduce((acc, card, index) => {
-              acc[index + 1] = {
-                "FaceURL": window.location.origin + window.location.pathname.replace('index.html', '') + getCardImageUrl(card).replace('./', ''),
-                "BackURL": "https://i.imgur.com/v8tZ48h.png",
-                "NumWidth": 1,
-                "NumHeight": 1
-              };
-              return acc;
-            }, {})
+            "Transform": {
+              "posX": 0, "posY": 1, "posZ": 0,
+              "rotX": 0, "rotY": 180, "rotZ": 180,
+              "scaleX": 1, "scaleY": 1, "scaleZ": 1
+            },
+            "Nickname": "Naruto CCG Deck",
+            "Description": "Exported from Naruto CCG Deckbuilder",
+            "DeckIDs": deckIDs,
+            "CustomDeck": customDeckDict,
+            "ContainedObjects": containedObjects
           }
         ]
       };
