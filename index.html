@@ -69,7 +69,62 @@
       overflow: hidden;
     }
 
-    /* Left: Card Grid */
+    /* Left: Expanded Card Inspector Panel */
+    .card-inspector {
+      width: 420px;
+      background-color: var(--panel-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .inspector-img {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.6);
+      display: block;
+    }
+
+    .inspector-details {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .inspector-details h4 {
+      color: var(--accent-color);
+      font-size: 20px;
+    }
+
+    /* Preserve line breaks for multi-line rules text */
+    .inspector-details p {
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: block;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      background: #262626;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
+
+    .placeholder-text {
+      color: #777;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    /* Middle: Card Grid Browser */
     .card-browser {
       flex: 1;
       padding: 15px;
@@ -140,64 +195,16 @@
       color: var(--accent-color);
     }
 
-    /* Middle: Card Inspector */
-    .card-inspector {
-      width: 320px;
-      background-color: var(--panel-bg);
-      border-left: 1px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      overflow-y: auto;
-    }
-
-    .inspector-img {
-      width: 100%;
-      border-radius: 6px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    }
-
-    .inspector-details {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 14px;
-    }
-
-    .inspector-details h4 {
-      color: var(--accent-color);
-      font-size: 18px;
-    }
-    
-    /* Preserve line breaks for multi-line effect text */
-    .inspector-details p {
-      white-space: pre-line;
-    }
-
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      background: #262626;
-      padding: 4px 8px;
-      border-radius: 4px;
-    }
-
-    .placeholder-text {
-      color: #777;
-      text-align: center;
-      margin-top: 50px;
-    }
-
     /* Right: Decklist Sidebar */
     .decklist-sidebar {
       width: 320px;
       background-color: var(--panel-bg);
+      border-left: 1px solid var(--border-color);
       padding: 15px;
       display: flex;
       flex-direction: column;
       gap: 15px;
+      flex-shrink: 0;
     }
 
     .deck-items {
@@ -305,18 +312,18 @@
   <!-- App Body Layout -->
   <div class="app-container">
     
-    <!-- Left: Card Grid -->
-    <section class="card-browser">
-      <div id="card-grid" class="card-grid"></div>
-    </section>
-
-    <!-- Middle: Card Inspector Panel -->
+    <!-- Left: Card Inspector Panel -->
     <aside class="card-inspector">
       <h3>Card Inspector</h3>
       <div id="inspector-content">
         <p class="placeholder-text">Click any card to view stats and text</p>
       </div>
     </aside>
+
+    <!-- Middle: Card Grid Browser -->
+    <section class="card-browser">
+      <div id="card-grid" class="card-grid"></div>
+    </section>
 
     <!-- Right: Aggregated Decklist -->
     <aside class="decklist-sidebar">
