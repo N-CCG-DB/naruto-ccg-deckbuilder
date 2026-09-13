@@ -142,7 +142,7 @@
 
     /* Middle: Card Inspector */
     .card-inspector {
-      width: 300px;
+      width: 320px;
       background-color: var(--panel-bg);
       border-left: 1px solid var(--border-color);
       border-right: 1px solid var(--border-color);
@@ -169,6 +169,14 @@
     .inspector-details h4 {
       color: var(--accent-color);
       font-size: 18px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      background: #262626;
+      padding: 4px 8px;
+      border-radius: 4px;
     }
 
     .placeholder-text {
@@ -299,9 +307,9 @@
 
     <!-- Middle: Card Inspector Panel -->
     <aside class="card-inspector">
-      <h3>Card Preview</h3>
+      <h3>Card Inspector</h3>
       <div id="inspector-content">
-        <p class="placeholder-text">Click any card to view detailed specifications</p>
+        <p class="placeholder-text">Click any card to view stats and text</p>
       </div>
     </aside>
 
@@ -319,7 +327,7 @@
     let currentDeck = {};
 
     function getCardImageUrl(card) {
-      return `./naruto_ccg_sets_database/${card.setFolder}/${card.imgName}`;
+      return `./naruto_ccg_sets_database/${card.setfolder}/${card.imgname}`;
     }
 
     async function initApp() {
@@ -336,12 +344,20 @@
 
     function populateSetFilter() {
       const setSelect = document.getElementById('set-filter');
-      const sets = [...new Set(cardDatabase.map(c => c.setFolder))].sort();
       
-      sets.forEach(setFolder => {
+      // Get unique sets using the clean 'set' property or fallback to 'setfolder'
+      const setMap = new Map();
+      cardDatabase.forEach(c => {
+        if (c.setfolder) {
+          const displayName = c.set || c.setfolder.replace(/_/g, ' ');
+          setMap.set(c.setfolder, displayName);
+        }
+      });
+
+      Array.from(setMap.entries()).sort((a,b) => a[1].localeCompare(b[1])).forEach(([folder, name]) => {
         const opt = document.createElement('option');
-        opt.value = setFolder;
-        opt.textContent = setFolder;
+        opt.value = folder;
+        opt.textContent = name;
         setSelect.appendChild(opt);
       });
     }
@@ -352,10 +368,12 @@
       const selectedType = document.getElementById('type-filter').value;
 
       return cardDatabase.filter(card => {
-        const matchesQuery = card.name.toLowerCase().includes(query) || 
-                             card.cardNumber.toLowerCase().includes(query);
-        const matchesSet = (selectedSet === 'ALL') || (card.setFolder === selectedSet);
-        const matchesType = (selectedType === 'ALL') || (card.cardType === selectedType);
+        const nameMatch = card.name ? card.name.toLowerCase().includes(query) : false;
+        const numberMatch = card.cardnumber ? card.cardnumber.toLowerCase().includes(query) : false;
+        const matchesQuery = nameMatch || numberMatch;
+
+        const matchesSet = (selectedSet === 'ALL') || (card.setfolder === selectedSet);
+        const matchesType = (selectedType === 'ALL') || (card.cardtype && card.cardtype.toLowerCase() === selectedType.toLowerCase());
 
         return matchesQuery && matchesSet && matchesType;
       });
@@ -374,7 +392,7 @@
         cardEl.className = 'card-item';
         cardEl.onclick = () => inspectCard(card);
 
-        const countInDeck = currentDeck[card.cardNumber] ? currentDeck[card.cardNumber].count : 0;
+        const countInDeck = currentDeck[card.cardnumber] ? currentDeck[card.cardnumber].count : 0;
 
         cardEl.innerHTML = `
           <img 
@@ -385,9 +403,9 @@
             height="1050"
           />
           <div class="card-controls" onclick="event.stopPropagation()">
-            <button onclick="removeCard('${card.cardNumber}')">-</button>
+            <button onclick="removeCard('${card.cardnumber}')">-</button>
             <span class="card-qty">${countInDeck}</span>
-            <button onclick="addCard('${card.cardNumber}')">+</button>
+            <button onclick="addCard('${card.cardnumber}')">+</button>
           </div>
         `;
         grid.appendChild(cardEl);
@@ -395,7 +413,7 @@
     }
 
     function addCard(cardNumber) {
-      const card = cardDatabase.find(c => c.cardNumber === cardNumber);
+      const card = cardDatabase.find(c => c.cardnumber === cardNumber);
       if (!card) return;
 
       if (currentDeck[cardNumber]) {
@@ -422,11 +440,22 @@
       inspector.innerHTML = `
         <img src="${getCardImageUrl(card)}" class="inspector-img" alt="${card.name}" />
         <div class="inspector-details">
-          <h4>${card.name}</h4>
-          <p><strong>Card Number:</strong> ${card.cardNumber}</p>
-          <p><strong>Type:</strong> ${card.cardType}</p>
-          <p><strong>Set:</strong> ${card.setFolder}</p>
+          <h4>${card.name || 'Unknown'}</h4>
+          <p><strong>Card Number:</strong> ${card.cardnumber || '-'}</p>
+          <p><strong>Type:</strong> ${card.cardtype || '-'}</p>
+          <p><strong>Set:</strong> ${card.set || card.setfolder || '-'}</p>
+          ${card.symbol ? `<p><strong>Symbol:</strong> ${card.symbol}</p>` : ''}
+          ${card.entrancecost !== '' ? `<p><strong>Entrance Cost:</strong> ${card.entrancecost}</p>` : ''}
+          ${card.handcost !== '' ? `<p><strong>Hand Cost:</strong> ${card.handcost}</p>` : ''}
+          ${(card.combath || card.supporth) ? `
+            <div class="stat-row">
+              <span><strong>Healthy:</strong> ${card.combath || '-'}/${card.supporth || '-'}</span>
+              <span><strong>Injured:</strong> ${card.combati || '-'}/${card.supporti || '-'}</span>
+            </div>
+          ` : ''}
+          ${card.attribute ? `<p><strong>Attributes:</strong> ${card.attribute}</p>` : ''}
           ${card.effect ? `<p><strong>Effect:</strong> ${card.effect}</p>` : ''}
+          ${card.flavor ? `<p><em>"${card.flavor}"</em></p>` : ''}
         </div>
       `;
     }
@@ -444,12 +473,12 @@
         item.className = 'deck-entry';
         item.innerHTML = `
           <span class="deck-qty">${entry.count}x</span>
-          <span class="deck-name" onclick="inspectCard(currentDeck['${entry.card.cardNumber}'].card)">
+          <span class="deck-name" onclick="inspectCard(currentDeck['${entry.card.cardnumber}'].card)">
             ${entry.card.name}
           </span>
           <div class="deck-entry-controls">
-            <button onclick="removeCard('${entry.card.cardNumber}')">-</button>
-            <button onclick="addCard('${entry.card.cardNumber}')">+</button>
+            <button onclick="removeCard('${entry.card.cardnumber}')">-</button>
+            <button onclick="addCard('${entry.card.cardnumber}')">+</button>
           </div>
         `;
         container.appendChild(item);
@@ -507,7 +536,7 @@
             "scaleX": 1, "scaleY": 1, "scaleZ": 1
           },
           "Nickname": card.name,
-          "Description": card.cardNumber,
+          "Description": card.cardnumber,
           "CardID": cardId,
           "CustomDeck": {
             [index + 1]: customDeckDict[index + 1]
