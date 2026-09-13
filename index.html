@@ -12,14 +12,36 @@
       --text-color: #e0e0e0;
       --accent-color: #ff9800;
       --accent-hover: #e68a00;
-      --btn-danger: #d32f2f;
-      --btn-success: #388e3c;
+      --scrollbar-bg: #1a1a1a;
+      --scrollbar-thumb: #444444;
+      --scrollbar-thumb-hover: #666666;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    /* Dark Theme Scrollbars */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 5px;
+      border: 2px solid var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
     }
 
     body {
@@ -32,7 +54,6 @@
       overflow: hidden;
     }
 
-    /* Top Control Bar */
     header {
       background-color: var(--panel-bg);
       padding: 12px 20px;
@@ -62,14 +83,13 @@
       border-color: var(--accent-color);
     }
 
-    /* Main Container Layout */
     .app-container {
       display: flex;
       flex: 1;
       overflow: hidden;
     }
 
-    /* Left: Expanded Card Inspector Panel */
+    /* Left Panel: Card Inspector */
     .card-inspector {
       width: 420px;
       background-color: var(--panel-bg);
@@ -100,14 +120,15 @@
 
     .inspector-details h4 {
       color: var(--accent-color);
-      font-size: 20px;
+      font-size: 24px;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      line-height: 1.2;
     }
 
-    /* Preserve line breaks for multi-line rules text */
     .inspector-details p {
-      white-space: pre-wrap;
       word-break: break-word;
-      display: block;
+      line-height: 1.4;
     }
 
     .stat-row {
@@ -195,7 +216,7 @@
       color: var(--accent-color);
     }
 
-    /* Right: Decklist Sidebar */
+    /* Right Panel: Decklist Sidebar */
     .decklist-sidebar {
       width: 320px;
       background-color: var(--panel-bg);
@@ -283,7 +304,6 @@
 </head>
 <body>
 
-  <!-- Search & Filter Header -->
   <header>
     <div class="filter-group">
       <label for="search-input">Search:</label>
@@ -309,10 +329,8 @@
     </div>
   </header>
 
-  <!-- App Body Layout -->
   <div class="app-container">
     
-    <!-- Left: Card Inspector Panel -->
     <aside class="card-inspector">
       <h3>Card Inspector</h3>
       <div id="inspector-content">
@@ -320,12 +338,10 @@
       </div>
     </aside>
 
-    <!-- Middle: Card Grid Browser -->
     <section class="card-browser">
       <div id="card-grid" class="card-grid"></div>
     </section>
 
-    <!-- Right: Aggregated Decklist -->
     <aside class="decklist-sidebar">
       <h3>Deck (<span id="deck-count">0</span>)</h3>
       <div id="deck-items" class="deck-items"></div>
@@ -447,27 +463,42 @@
 
     function inspectCard(card) {
       const inspector = document.getElementById('inspector-content');
-      
+
+      const hasCosts = (card.entrancecost !== '' && card.entrancecost !== undefined) || (card.handcost !== '' && card.handcost !== undefined);
+      const hasStats = (card.combath || card.supporth || card.combati || card.supporti);
+
       inspector.innerHTML = `
         <img src="${getCardImageUrl(card)}" class="inspector-img" alt="${card.name}" />
         <div class="inspector-details">
           <h4>${card.name || 'Unknown'}</h4>
-          <p><strong>Card Number:</strong> ${card.cardnumber || '-'}</p>
+          
           <p><strong>Type:</strong> ${card.cardtype || '-'}</p>
-          <p><strong>Set:</strong> ${card.set || card.setfolder || '-'}</p>
+
           ${card.symbol ? `<p><strong>Symbol:</strong> ${card.symbol}</p>` : ''}
-          ${card.entrancecost !== '' && card.entrancecost !== undefined ? `<p><strong>Entrance Cost:</strong> ${card.entrancecost}</p>` : ''}
-          ${card.handcost !== '' && card.handcost !== undefined ? `<p><strong>Hand Cost:</strong> ${card.handcost}</p>` : ''}
-          ${(card.combath || card.supporth) ? `
+
+          ${hasCosts ? `
+            <div class="stat-row">
+              <span><strong>Entrance Cost:</strong> ${card.entrancecost !== '' ? card.entrancecost : '-'}</span>
+              <span><strong>Hand Cost:</strong> ${card.handcost !== '' ? card.handcost : '-'}</span>
+            </div>
+          ` : ''}
+
+          ${card.jutsucost ? `<p><strong>Jutsu Cost:</strong> ${card.jutsucost}</p>` : ''}
+
+          ${hasStats ? `
             <div class="stat-row">
               <span><strong>Healthy:</strong> ${card.combath || '-'}/${card.supporth || '-'}</span>
               <span><strong>Injured:</strong> ${card.combati || '-'}/${card.supporti || '-'}</span>
             </div>
           ` : ''}
-          ${card.attribute ? `<p><strong>Attributes:</strong> ${card.attribute}</p>` : ''}
+
+          ${card.attribute ? `<p><strong>Combat Attribute:</strong> ${card.attribute}</p>` : ''}
           ${card.characteristics ? `<p><strong>Characteristics:</strong> ${card.characteristics}</p>` : ''}
           ${card.effect ? `<p><strong>Effect:</strong> ${card.effect}</p>` : ''}
           ${card.flavor ? `<p><em>"${card.flavor}"</em></p>` : ''}
+          
+          <p><strong>Number:</strong> ${card.cardnumber || '-'}</p>
+          <p><strong>Set:</strong> ${card.set || card.setfolder || '-'}</p>
         </div>
       `;
     }
