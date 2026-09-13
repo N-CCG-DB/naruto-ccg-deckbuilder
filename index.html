@@ -224,7 +224,7 @@
       padding: 15px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
       flex-shrink: 0;
     }
 
@@ -258,7 +258,13 @@
       overflow: hidden;
       text-overflow: ellipsis;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
+    }
+
+    .deck-number {
+      color: #888;
+      font-size: 11px;
+      margin-left: 4px;
     }
 
     .deck-name:hover {
@@ -285,20 +291,32 @@
       background-color: var(--accent-color);
     }
 
-    .export-btn {
+    .btn {
       background-color: var(--accent-color);
       color: #000;
       font-weight: bold;
       border: none;
-      padding: 12px;
+      padding: 10px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
+      text-align: center;
       transition: background-color 0.2s;
     }
 
-    .export-btn:hover {
+    .btn:hover {
       background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background-color: #2a2a2a;
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: #3a3a3a;
+      border-color: #555;
     }
   </style>
 </head>
@@ -344,8 +362,24 @@
 
     <aside class="decklist-sidebar">
       <h3>Deck (<span id="deck-count">0</span>)</h3>
+      
+      <div style="display: flex; gap: 6px;">
+        <button onclick="exportToTTS()" class="btn" style="flex: 1;">Export TTS</button>
+        <button onclick="exportTextDeck()" class="btn btn-secondary" style="flex: 1;">Export Text</button>
+      </div>
+
+      <div style="display: flex; gap: 6px;">
+        <label class="btn btn-secondary" style="flex: 1; font-size: 12px; padding: 8px;">
+          Import JSON
+          <input type="file" id="json-import-input" accept=".json" onchange="importJSONDeck(event)" style="display: none;" />
+        </label>
+        
+        <button onclick="importTextDeckPrompt()" class="btn btn-secondary" style="flex: 1; font-size: 12px; padding: 8px;">
+          Import Text
+        </button>
+      </div>
+
       <div id="deck-items" class="deck-items"></div>
-      <button onclick="exportToTTS()" class="export-btn">Export to TTS</button>
     </aside>
 
   </div>
@@ -483,7 +517,12 @@
             </div>
           ` : ''}
 
-          ${card.jutsucost ? `<p><strong>Jutsu Cost:</strong> ${card.jutsucost}</p>` : ''}
+          ${card.jutsucost ? `
+            <div class="stat-row">
+              <span><strong>Jutsu Cost:</strong> ${card.jutsucost}</span>
+            </div>
+          ` : ''}
+
           ${card.requirement ? `<p><strong>Requirement:</strong> ${card.requirement}</p>` : ''}
           ${card.target ? `<p><strong>Target:</strong> ${card.target}</p>` : ''}
 
@@ -520,7 +559,7 @@
         item.innerHTML = `
           <span class="deck-qty">${entry.count}x</span>
           <span class="deck-name" onclick="inspectCard(currentDeck['${entry.card.cardnumber}'].card)">
-            ${entry.card.name}
+            ${entry.card.name} <span class="deck-number">[${entry.card.cardnumber || ''}]</span>
           </span>
           <div class="deck-entry-controls">
             <button onclick="removeCard('${entry.card.cardnumber}')">-</button>
@@ -618,6 +657,103 @@
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
+    }
+
+    function exportTextDeck() {
+      const entries = Object.values(currentDeck);
+      if (entries.length === 0) {
+        alert("Deck is empty!");
+        return;
+      }
+
+      let textData = "";
+      entries.forEach(entry => {
+        textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
+      });
+
+      const blob = new Blob([textData], { type: 'text/plain;charset=utf-8' });
+      const anchor = document.createElement('a');
+      anchor.href = URL.createObjectURL(blob);
+      anchor.download = "naruto_decklist.txt";
+      anchor.click();
+      anchor.remove();
+    }
+
+    function importJSONDeck(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          currentDeck = {};
+
+          if (data.ObjectStates && data.ObjectStates[0] && data.ObjectStates[0].ContainedObjects) {
+            data.ObjectStates[0].ContainedObjects.forEach(obj => {
+              const cardNum = obj.Description;
+              const matchedCard = cardDatabase.find(c => c.cardnumber && c.cardnumber.toLowerCase() === cardNum.toLowerCase());
+              
+              if (matchedCard) {
+                if (currentDeck[matchedCard.cardnumber]) {
+                  currentDeck[matchedCard.cardnumber].count += 1;
+                } else {
+                  currentDeck[matchedCard.cardnumber] = { card: matchedCard, count: 1 };
+                }
+              }
+            });
+            updateUI();
+          } else {
+            alert("Unrecognized JSON deck format.");
+          }
+          event.target.value = '';
+        } catch (err) {
+          alert("Error parsing JSON file: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function importTextDeckPrompt() {
+      const input = prompt("Paste your decklist here (e.g. '3x Naruto Uzumaki [EX001]'):");
+      if (!input) return;
+
+      const lines = input.split('\n');
+      let addedCount = 0;
+
+      lines.forEach(line => {
+        const cleanLine = line.trim();
+        if (!cleanLine) return;
+
+        const match = cleanLine.match(/^(\d+)x?\s+(.+?)(?:\s+\[(.*?)\])?$/i);
+        if (match) {
+          const qty = parseInt(match[1], 10);
+          const cardName = match[2].trim().toLowerCase();
+          const cardNumber = match[3] ? match[3].trim().toLowerCase() : null;
+
+          const matchedCard = cardDatabase.find(c => {
+            if (cardNumber && c.cardnumber) {
+              return c.cardnumber.toLowerCase() === cardNumber;
+            }
+            return c.name && c.name.toLowerCase() === cardName;
+          });
+
+          if (matchedCard) {
+            if (currentDeck[matchedCard.cardnumber]) {
+              currentDeck[matchedCard.cardnumber].count += qty;
+            } else {
+              currentDeck[matchedCard.cardnumber] = { card: matchedCard, count: qty };
+            }
+            addedCount += qty;
+          }
+        }
+      });
+
+      if (addedCount > 0) {
+        updateUI();
+      } else {
+        alert("No matching cards found in decklist paste.");
+      }
     }
 
     window.onload = initApp;
