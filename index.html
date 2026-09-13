@@ -484,6 +484,8 @@
           ` : ''}
 
           ${card.jutsucost ? `<p><strong>Jutsu Cost:</strong> ${card.jutsucost}</p>` : ''}
+          ${card.requirement ? `<p><strong>Requirement:</strong> ${card.requirement}</p>` : ''}
+          ${card.target ? `<p><strong>Target:</strong> ${card.target}</p>` : ''}
 
           ${hasStats ? `
             <div class="stat-row">
@@ -494,7 +496,8 @@
 
           ${card.attribute ? `<p><strong>Combat Attribute:</strong> ${card.attribute}</p>` : ''}
           ${card.characteristics ? `<p><strong>Characteristics:</strong> ${card.characteristics}</p>` : ''}
-          ${card.effect ? `<p><strong>Effect:</strong> ${card.effect}</p>` : ''}
+          
+          ${card.effect ? `<p>${card.effect}</p>` : ''}
           ${card.flavor ? `<p><em>"${card.flavor}"</em></p>` : ''}
           
           <p><strong>Number:</strong> ${card.cardnumber || '-'}</p>
