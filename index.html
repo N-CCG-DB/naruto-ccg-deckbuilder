@@ -316,14 +316,12 @@
 
   <script>
     let cardDatabase = [];
-    let currentDeck = {}; // Format: { "cardNumber": { card: cardObj, count: 2 } }
+    let currentDeck = {};
 
-    // Path builder for lowercase WebP assets
     function getCardImageUrl(card) {
       return `./naruto_ccg_sets_database/${card.setFolder}/${card.imgName}`;
     }
 
-    // Initialize App & Fetch cards.json
     async function initApp() {
       try {
         const response = await fetch('cards.json');
@@ -336,7 +334,6 @@
       }
     }
 
-    // Populate Set Filter Dropdown
     function populateSetFilter() {
       const setSelect = document.getElementById('set-filter');
       const sets = [...new Set(cardDatabase.map(c => c.setFolder))].sort();
@@ -349,7 +346,6 @@
       });
     }
 
-    // Filter cards based on user inputs
     function getFilteredCards() {
       const query = document.getElementById('search-input').value.toLowerCase().trim();
       const selectedSet = document.getElementById('set-filter').value;
@@ -369,7 +365,6 @@
       renderCards(getFilteredCards());
     }
 
-    // Render Card Grid with Lazy Loading
     function renderCards(cardsToRender) {
       const grid = document.getElementById('card-grid');
       grid.innerHTML = '';
@@ -399,7 +394,6 @@
       });
     }
 
-    // Add Card to Deck
     function addCard(cardNumber) {
       const card = cardDatabase.find(c => c.cardNumber === cardNumber);
       if (!card) return;
@@ -412,7 +406,6 @@
       updateUI();
     }
 
-    // Remove Card from Deck
     function removeCard(cardNumber) {
       if (!currentDeck[cardNumber]) return;
 
@@ -423,7 +416,6 @@
       updateUI();
     }
 
-    // Update Card Inspector Panel
     function inspectCard(card) {
       const inspector = document.getElementById('inspector-content');
       
@@ -439,7 +431,6 @@
       `;
     }
 
-    // Render Aggregated Decklist (1x, 2x, 3x)
     function renderDecklist() {
       const container = document.getElementById('deck-items');
       const countEl = document.getElementById('deck-count');
@@ -467,13 +458,11 @@
       countEl.innerText = totalCards;
     }
 
-    // Synchronize UI Elements
     function updateUI() {
       renderDecklist();
       renderCards(getFilteredCards());
     }
 
-    // Tabletop Simulator JSON Exporter (Absolute URL & Transform Formatted)
     function exportToTTS() {
       const deckArray = [];
       
@@ -489,6 +478,7 @@
       }
 
       const baseURL = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+      const cardBackURL = `${baseURL}/cardback.webp`;
       const customDeckDict = {};
       const containedObjects = [];
       const deckIDs = [];
@@ -502,7 +492,7 @@
 
         customDeckDict[index + 1] = {
           "FaceURL": fullImageUrl,
-          "BackURL": "https://i.imgur.com/v8tZ48h.png",
+          "BackURL": cardBackURL,
           "NumWidth": 1,
           "NumHeight": 1,
           "BackIsHidden": true,
@@ -555,7 +545,6 @@
       downloadAnchor.remove();
     }
 
-    // Launch application on page load
     window.onload = initApp;
   </script>
 </body>
