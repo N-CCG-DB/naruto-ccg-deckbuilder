@@ -17,32 +17,13 @@
       --scrollbar-thumb-hover: #666666;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Dark Theme Scrollbars */
-    ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--scrollbar-bg);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--scrollbar-thumb);
-      border-radius: 5px;
-      border: 2px solid var(--scrollbar-bg);
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--scrollbar-thumb-hover);
-    }
-    * {
-      scrollbar-width: thin;
-      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
-    }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 5px; border: 2px solid var(--scrollbar-bg); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+    * { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg); }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -64,11 +45,7 @@
       flex-wrap: wrap;
     }
 
-    .filter-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .filter-group { display: flex; align-items: center; gap: 8px; }
 
     input, select {
       background-color: #2a2a2a;
@@ -79,17 +56,11 @@
       outline: none;
     }
 
-    input:focus, select:focus {
-      border-color: var(--accent-color);
-    }
+    input:focus, select:focus { border-color: var(--accent-color); }
 
-    .app-container {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
+    .app-container { display: flex; flex: 1; overflow: hidden; }
 
-    /* Left Panel: Card Inspector */
+    /* Left Panel */
     .card-inspector {
       width: 420px;
       background-color: var(--panel-bg);
@@ -111,25 +82,9 @@
       display: block;
     }
 
-    .inspector-details {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      font-size: 14px;
-    }
-
-    .inspector-details h4 {
-      color: var(--accent-color);
-      font-size: 24px;
-      margin-top: 15px;
-      margin-bottom: 5px;
-      line-height: 1.2;
-    }
-
-    .inspector-details p {
-      word-break: break-word;
-      line-height: 1.4;
-    }
+    .inspector-details { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+    .inspector-details h4 { color: var(--accent-color); font-size: 24px; margin-top: 15px; margin-bottom: 5px; line-height: 1.2; }
+    .inspector-details p { word-break: break-word; line-height: 1.4; }
 
     .stat-row {
       display: flex;
@@ -139,24 +94,11 @@
       border-radius: 4px;
     }
 
-    .placeholder-text {
-      color: #777;
-      text-align: center;
-      margin-top: 50px;
-    }
+    .placeholder-text { color: #777; text-align: center; margin-top: 50px; }
 
-    /* Middle: Card Grid Browser */
-    .card-browser {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-    }
-
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 15px;
-    }
+    /* Middle Grid */
+    .card-browser { flex: 1; padding: 15px; overflow-y: auto; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 
     .card-item {
       background-color: var(--panel-bg);
@@ -169,10 +111,7 @@
       transition: transform 0.1s ease, border-color 0.1s ease;
     }
 
-    .card-item:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent-color);
-    }
+    .card-item:hover { transform: translateY(-2px); border-color: var(--accent-color); }
 
     .card-item img {
       width: 100%;
@@ -207,18 +146,12 @@
       justify-content: center;
     }
 
-    .card-controls button:hover {
-      background-color: var(--accent-color);
-    }
+    .card-controls button:hover { background-color: var(--accent-color); color: #000; }
+    .card-qty { font-weight: bold; color: var(--accent-color); font-size: 13px; }
 
-    .card-qty {
-      font-weight: bold;
-      color: var(--accent-color);
-    }
-
-    /* Right Panel: Decklist Sidebar */
+    /* Right Decklist Sidebar */
     .decklist-sidebar {
-      width: 320px;
+      width: 340px;
       background-color: var(--panel-bg);
       border-left: 1px solid var(--border-color);
       padding: 15px;
@@ -228,85 +161,95 @@
       flex-shrink: 0;
     }
 
+    .target-selector {
+      display: flex;
+      background: #121212;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .target-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #888;
+      padding: 6px 4px;
+      font-size: 11px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .target-btn.active {
+      background-color: var(--accent-color);
+      color: #000;
+    }
+
     .deck-items {
       flex: 1;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 12px;
+    }
+
+    .deck-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent-color);
+      border-bottom: 1px solid #333;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+      margin-top: 4px;
     }
 
     .deck-entry {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
+      gap: 6px;
+      padding: 4px 6px;
       background-color: #262626;
       border-radius: 4px;
       border: 1px solid #333;
+      margin-bottom: 4px;
     }
 
-    .deck-qty {
-      font-weight: bold;
-      color: var(--accent-color);
-      min-width: 24px;
-    }
+    .deck-qty { font-weight: bold; color: var(--accent-color); min-width: 20px; font-size: 12px; }
+    .deck-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; font-size: 12px; }
+    .deck-number { color: #888; font-size: 10px; margin-left: 3px; }
+    .deck-name:hover { text-decoration: underline; color: #fff; }
 
-    .deck-name {
-      flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .deck-number {
-      color: #888;
-      font-size: 11px;
-      margin-left: 4px;
-    }
-
-    .deck-name:hover {
-      text-decoration: underline;
-      color: #fff;
-    }
-
-    .deck-entry-controls {
-      display: flex;
-      gap: 4px;
-    }
-
+    .deck-entry-controls { display: flex; gap: 3px; }
     .deck-entry-controls button {
       background-color: #3a3a3a;
       color: #fff;
       border: none;
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 3px;
       cursor: pointer;
+      font-size: 12px;
     }
 
-    .deck-entry-controls button:hover {
-      background-color: var(--accent-color);
-    }
+    .deck-entry-controls button:hover { background-color: var(--accent-color); color: #000; }
 
     .btn {
       background-color: var(--accent-color);
       color: #000;
       font-weight: bold;
       border: none;
-      padding: 10px;
+      padding: 8px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
-      transition: background-color 0.2s;
     }
 
-    .btn:hover {
-      background-color: var(--accent-hover);
-    }
+    .btn:hover { background-color: var(--accent-hover); }
 
     .btn-secondary {
       background-color: #2a2a2a;
@@ -314,10 +257,7 @@
       border: 1px solid var(--border-color);
     }
 
-    .btn-secondary:hover {
-      background-color: #3a3a3a;
-      border-color: #555;
-    }
+    .btn-secondary:hover { background-color: #3a3a3a; border-color: #555; }
   </style>
 </head>
 <body>
@@ -362,19 +302,26 @@
 
     <aside class="decklist-sidebar">
       <h3>Deck (<span id="deck-count">0</span>)</h3>
-      
+
+      <!-- Target Destination Selector -->
+      <div class="target-selector">
+        <button id="target-main" class="target-btn active" onclick="setAddTarget('main')">+ Main Deck</button>
+        <button id="target-side" class="target-btn" onclick="setAddTarget('side')">+ Sideboard</button>
+        <button id="target-reinf" class="target-btn" onclick="setAddTarget('reinf')">+ Reinforcements</button>
+      </div>
+
       <div style="display: flex; gap: 6px;">
         <button onclick="exportToTTS()" class="btn" style="flex: 1;">Export TTS</button>
         <button onclick="exportTextDeck()" class="btn btn-secondary" style="flex: 1;">Export Text</button>
       </div>
 
       <div style="display: flex; gap: 6px;">
-        <label class="btn btn-secondary" style="flex: 1; font-size: 12px; padding: 8px;">
+        <label class="btn btn-secondary" style="flex: 1; font-size: 11px; padding: 6px;">
           Import JSON
           <input type="file" id="json-import-input" accept=".json" onchange="importJSONDeck(event)" style="display: none;" />
         </label>
         
-        <button onclick="importTextDeckPrompt()" class="btn btn-secondary" style="flex: 1; font-size: 12px; padding: 8px;">
+        <button onclick="importTextDeckPrompt()" class="btn btn-secondary" style="flex: 1; font-size: 11px; padding: 6px;">
           Import Text
         </button>
       </div>
@@ -386,7 +333,22 @@
 
   <script>
     let cardDatabase = [];
-    let currentDeck = {};
+    
+    // Separate pools for each section
+    let currentDeck = {
+      main: {},
+      side: {},
+      reinf: {}
+    };
+
+    let activeAddTarget = 'main'; // 'main', 'side', or 'reinf'
+
+    function setAddTarget(target) {
+      activeAddTarget = target;
+      document.getElementById('target-main').classList.toggle('active', target === 'main');
+      document.getElementById('target-side').classList.toggle('active', target === 'side');
+      document.getElementById('target-reinf').classList.toggle('active', target === 'reinf');
+    }
 
     function getCardImageUrl(card) {
       return `./naruto_ccg_sets_database/${card.setfolder}/${card.imgname}`;
@@ -406,7 +368,6 @@
 
     function populateSetFilter() {
       const setSelect = document.getElementById('set-filter');
-      
       const setMap = new Map();
       cardDatabase.forEach(c => {
         if (c.setfolder) {
@@ -453,7 +414,14 @@
         cardEl.className = 'card-item';
         cardEl.onclick = () => inspectCard(card);
 
-        const countInDeck = currentDeck[card.cardnumber] ? currentDeck[card.cardnumber].count : 0;
+        const mainCount = currentDeck.main[card.cardnumber] ? currentDeck.main[card.cardnumber].count : 0;
+        const sideCount = currentDeck.side[card.cardnumber] ? currentDeck.side[card.cardnumber].count : 0;
+        const reinfCount = currentDeck.reinf[card.cardnumber] ? currentDeck.reinf[card.cardnumber].count : 0;
+        
+        let qtyLabel = `${mainCount}`;
+        if (sideCount > 0 || reinfCount > 0) {
+          qtyLabel += ` (S:${sideCount}|R:${reinfCount})`;
+        }
 
         cardEl.innerHTML = `
           <img 
@@ -464,33 +432,35 @@
             height="1050"
           />
           <div class="card-controls" onclick="event.stopPropagation()">
-            <button onclick="removeCard('${card.cardnumber}')">-</button>
-            <span class="card-qty">${countInDeck}</span>
-            <button onclick="addCard('${card.cardnumber}')">+</button>
+            <button onclick="removeCard('${card.cardnumber}', activeAddTarget)">-</button>
+            <span class="card-qty">${qtyLabel}</span>
+            <button onclick="addCard('${card.cardnumber}', activeAddTarget)">+</button>
           </div>
         `;
         grid.appendChild(cardEl);
       });
     }
 
-    function addCard(cardNumber) {
+    function addCard(cardNumber, target = activeAddTarget) {
       const card = cardDatabase.find(c => c.cardnumber === cardNumber);
       if (!card) return;
 
-      if (currentDeck[cardNumber]) {
-        currentDeck[cardNumber].count += 1;
+      const pool = currentDeck[target];
+      if (pool[cardNumber]) {
+        pool[cardNumber].count += 1;
       } else {
-        currentDeck[cardNumber] = { card: card, count: 1 };
+        pool[cardNumber] = { card: card, count: 1 };
       }
       updateUI();
     }
 
-    function removeCard(cardNumber) {
-      if (!currentDeck[cardNumber]) return;
+    function removeCard(cardNumber, target = activeAddTarget) {
+      const pool = currentDeck[target];
+      if (!pool[cardNumber]) return;
 
-      currentDeck[cardNumber].count -= 1;
-      if (currentDeck[cardNumber].count <= 0) {
-        delete currentDeck[cardNumber];
+      pool[cardNumber].count -= 1;
+      if (pool[cardNumber].count <= 0) {
+        delete pool[cardNumber];
       }
       updateUI();
     }
@@ -505,9 +475,7 @@
         <img src="${getCardImageUrl(card)}" class="inspector-img" alt="${card.name}" />
         <div class="inspector-details">
           <h4>${card.name || 'Unknown'}</h4>
-          
           <p><strong>Type:</strong> ${card.cardtype || '-'}</p>
-
           ${card.symbol ? `<p><strong>Symbol:</strong> ${card.symbol}</p>` : ''}
 
           ${hasCosts ? `
@@ -550,26 +518,91 @@
       const countEl = document.getElementById('deck-count');
       container.innerHTML = '';
 
-      let totalCards = 0;
+      let mainTotal = 0;
+      let sideTotal = 0;
+      let reinfTotal = 0;
 
-      Object.values(currentDeck).forEach(entry => {
-        totalCards += entry.count;
-        const item = document.createElement('div');
-        item.className = 'deck-entry';
-        item.innerHTML = `
-          <span class="deck-qty">${entry.count}x</span>
-          <span class="deck-name" onclick="inspectCard(currentDeck['${entry.card.cardnumber}'].card)">
-            ${entry.card.name} <span class="deck-number">[${entry.card.cardnumber || ''}]</span>
-          </span>
-          <div class="deck-entry-controls">
-            <button onclick="removeCard('${entry.card.cardnumber}')">-</button>
-            <button onclick="addCard('${entry.card.cardnumber}')">+</button>
+      // Helper to render entry lines
+      const createEntryHTML = (entry, targetKey) => {
+        return `
+          <div class="deck-entry">
+            <span class="deck-qty">${entry.count}x</span>
+            <span class="deck-name" onclick="inspectCard(cardDatabase.find(c => c.cardnumber === '${entry.card.cardnumber}'))">
+              ${entry.card.name} <span class="deck-number">[${entry.card.cardnumber || ''}]</span>
+            </span>
+            <div class="deck-entry-controls">
+              <button onclick="removeCard('${entry.card.cardnumber}', '${targetKey}')">-</button>
+              <button onclick="addCard('${entry.card.cardnumber}', '${targetKey}')">+</button>
+            </div>
           </div>
         `;
-        container.appendChild(item);
+      };
+
+      // 1. MAIN DECK CATEGORIES
+      const categories = { 'Ninja': [], 'Jutsu': [], 'Mission': [], 'Client': [], 'Other': [] };
+
+      Object.values(currentDeck.main).forEach(entry => {
+        mainTotal += entry.count;
+        const type = entry.card.cardtype || 'Other';
+        if (categories[type]) {
+          categories[type].push(entry);
+        } else {
+          categories['Other'].push(entry);
+        }
       });
 
-      countEl.innerText = totalCards;
+      Object.keys(categories).forEach(type => {
+        const entries = categories[type];
+        if (entries.length > 0) {
+          const catCount = entries.reduce((sum, e) => sum + e.count, 0);
+          const catHeader = document.createElement('div');
+          catHeader.className = 'deck-section-title';
+          catHeader.innerText = `${type}s (${catCount})`;
+          container.appendChild(catHeader);
+
+          entries.forEach(entry => {
+            const div = document.createElement('div');
+            div.innerHTML = createEntryHTML(entry, 'main');
+            container.appendChild(div.firstElementChild);
+          });
+        }
+      });
+
+      // 2. SIDEBOARD
+      const sideEntries = Object.values(currentDeck.side);
+      sideTotal = sideEntries.reduce((sum, e) => sum + e.count, 0);
+      if (sideEntries.length > 0 || activeAddTarget === 'side') {
+        const sideHeader = document.createElement('div');
+        sideHeader.className = 'deck-section-title';
+        sideHeader.style.color = '#4fc3f7';
+        sideHeader.innerText = `Sideboard (${sideTotal})`;
+        container.appendChild(sideHeader);
+
+        sideEntries.forEach(entry => {
+          const div = document.createElement('div');
+          div.innerHTML = createEntryHTML(entry, 'side');
+          container.appendChild(div.firstElementChild);
+        });
+      }
+
+      // 3. REINFORCEMENTS
+      const reinfEntries = Object.values(currentDeck.reinf);
+      reinfTotal = reinfEntries.reduce((sum, e) => sum + e.count, 0);
+      if (reinfEntries.length > 0 || activeAddTarget === 'reinf') {
+        const reinfHeader = document.createElement('div');
+        reinfHeader.className = 'deck-section-title';
+        reinfHeader.style.color = '#aed581';
+        reinfHeader.innerText = `Reinforcements (${reinfTotal})`;
+        container.appendChild(reinfHeader);
+
+        reinfEntries.forEach(entry => {
+          const div = document.createElement('div');
+          div.innerHTML = createEntryHTML(entry, 'reinf');
+          container.appendChild(div.firstElementChild);
+        });
+      }
+
+      countEl.innerText = `${mainTotal}` + (sideTotal || reinfTotal ? ` + ${sideTotal}S / ${reinfTotal}R` : '');
     }
 
     function updateUI() {
@@ -578,77 +611,74 @@
     }
 
     function exportToTTS() {
-      const deckArray = [];
-      
-      Object.values(currentDeck).forEach(entry => {
-        for (let i = 0; i < entry.count; i++) {
-          deckArray.push(entry.card);
-        }
+      const allMainCards = [];
+      Object.values(currentDeck.main).forEach(entry => {
+        for (let i = 0; i < entry.count; i++) allMainCards.push(entry.card);
       });
 
-      if (deckArray.length === 0) {
-        alert("Deck is empty!");
+      if (allMainCards.length === 0) {
+        alert("Main deck is empty!");
         return;
       }
 
       const baseURL = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
       const cardBackURL = `${baseURL}/cardback.webp`;
-      const customDeckDict = {};
-      const containedObjects = [];
-      const deckIDs = [];
 
-      deckArray.forEach((card, index) => {
-        const cardId = (index + 1) * 100;
-        const cleanImgPath = getCardImageUrl(card).replace(/^\.\//, '');
-        const fullImageUrl = `${baseURL}/${cleanImgPath}`;
+      const createTTSDeckObject = (cardList, deckName) => {
+        const customDeckDict = {};
+        const containedObjects = [];
+        const deckIDs = [];
 
-        deckIDs.push(cardId);
+        cardList.forEach((card, index) => {
+          const cardId = (index + 1) * 100;
+          const cleanImgPath = getCardImageUrl(card).replace(/^\.\//, '');
+          const fullImageUrl = `${baseURL}/${cleanImgPath}`;
 
-        customDeckDict[index + 1] = {
-          "FaceURL": fullImageUrl,
-          "BackURL": cardBackURL,
-          "NumWidth": 1,
-          "NumHeight": 1,
-          "BackIsHidden": true,
-          "UniqueBack": false
-        };
+          deckIDs.push(cardId);
+          customDeckDict[index + 1] = {
+            "FaceURL": fullImageUrl,
+            "BackURL": cardBackURL,
+            "NumWidth": 1, "NumHeight": 1,
+            "BackIsHidden": true, "UniqueBack": false
+          };
 
-        containedObjects.push({
-          "Name": "Card",
-          "Transform": {
-            "posX": 0, "posY": 0, "posZ": 0,
-            "rotX": 0, "rotY": 180, "rotZ": 180,
-            "scaleX": 1, "scaleY": 1, "scaleZ": 1
-          },
-          "Nickname": card.name,
-          "Description": card.cardnumber,
-          "CardID": cardId,
-          "CustomDeck": {
-            [index + 1]: customDeckDict[index + 1]
-          }
+          containedObjects.push({
+            "Name": "Card",
+            "Transform": { "posX": 0, "posY": 0, "posZ": 0, "rotX": 0, "rotY": 180, "rotZ": 180, "scaleX": 1, "scaleY": 1, "scaleZ": 1 },
+            "Nickname": card.name,
+            "Description": card.cardnumber,
+            "CardID": cardId,
+            "CustomDeck": { [index + 1]: customDeckDict[index + 1] }
+          });
         });
-      });
 
-      const ttsSaveObject = {
-        "SaveName": "",
-        "GameMode": "",
-        "Date": "",
-        "ObjectStates": [
-          {
-            "Name": "DeckCustom",
-            "Transform": {
-              "posX": 0, "posY": 1, "posZ": 0,
-              "rotX": 0, "rotY": 180, "rotZ": 180,
-              "scaleX": 1, "scaleY": 1, "scaleZ": 1
-            },
-            "Nickname": "Naruto CCG Deck",
-            "Description": "Exported from Naruto CCG Deckbuilder",
-            "DeckIDs": deckIDs,
-            "CustomDeck": customDeckDict,
-            "ContainedObjects": containedObjects
-          }
-        ]
+        return {
+          "Name": "DeckCustom",
+          "Nickname": deckName,
+          "Transform": { "posX": 0, "posY": 1, "posZ": 0, "rotX": 0, "rotY": 180, "rotZ": 180, "scaleX": 1, "scaleY": 1, "scaleZ": 1 },
+          "DeckIDs": deckIDs,
+          "CustomDeck": customDeckDict,
+          "ContainedObjects": containedObjects
+        };
       };
+
+      const objectStates = [createTTSDeckObject(allMainCards, "Main Deck")];
+
+      // Sideboard to TTS
+      const sideCards = [];
+      Object.values(currentDeck.side).forEach(entry => {
+        for (let i = 0; i < entry.count; i++) sideCards.push(entry.card);
+      });
+      if (sideCards.length > 0) objectStates.push(createTTSDeckObject(sideCards, "Sideboard"));
+
+      // Reinforcements to TTS
+      const reinfCards = [];
+      Object.values(currentDeck.reinf).forEach(entry => {
+        for (let i = 0; i < entry.count; i++) reinfCards.push(entry.card);
+      });
+      if (reinfCards.length > 0) objectStates.push(createTTSDeckObject(reinfCards, "Reinforcements"));
+
+      const ttsSaveObject = { "SaveName": "", "GameMode": "", "Date": "", "ObjectStates": objectStates };
 
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ttsSaveObject, null, 2));
       const downloadAnchor = document.createElement('a');
@@ -660,16 +690,24 @@
     }
 
     function exportTextDeck() {
-      const entries = Object.values(currentDeck);
-      if (entries.length === 0) {
-        alert("Deck is empty!");
-        return;
-      }
-
-      let textData = "";
-      entries.forEach(entry => {
+      let textData = "// Main Deck\n";
+      Object.values(currentDeck.main).forEach(entry => {
         textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
       });
+
+      if (Object.keys(currentDeck.side).length > 0) {
+        textData += "\n// Sideboard\n";
+        Object.values(currentDeck.side).forEach(entry => {
+          textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
+        });
+      }
+
+      if (Object.keys(currentDeck.reinf).length > 0) {
+        textData += "\n// Reinforcements\n";
+        Object.values(currentDeck.reinf).forEach(entry => {
+          textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
+        });
+      }
 
       const blob = new Blob([textData], { type: 'text/plain;charset=utf-8' });
       const anchor = document.createElement('a');
@@ -687,43 +725,60 @@
       reader.onload = function(e) {
         try {
           const data = JSON.parse(e.target.result);
-          currentDeck = {};
+          currentDeck = { main: {}, side: {}, reinf: {} };
 
-          if (data.ObjectStates && data.ObjectStates[0] && data.ObjectStates[0].ContainedObjects) {
-            data.ObjectStates[0].ContainedObjects.forEach(obj => {
-              const cardNum = obj.Description;
-              const matchedCard = cardDatabase.find(c => c.cardnumber && c.cardnumber.toLowerCase() === cardNum.toLowerCase());
-              
-              if (matchedCard) {
-                if (currentDeck[matchedCard.cardnumber]) {
-                  currentDeck[matchedCard.cardnumber].count += 1;
-                } else {
-                  currentDeck[matchedCard.cardnumber] = { card: matchedCard, count: 1 };
-                }
+          if (data.ObjectStates) {
+            data.ObjectStates.forEach(deckObj => {
+              let targetKey = 'main';
+              if (deckObj.Nickname === 'Sideboard') targetKey = 'side';
+              if (deckObj.Nickname === 'Reinforcements') targetKey = 'reinf';
+
+              if (deckObj.ContainedObjects) {
+                deckObj.ContainedObjects.forEach(obj => {
+                  const cardNum = obj.Description;
+                  const matchedCard = cardDatabase.find(c => c.cardnumber && c.cardnumber.toLowerCase() === cardNum.toLowerCase());
+                  if (matchedCard) {
+                    addCard(matchedCard.cardnumber, targetKey);
+                  }
+                });
               }
             });
             updateUI();
           } else {
-            alert("Unrecognized JSON deck format.");
+            alert("Unrecognized JSON format.");
           }
           event.target.value = '';
         } catch (err) {
-          alert("Error parsing JSON file: " + err.message);
+          alert("Error parsing JSON: " + err.message);
         }
       };
       reader.readAsText(file);
     }
 
     function importTextDeckPrompt() {
-      const input = prompt("Paste your decklist here (e.g. '3x Naruto Uzumaki [EX001]'):");
+      const input = prompt("Paste your decklist here (supports section headers like // Sideboard):");
       if (!input) return;
 
+      currentDeck = { main: {}, side: {}, reinf: {} };
+      let currentSection = 'main';
       const lines = input.split('\n');
-      let addedCount = 0;
 
       lines.forEach(line => {
         const cleanLine = line.trim();
         if (!cleanLine) return;
+
+        if (cleanLine.toLowerCase().includes('sideboard')) {
+          currentSection = 'side';
+          return;
+        }
+        if (cleanLine.toLowerCase().includes('reinforcement')) {
+          currentSection = 'reinf';
+          return;
+        }
+        if (cleanLine.toLowerCase().includes('main')) {
+          currentSection = 'main';
+          return;
+        }
 
         const match = cleanLine.match(/^(\d+)x?\s+(.+?)(?:\s+\[(.*?)\])?$/i);
         if (match) {
@@ -732,28 +787,19 @@
           const cardNumber = match[3] ? match[3].trim().toLowerCase() : null;
 
           const matchedCard = cardDatabase.find(c => {
-            if (cardNumber && c.cardnumber) {
-              return c.cardnumber.toLowerCase() === cardNumber;
-            }
+            if (cardNumber && c.cardnumber) return c.cardnumber.toLowerCase() === cardNumber;
             return c.name && c.name.toLowerCase() === cardName;
           });
 
           if (matchedCard) {
-            if (currentDeck[matchedCard.cardnumber]) {
-              currentDeck[matchedCard.cardnumber].count += qty;
-            } else {
-              currentDeck[matchedCard.cardnumber] = { card: matchedCard, count: qty };
+            for (let i = 0; i < qty; i++) {
+              addCard(matchedCard.cardnumber, currentSection);
             }
-            addedCount += qty;
           }
         }
       });
 
-      if (addedCount > 0) {
-        updateUI();
-      } else {
-        alert("No matching cards found in decklist paste.");
-      }
+      updateUI();
     }
 
     window.onload = initApp;
