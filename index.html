@@ -413,6 +413,7 @@
       cardsToRender.forEach(card => {
         const cardEl = document.createElement('div');
         cardEl.className = 'card-item';
+        cardEl.setAttribute('data-card-number', card.cardnumber);
         cardEl.onclick = () => inspectCard(card);
 
         const mainCount = currentDeck.main[card.cardnumber] ? currentDeck.main[card.cardnumber].count : 0;
@@ -442,6 +443,23 @@
       });
     }
 
+    function updateSingleCardQty(cardNumber) {
+      const cardTile = document.querySelector(`[data-card-number="${cardNumber}"]`);
+      if (!cardTile) return;
+
+      const mainCount = currentDeck.main[cardNumber] ? currentDeck.main[cardNumber].count : 0;
+      const reinfCount = currentDeck.reinf[cardNumber] ? currentDeck.reinf[cardNumber].count : 0;
+      const sideCount = currentDeck.side[cardNumber] ? currentDeck.side[cardNumber].count : 0;
+
+      let qtyLabel = `${mainCount}M`;
+      if (reinfCount > 0 || sideCount > 0) {
+        qtyLabel += ` (R:${reinfCount}|S:${sideCount})`;
+      }
+
+      const qtySpan = cardTile.querySelector('.card-qty');
+      if (qtySpan) qtySpan.innerText = qtyLabel;
+    }
+
     function addCard(cardNumber, target = activeAddTarget) {
       const card = cardDatabase.find(c => c.cardnumber === cardNumber);
       if (!card) return;
@@ -452,7 +470,9 @@
       } else {
         pool[cardNumber] = { card: card, count: 1 };
       }
-      updateUI();
+      
+      renderDecklist();
+      updateSingleCardQty(cardNumber);
     }
 
     function removeCard(cardNumber, target = activeAddTarget) {
@@ -463,7 +483,9 @@
       if (pool[cardNumber].count <= 0) {
         delete pool[cardNumber];
       }
-      updateUI();
+      
+      renderDecklist();
+      updateSingleCardQty(cardNumber);
     }
 
     function inspectCard(card) {
@@ -743,7 +765,12 @@
                   const cardNum = obj.Description;
                   const matchedCard = cardDatabase.find(c => c.cardnumber && c.cardnumber.toLowerCase() === cardNum.toLowerCase());
                   if (matchedCard) {
-                    addCard(matchedCard.cardnumber, targetKey);
+                    const pool = currentDeck[targetKey];
+                    if (pool[matchedCard.cardnumber]) {
+                      pool[matchedCard.cardnumber].count += 1;
+                    } else {
+                      pool[matchedCard.cardnumber] = { card: matchedCard, count: 1 };
+                    }
                   }
                 });
               }
@@ -797,8 +824,11 @@
           });
 
           if (matchedCard) {
-            for (let i = 0; i < qty; i++) {
-              addCard(matchedCard.cardnumber, currentSection);
+            const pool = currentDeck[currentSection];
+            if (pool[matchedCard.cardnumber]) {
+              pool[matchedCard.cardnumber].count += qty;
+            } else {
+              pool[matchedCard.cardnumber] = { card: matchedCard, count: qty };
             }
           }
         }
