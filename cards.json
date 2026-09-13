@@ -14,10 +14,10 @@
     "combati": "3",
     "supporti": "0",
     "attribute": "Oil",
-    "effect": "[PERVY SAGE'S TRAINING]When this Ninja is put into play, except by the effect of \"Growth\", discard all Chakras in both player's Chakra areas.",
-    "jutsucost": "2",
-    "rarity": "",
-    "flavor": "",
+    "effect": "[PERVY SAGE'S TRAINING] When this Ninja is put into play, except by the effect of \"Growth\", discard all Chakras in both player's Chakra areas.",
+    "jutsucost": "",
+    "rarity": "*",
+    "flavor": "\"I'm doing my best, believe me!\"",
     "characteristics": "Leaf / Genin / Male / Growth"
   },
   {
