@@ -59,7 +59,7 @@
     "effect": "Permanent<br>Effect: When you put an \"Akatsuki\" Ninja card in play, it gets the following effect texts during that turn:<br>\"When this Ninja is put in play, draw 1 card.\" \"When this Ninja's Team wins a Victory or an Outstanding Victory, you win 1 Battle Reward.\"",
     "jutsucost": "",
     "rarity": "",
-    "flavor": "",
+    "flavor": "I hate the way they look at us as if we're monsters or something!!",
     "characteristics": ""
   },
   {
@@ -80,7 +80,7 @@
     "effect": "",
     "jutsucost": "",
     "rarity": "",
-    "flavor": "I hate the way they look at us as if we're monsters or something!!",
+    "flavor": "",
     "characteristics": ""
   },
   {
@@ -289,7 +289,7 @@
     "attribute": "",
     "effect": "Requirements: \"The Fourth Hokage\" or \"Jaraya\" or \"Naruto Uzumaki\" + \"Clone Status\"<br>Target: User<br>Effect: The Target gets +7/+0 during this turn. At the end of the turn, give 1 damage to every Ninja in this Ninja's Team.",
     "jutsucost": "Lightning / Lightning / 1",
-    "rarity": "*",
+    "rarity": "",
     "flavor": "It's time for that Jutsu...",
     "characteristics": ""
   },
@@ -3760,24 +3760,24 @@
   },
   {
     "cardnumber": "C034",
-    "name": "C034",
+    "name": "Kahiko",
     "cardtype": "Client",
     "setfolder": "set_10_lineage_of_the_legends",
     "imgname": "c034.webp",
     "set": "Set 10 Lineage Of The Legends",
-    "entrancecost": "",
-    "handcost": "",
-    "symbol": "",
+    "entrancecost": "1",
+    "handcost": "0",
+    "symbol": "Earth / Fire",
     "combath": "",
     "supporth": "",
     "combati": "",
     "supporti": "",
     "attribute": "",
-    "effect": "",
+    "effect": "Effect: At the end of your turn, you can send this in-play Client to your Chakra area. In that case, select and move 1 Ninja card with \"Galel\" in your Discard Pile to your hand.",
     "jutsucost": "",
     "rarity": "",
-    "flavor": "",
-    "characteristics": ""
+    "flavor": "It's time this thing was eliminated from the world once and for all, Even if it means our doom.",
+    "characteristics": "Wanderer / Male"
   },
   {
     "cardnumber": "C035",
