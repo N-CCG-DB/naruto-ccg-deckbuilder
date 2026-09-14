@@ -348,8 +348,8 @@
         </button>
       </div>
 
-      <!-- Counter positioned directly below controls -->
-      <h3 style="margin-top: 2px;">Deck (<span id="deck-count">0</span>)</h3>
+      <!-- Counter without parentheses -->
+      <h3 style="margin-top: 2px;">Deck <span id="deck-count">0</span></h3>
 
       <div id="deck-items" class="deck-items"></div>
     </aside>
@@ -374,7 +374,7 @@
     let decklistRenderPending = false;
 
     function setAddTarget(target) {
-      if (activeAddTarget === target) return; // Prevent unnecessary work if clicking already active tab
+      if (activeAddTarget === target) return;
       activeAddTarget = target;
       document.getElementById('target-main').classList.toggle('active', target === 'main');
       document.getElementById('target-reinf').classList.toggle('active', target === 'reinf');
@@ -452,7 +452,7 @@
         parts.push(`<span style="color: ${COLOR_SIDE};">x${sideCount}</span>`);
       }
 
-      return parts.join(' <span style="color: #666; font-weight: normal;">/</span> ');
+      return parts.join('<span style="color: #666; font-weight: normal;"> / </span>');
     }
 
     function renderCards(cardsToRender) {
@@ -670,7 +670,7 @@
         });
       }
 
-      // Format color-coded total count string
+      // Clean total count string without parentheses
       let countParts = [`<span style="color: ${COLOR_MAIN};">${mainTotal}</span>`];
       if (reinfTotal > 0 || activeAddTarget === 'reinf') {
         countParts.push(`<span style="color: ${COLOR_REINF};">${reinfTotal}</span>`);
@@ -741,14 +741,12 @@
 
       const objectStates = [createTTSDeckObject(allMainCards, "Mainboard")];
 
-      // Reinforcements to TTS
       const reinfCards = [];
       Object.values(currentDeck.reinf).forEach(entry => {
         for (let i = 0; i < entry.count; i++) reinfCards.push(entry.card);
       });
       if (reinfCards.length > 0) objectStates.push(createTTSDeckObject(reinfCards, "Reinforcements"));
 
-      // Sideboard to TTS
       const sideCards = [];
       Object.values(currentDeck.side).forEach(entry => {
         for (let i = 0; i < entry.count; i++) sideCards.push(entry.card);
