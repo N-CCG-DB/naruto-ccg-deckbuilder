@@ -15,6 +15,11 @@
       --scrollbar-bg: #1a1a1a;
       --scrollbar-thumb: #444444;
       --scrollbar-thumb-hover: #666666;
+      
+      /* Trio Theme Colors */
+      --color-main: #ff9800; /* Naruto Orange */
+      --color-reinf: #4fc3f7; /* Sasuke Blue */
+      --color-side: #f48fb1;  /* Sakura Pink */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -129,6 +134,7 @@
       padding: 6px 10px;
       background: #181818;
       border-top: 1px solid var(--border-color);
+      min-height: 40px;
     }
 
     .card-controls button {
@@ -147,7 +153,14 @@
     }
 
     .card-controls button:hover { background-color: var(--accent-color); color: #000; }
-    .card-qty { font-weight: bold; color: var(--accent-color); font-size: 12px; }
+    
+    .card-qty { 
+      font-weight: bold; 
+      font-size: 13px; 
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
 
     /* Right Decklist Sidebar */
     .decklist-sidebar {
@@ -182,12 +195,13 @@
       cursor: pointer;
       text-align: center;
       white-space: nowrap;
+      transition: background-color 0.15s ease, color 0.15s ease;
     }
 
-    .target-btn.active {
-      background-color: var(--accent-color);
-      color: #000;
-    }
+    /* Color-coded Active Targets */
+    .target-btn[data-target="main"].active { background-color: var(--color-main); color: #000; }
+    .target-btn[data-target="reinf"].active { background-color: var(--color-reinf); color: #000; }
+    .target-btn[data-target="side"].active { background-color: var(--color-side); color: #000; }
 
     .deck-items {
       flex: 1;
@@ -304,9 +318,9 @@
     <aside class="decklist-sidebar">
       <!-- Target Destination Selector -->
       <div class="target-selector">
-        <button id="target-main" class="target-btn active" onclick="setAddTarget('main')">+ Mainboard</button>
-        <button id="target-reinf" class="target-btn" onclick="setAddTarget('reinf')">+ Reinforcements</button>
-        <button id="target-side" class="target-btn" onclick="setAddTarget('side')">+ Sideboard</button>
+        <button id="target-main" data-target="main" class="target-btn active" onclick="setAddTarget('main')">+ Mainboard</button>
+        <button id="target-reinf" data-target="reinf" class="target-btn" onclick="setAddTarget('reinf')">+ Reinforcements</button>
+        <button id="target-side" data-target="side" class="target-btn" onclick="setAddTarget('side')">+ Sideboard</button>
       </div>
 
       <div style="display: flex; gap: 6px;">
@@ -326,7 +340,7 @@
       </div>
 
       <!-- Counter positioned directly below controls -->
-      <h3 style="margin-top: 2px;">Deck (<span id="deck-count">0M</span>)</h3>
+      <h3 style="margin-top: 2px;">Deck (<span id="deck-count">0</span>)</h3>
 
       <div id="deck-items" class="deck-items"></div>
     </aside>
@@ -334,6 +348,10 @@
   </div>
 
   <script>
+    const COLOR_MAIN = '#ff9800'; // Naruto Orange
+    const COLOR_REINF = '#4fc3f7'; // Sasuke Blue
+    const COLOR_SIDE = '#f48fb1';  // Sakura Pink
+
     let cardDatabase = [];
     
     let currentDeck = {
@@ -406,6 +424,25 @@
       renderCards(getFilteredCards());
     }
 
+    function getFormattedQtyHTML(cardNumber) {
+      const mainCount = currentDeck.main[cardNumber] ? currentDeck.main[cardNumber].count : 0;
+      const reinfCount = currentDeck.reinf[cardNumber] ? currentDeck.reinf[cardNumber].count : 0;
+      const sideCount = currentDeck.side[cardNumber] ? currentDeck.side[cardNumber].count : 0;
+
+      const parts = [];
+      if (mainCount > 0) {
+        parts.push(`<span style="color: ${COLOR_MAIN};">x${mainCount}</span>`);
+      }
+      if (reinfCount > 0) {
+        parts.push(`<span style="color: ${COLOR_REINF};">x${reinfCount}</span>`);
+      }
+      if (sideCount > 0) {
+        parts.push(`<span style="color: ${COLOR_SIDE};">x${sideCount}</span>`);
+      }
+
+      return parts.join(' <span style="color: #666; font-weight: normal;">/</span> ');
+    }
+
     function renderCards(cardsToRender) {
       const grid = document.getElementById('card-grid');
       grid.innerHTML = '';
@@ -415,15 +452,6 @@
         cardEl.className = 'card-item';
         cardEl.setAttribute('data-card-number', card.cardnumber);
         cardEl.onclick = () => inspectCard(card);
-
-        const mainCount = currentDeck.main[card.cardnumber] ? currentDeck.main[card.cardnumber].count : 0;
-        const reinfCount = currentDeck.reinf[card.cardnumber] ? currentDeck.reinf[card.cardnumber].count : 0;
-        const sideCount = currentDeck.side[card.cardnumber] ? currentDeck.side[card.cardnumber].count : 0;
-        
-        let qtyLabel = `${mainCount}M`;
-        if (reinfCount > 0 || sideCount > 0) {
-          qtyLabel += ` (R:${reinfCount}|S:${sideCount})`;
-        }
 
         cardEl.innerHTML = `
           <img 
@@ -435,7 +463,7 @@
           />
           <div class="card-controls" onclick="event.stopPropagation()">
             <button onclick="removeCard('${card.cardnumber}', activeAddTarget)">-</button>
-            <span class="card-qty">${qtyLabel}</span>
+            <span class="card-qty">${getFormattedQtyHTML(card.cardnumber)}</span>
             <button onclick="addCard('${card.cardnumber}', activeAddTarget)">+</button>
           </div>
         `;
@@ -447,17 +475,10 @@
       const cardTile = document.querySelector(`[data-card-number="${cardNumber}"]`);
       if (!cardTile) return;
 
-      const mainCount = currentDeck.main[cardNumber] ? currentDeck.main[cardNumber].count : 0;
-      const reinfCount = currentDeck.reinf[cardNumber] ? currentDeck.reinf[cardNumber].count : 0;
-      const sideCount = currentDeck.side[cardNumber] ? currentDeck.side[cardNumber].count : 0;
-
-      let qtyLabel = `${mainCount}M`;
-      if (reinfCount > 0 || sideCount > 0) {
-        qtyLabel += ` (R:${reinfCount}|S:${sideCount})`;
-      }
-
       const qtySpan = cardTile.querySelector('.card-qty');
-      if (qtySpan) qtySpan.innerText = qtyLabel;
+      if (qtySpan) {
+        qtySpan.innerHTML = getFormattedQtyHTML(cardNumber);
+      }
     }
 
     function addCard(cardNumber, target = activeAddTarget) {
@@ -545,10 +566,10 @@
       let reinfTotal = 0;
       let sideTotal = 0;
 
-      const createEntryHTML = (entry, targetKey) => {
+      const createEntryHTML = (entry, targetKey, badgeColor) => {
         return `
           <div class="deck-entry">
-            <span class="deck-qty">${entry.count}x</span>
+            <span class="deck-qty" style="color: ${badgeColor}">${entry.count}x</span>
             <span class="deck-name" onclick="inspectCard(cardDatabase.find(c => c.cardnumber === '${entry.card.cardnumber}'))">
               ${entry.card.name} <span class="deck-number">[${entry.card.cardnumber || ''}]</span>
             </span>
@@ -579,12 +600,13 @@
           const catCount = entries.reduce((sum, e) => sum + e.count, 0);
           const catHeader = document.createElement('div');
           catHeader.className = 'deck-section-title';
+          catHeader.style.color = COLOR_MAIN;
           catHeader.innerText = `${type}s (${catCount})`;
           container.appendChild(catHeader);
 
           entries.forEach(entry => {
             const div = document.createElement('div');
-            div.innerHTML = createEntryHTML(entry, 'main');
+            div.innerHTML = createEntryHTML(entry, 'main', COLOR_MAIN);
             container.appendChild(div.firstElementChild);
           });
         }
@@ -596,13 +618,13 @@
       if (reinfEntries.length > 0 || activeAddTarget === 'reinf') {
         const reinfHeader = document.createElement('div');
         reinfHeader.className = 'deck-section-title';
-        reinfHeader.style.color = '#aed581';
+        reinfHeader.style.color = COLOR_REINF;
         reinfHeader.innerText = `Reinforcements (${reinfTotal})`;
         container.appendChild(reinfHeader);
 
         reinfEntries.forEach(entry => {
           const div = document.createElement('div');
-          div.innerHTML = createEntryHTML(entry, 'reinf');
+          div.innerHTML = createEntryHTML(entry, 'reinf', COLOR_REINF);
           container.appendChild(div.firstElementChild);
         });
       }
@@ -613,23 +635,27 @@
       if (sideEntries.length > 0 || activeAddTarget === 'side') {
         const sideHeader = document.createElement('div');
         sideHeader.className = 'deck-section-title';
-        sideHeader.style.color = '#4fc3f7';
+        sideHeader.style.color = COLOR_SIDE;
         sideHeader.innerText = `Sideboard (${sideTotal})`;
         container.appendChild(sideHeader);
 
         sideEntries.forEach(entry => {
           const div = document.createElement('div');
-          div.innerHTML = createEntryHTML(entry, 'side');
+          div.innerHTML = createEntryHTML(entry, 'side', COLOR_SIDE);
           container.appendChild(div.firstElementChild);
         });
       }
 
-      // Format count string (e.g., 50M + 15R + 10S)
-      let countParts = [`${mainTotal}M`];
-      if (reinfTotal > 0 || activeAddTarget === 'reinf') countParts.push(`${reinfTotal}R`);
-      if (sideTotal > 0 || activeAddTarget === 'side') countParts.push(`${sideTotal}S`);
+      // Format color-coded total count string
+      let countParts = [`<span style="color: ${COLOR_MAIN};">${mainTotal}</span>`];
+      if (reinfTotal > 0 || activeAddTarget === 'reinf') {
+        countParts.push(`<span style="color: ${COLOR_REINF};">${reinfTotal}</span>`);
+      }
+      if (sideTotal > 0 || activeAddTarget === 'side') {
+        countParts.push(`<span style="color: ${COLOR_SIDE};">${sideTotal}</span>`);
+      }
 
-      countEl.innerText = countParts.join(' + ');
+      countEl.innerHTML = countParts.join(' <span style="color: #666; font-weight: normal;">+</span> ');
     }
 
     function updateUI() {
