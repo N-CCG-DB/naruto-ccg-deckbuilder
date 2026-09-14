@@ -24,6 +24,12 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* Disable accidental text selection on rapid clicks */
+    body, .card-item, .deck-entry, .target-btn, .card-controls, .btn, header {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
     ::-webkit-scrollbar { width: 10px; height: 10px; }
     ::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
     ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 5px; border: 2px solid var(--scrollbar-bg); }
@@ -59,6 +65,8 @@
       padding: 8px 12px;
       border-radius: 4px;
       outline: none;
+      user-select: text;
+      -webkit-user-select: text;
     }
 
     input:focus, select:focus { border-color: var(--accent-color); }
@@ -87,7 +95,7 @@
       display: block;
     }
 
-    .inspector-details { display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+    .inspector-details { display: flex; flex-direction: column; gap: 10px; font-size: 14px; user-select: text; -webkit-user-select: text; }
     .inspector-details h4 { color: var(--accent-color); font-size: 24px; margin-top: 15px; margin-bottom: 5px; line-height: 1.2; }
     .inspector-details p { word-break: break-word; line-height: 1.4; }
 
@@ -125,6 +133,7 @@
       background-color: #1a1a1a;
       object-fit: cover;
       display: block;
+      pointer-events: none;
     }
 
     .card-controls {
@@ -361,8 +370,11 @@
     };
 
     let activeAddTarget = 'main'; // 'main', 'reinf', or 'side'
+    let currentInspectedCardNumber = null;
+    let decklistRenderPending = false;
 
     function setAddTarget(target) {
+      if (activeAddTarget === target) return; // Prevent unnecessary work if clicking already active tab
       activeAddTarget = target;
       document.getElementById('target-main').classList.toggle('active', target === 'main');
       document.getElementById('target-reinf').classList.toggle('active', target === 'reinf');
@@ -481,6 +493,15 @@
       }
     }
 
+    function scheduleDecklistRender() {
+      if (decklistRenderPending) return;
+      decklistRenderPending = true;
+      requestAnimationFrame(() => {
+        renderDecklist();
+        decklistRenderPending = false;
+      });
+    }
+
     function addCard(cardNumber, target = activeAddTarget) {
       const card = cardDatabase.find(c => c.cardnumber === cardNumber);
       if (!card) return;
@@ -492,7 +513,7 @@
         pool[cardNumber] = { card: card, count: 1 };
       }
       
-      renderDecklist();
+      scheduleDecklistRender();
       updateSingleCardQty(cardNumber);
     }
 
@@ -505,11 +526,14 @@
         delete pool[cardNumber];
       }
       
-      renderDecklist();
+      scheduleDecklistRender();
       updateSingleCardQty(cardNumber);
     }
 
     function inspectCard(card) {
+      if (!card || currentInspectedCardNumber === card.cardnumber) return;
+      currentInspectedCardNumber = card.cardnumber;
+
       const inspector = document.getElementById('inspector-content');
 
       const hasCosts = (card.entrancecost !== '' && card.entrancecost !== undefined) || (card.handcost !== '' && card.handcost !== undefined);
@@ -659,7 +683,7 @@
     }
 
     function updateUI() {
-      renderDecklist();
+      scheduleDecklistRender();
       renderCards(getFilteredCards());
     }
 
