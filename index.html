@@ -381,7 +381,7 @@
     }
 
     function getCardImageUrl(card) {
-      return `./naruto_ccg_sets_database/${card.setfolder}/${card.imgname}`;
+      return `./cards_database/${card.setfolder}/${card.imgname}`;
     }
 
     async function initApp() {
@@ -563,8 +563,8 @@
 
           ${hasStats ? `
             <div class="stat-row">
-              <span><strong>Healthy:</strong> ${card.combath \vert{}\vert{} '-'}/${card.supporth || '-'}</span>
-              <span><strong>Injured:</strong> ${card.combati \vert{}\vert{} '-'}/${card.supporti || '-'}</span>
+              <span><strong>Healthy:</strong> ${card.combath || '-'}/${card.supporth || '-'}</span>
+              <span><strong>Injured:</strong> ${card.combati || '-'}/${card.supporti || '-'}</span>
             </div>
           ` : ''}
 
