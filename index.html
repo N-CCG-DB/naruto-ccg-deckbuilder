@@ -15,16 +15,14 @@
       --scrollbar-bg: #1a1a1a;
       --scrollbar-thumb: #444444;
       --scrollbar-thumb-hover: #666666;
-      
-      /* Trio Theme Colors */
-      --color-main: #ff9800; /* Naruto Orange */
-      --color-reinf: #4fc3f7; /* Sasuke Blue */
-      --color-side: #f48fb1;  /* Sakura Pink */
+
+      --color-main: #ff9800;
+      --color-reinf: #4fc3f7;
+      --color-side: #f48fb1;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Disable accidental text selection on rapid clicks */
     body, .card-item, .deck-entry, .target-btn, .card-controls, .btn, header {
       user-select: none;
       -webkit-user-select: none;
@@ -73,7 +71,6 @@
 
     .app-container { display: flex; flex: 1; overflow: hidden; }
 
-    /* Left Panel */
     .card-inspector {
       width: 420px;
       background-color: var(--panel-bg);
@@ -109,7 +106,6 @@
 
     .placeholder-text { color: #777; text-align: center; margin-top: 50px; }
 
-    /* Middle Grid */
     .card-browser { flex: 1; padding: 15px; overflow-y: auto; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 
@@ -162,16 +158,15 @@
     }
 
     .card-controls button:hover { background-color: var(--accent-color); color: #000; }
-    
-    .card-qty { 
-      font-weight: bold; 
-      font-size: 13px; 
+
+    .card-qty {
+      font-weight: bold;
+      font-size: 13px;
       display: inline-flex;
       align-items: center;
       gap: 3px;
     }
 
-    /* Right Decklist Sidebar */
     .decklist-sidebar {
       width: 340px;
       background-color: var(--panel-bg);
@@ -207,7 +202,6 @@
       transition: background-color 0.15s ease, color 0.15s ease;
     }
 
-    /* Color-coded Active Targets */
     .target-btn[data-target="main"].active { background-color: var(--color-main); color: #000; }
     .target-btn[data-target="reinf"].active { background-color: var(--color-reinf); color: #000; }
     .target-btn[data-target="side"].active { background-color: var(--color-side); color: #000; }
@@ -291,7 +285,7 @@
       <label for="search-input">Search:</label>
       <input type="text" id="search-input" placeholder="Name or Card #..." oninput="filterCards()" />
     </div>
-    
+
     <div class="filter-group">
       <label for="type-filter">Type:</label>
       <select id="type-filter" onchange="filterCards()">
@@ -312,7 +306,7 @@
   </header>
 
   <div class="app-container">
-    
+
     <aside class="card-inspector">
       <h3>Card Inspector</h3>
       <div id="inspector-content">
@@ -325,7 +319,6 @@
     </section>
 
     <aside class="decklist-sidebar">
-      <!-- Target Destination Selector -->
       <div class="target-selector">
         <button id="target-main" data-target="main" class="target-btn active" onclick="setAddTarget('main')">+ Mainboard</button>
         <button id="target-reinf" data-target="reinf" class="target-btn" onclick="setAddTarget('reinf')">+ Reinforcements</button>
@@ -342,7 +335,7 @@
           Import JSON
           <input type="file" id="json-import-input" accept=".json" onchange="importJSONDeck(event)" style="display: none;" />
         </label>
-        
+
         <button onclick="importTextDeckPrompt()" class="btn btn-secondary" style="flex: 1; font-size: 11px; padding: 6px;">
           Import Text
         </button>
@@ -356,19 +349,20 @@
   </div>
 
   <script>
-    const COLOR_MAIN = '#ff9800'; // Naruto Orange
-    const COLOR_REINF = '#4fc3f7'; // Sasuke Blue
-    const COLOR_SIDE = '#f48fb1';  // Sakura Pink
+    const COLOR_MAIN = '#ff9800';
+    const COLOR_REINF = '#4fc3f7';
+    const COLOR_SIDE = '#f48fb1';
 
     let cardDatabase = [];
-    
+    let setList = [];  // [{folder, display}, ...] loaded from sets.json
+
     let currentDeck = {
       main: {},
       reinf: {},
       side: {}
     };
 
-    let activeAddTarget = 'main'; // 'main', 'reinf', or 'side'
+    let activeAddTarget = 'main';
     let currentInspectedCardNumber = null;
     let decklistRenderPending = false;
 
@@ -384,32 +378,41 @@
       return `./cards_database/${card.setfolder}/${card.imgname}`;
     }
 
+    // Get display name for a set folder. Falls back to raw folder name.
+    function getSetDisplayName(folder) {
+      const entry = setList.find(s => s.folder === folder);
+      return entry ? entry.display : folder.replace(/_/g, ' ');
+    }
+
     async function initApp() {
       try {
-        const response = await fetch('cards.json');
-        cardDatabase = await response.json();
-        
+        const [cardsRes, setsRes] = await Promise.all([
+          fetch('cards.json'),
+          fetch('sets.json')
+        ]);
+        cardDatabase = await cardsRes.json();
+        setList = await setsRes.json();
+
         populateSetFilter();
         filterCards();
       } catch (err) {
-        console.error("Failed to load cards.json:", err);
+        console.error("Failed to load data:", err);
       }
     }
 
     function populateSetFilter() {
       const setSelect = document.getElementById('set-filter');
-      const setMap = new Map();
-      cardDatabase.forEach(c => {
-        if (c.setfolder) {
-          const displayName = c.set || c.setfolder.replace(/_/g, ' ');
-          setMap.set(c.setfolder, displayName);
-        }
-      });
+      // Reset to just the "All Sets" option
+      setSelect.innerHTML = '<option value="ALL">All Sets</option>';
 
-      Array.from(setMap.entries()).sort((a,b) => a[1].localeCompare(b[1])).forEach(([folder, name]) => {
+      // Only show sets that actually appear in the card database
+      const presentFolders = new Set(cardDatabase.map(c => c.setfolder));
+
+      setList.forEach(({ folder, display }) => {
+        if (!presentFolders.has(folder)) return;
         const opt = document.createElement('option');
         opt.value = folder;
-        opt.textContent = name;
+        opt.textContent = display;
         setSelect.appendChild(opt);
       });
     }
@@ -441,15 +444,9 @@
       const sideCount = currentDeck.side[cardNumber] ? currentDeck.side[cardNumber].count : 0;
 
       const parts = [];
-      if (mainCount > 0) {
-        parts.push(`<span style="color: ${COLOR_MAIN};">x${mainCount}</span>`);
-      }
-      if (reinfCount > 0) {
-        parts.push(`<span style="color: ${COLOR_REINF};">x${reinfCount}</span>`);
-      }
-      if (sideCount > 0) {
-        parts.push(`<span style="color: ${COLOR_SIDE};">x${sideCount}</span>`);
-      }
+      if (mainCount > 0) parts.push(`<span style="color: ${COLOR_MAIN};">x${mainCount}</span>`);
+      if (reinfCount > 0) parts.push(`<span style="color: ${COLOR_REINF};">x${reinfCount}</span>`);
+      if (sideCount > 0) parts.push(`<span style="color: ${COLOR_SIDE};">x${sideCount}</span>`);
 
       return parts.join('<span style="color: #666; font-weight: normal;"> / </span>');
     }
@@ -465,13 +462,7 @@
         cardEl.onclick = () => inspectCard(card);
 
         cardEl.innerHTML = `
-          <img 
-            src="${getCardImageUrl(card)}" 
-            alt="${card.name}" 
-            loading="lazy" 
-            width="750" 
-            height="1050"
-          />
+          <img src="${getCardImageUrl(card)}" alt="${card.name}" loading="lazy" width="750" height="1050" />
           <div class="card-controls" onclick="event.stopPropagation()">
             <button onclick="removeCard('${card.cardnumber}', activeAddTarget)">-</button>
             <span class="card-qty">${getFormattedQtyHTML(card.cardnumber)}</span>
@@ -485,11 +476,8 @@
     function updateSingleCardQty(cardNumber) {
       const cardTile = document.querySelector(`[data-card-number="${cardNumber}"]`);
       if (!cardTile) return;
-
       const qtySpan = cardTile.querySelector('.card-qty');
-      if (qtySpan) {
-        qtySpan.innerHTML = getFormattedQtyHTML(cardNumber);
-      }
+      if (qtySpan) qtySpan.innerHTML = getFormattedQtyHTML(cardNumber);
     }
 
     function scheduleDecklistRender() {
@@ -511,7 +499,7 @@
       } else {
         pool[cardNumber] = { card: card, count: 1 };
       }
-      
+
       scheduleDecklistRender();
       updateSingleCardQty(cardNumber);
     }
@@ -521,10 +509,8 @@
       if (!pool[cardNumber]) return;
 
       pool[cardNumber].count -= 1;
-      if (pool[cardNumber].count <= 0) {
-        delete pool[cardNumber];
-      }
-      
+      if (pool[cardNumber].count <= 0) delete pool[cardNumber];
+
       scheduleDecklistRender();
       updateSingleCardQty(cardNumber);
     }
@@ -534,8 +520,9 @@
       currentInspectedCardNumber = card.cardnumber;
 
       const inspector = document.getElementById('inspector-content');
+      const isJutsu = (card.cardtype || "").trim().toLowerCase() === "jutsu";
 
-      const hasCosts = (card.entrancecost !== '' && card.entrancecost !== undefined) || (card.handcost !== '' && card.handcost !== undefined);
+      const hasCosts = !isJutsu && ((card.entrancecost !== '' && card.entrancecost !== undefined) || (card.handcost !== '' && card.handcost !== undefined));
       const hasStats = (card.combath || card.supporth || card.combati || card.supporti);
 
       inspector.innerHTML = `
@@ -570,12 +557,12 @@
 
           ${card.attribute ? `<p><strong>Combat Attribute:</strong> ${card.attribute}</p>` : ''}
           ${card.characteristics ? `<p><strong>Characteristics:</strong> ${card.characteristics}</p>` : ''}
-          
+
           ${card.effect ? `<p>${card.effect}</p>` : ''}
           ${card.flavor ? `<p><em>"${card.flavor}"</em></p>` : ''}
-          
+
           <p><strong>Number:</strong> ${card.cardnumber || '-'}</p>
-          <p><strong>Set:</strong> ${card.set || card.setfolder || '-'}</p>
+          <p><strong>Set:</strong> ${getSetDisplayName(card.setfolder)}</p>
         </div>
       `;
     }
@@ -590,11 +577,12 @@
       let sideTotal = 0;
 
       const createEntryHTML = (entry, targetKey, badgeColor) => {
+        const displayName = entry.card.name || entry.card.cardnumber;
         return `
           <div class="deck-entry">
             <span class="deck-qty" style="color: ${badgeColor}">${entry.count}x</span>
             <span class="deck-name" onclick="inspectCard(cardDatabase.find(c => c.cardnumber === '${entry.card.cardnumber}'))">
-              ${entry.card.name} <span class="deck-number">[${entry.card.cardnumber || ''}]</span>
+              ${displayName} <span class="deck-number">[${entry.card.cardnumber || ''}]</span>
             </span>
             <div class="deck-entry-controls">
               <button onclick="removeCard('${entry.card.cardnumber}', '${targetKey}')">-</button>
@@ -604,17 +592,13 @@
         `;
       };
 
-      // 1. MAINBOARD CATEGORIES
       const categories = { 'Ninja': [], 'Jutsu': [], 'Mission': [], 'Client': [], 'Other': [] };
 
       Object.values(currentDeck.main).forEach(entry => {
         mainTotal += entry.count;
         const type = entry.card.cardtype || 'Other';
-        if (categories[type]) {
-          categories[type].push(entry);
-        } else {
-          categories['Other'].push(entry);
-        }
+        if (categories[type]) categories[type].push(entry);
+        else categories['Other'].push(entry);
       });
 
       Object.keys(categories).forEach(type => {
@@ -635,7 +619,6 @@
         }
       });
 
-      // 2. REINFORCEMENTS
       const reinfEntries = Object.values(currentDeck.reinf);
       reinfTotal = reinfEntries.reduce((sum, e) => sum + e.count, 0);
       if (reinfEntries.length > 0 || activeAddTarget === 'reinf') {
@@ -652,7 +635,6 @@
         });
       }
 
-      // 3. SIDEBOARD
       const sideEntries = Object.values(currentDeck.side);
       sideTotal = sideEntries.reduce((sum, e) => sum + e.count, 0);
       if (sideEntries.length > 0 || activeAddTarget === 'side') {
@@ -670,12 +652,8 @@
       }
 
       let countParts = [`<span style="color: ${COLOR_MAIN};">${mainTotal}</span>`];
-      if (reinfTotal > 0 || activeAddTarget === 'reinf') {
-        countParts.push(`<span style="color: ${COLOR_REINF};">${reinfTotal}</span>`);
-      }
-      if (sideTotal > 0 || activeAddTarget === 'side') {
-        countParts.push(`<span style="color: ${COLOR_SIDE};">${sideTotal}</span>`);
-      }
+      if (reinfTotal > 0 || activeAddTarget === 'reinf') countParts.push(`<span style="color: ${COLOR_REINF};">${reinfTotal}</span>`);
+      if (sideTotal > 0 || activeAddTarget === 'side') countParts.push(`<span style="color: ${COLOR_SIDE};">${sideTotal}</span>`);
 
       countEl.innerHTML = countParts.join('<span style="color: #666; font-weight: normal;"> / </span>');
     }
@@ -721,7 +699,7 @@
           containedObjects.push({
             "Name": "Card",
             "Transform": { "posX": 0, "posY": 0, "posZ": 0, "rotX": 0, "rotY": 180, "rotZ": 180, "scaleX": 1.25, "scaleY": 1, "scaleZ": 1.25 },
-            "Nickname": card.name,
+            "Nickname": card.name || card.cardnumber,
             "Description": card.cardnumber,
             "CardID": cardId,
             "CustomDeck": { [deckKey]: customDeckDict[deckKey] }
@@ -766,20 +744,20 @@
     function exportTextDeck() {
       let textData = "// Mainboard\n";
       Object.values(currentDeck.main).forEach(entry => {
-        textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
+        textData += `${entry.count}x ${entry.card.name || entry.card.cardnumber} [${entry.card.cardnumber}]\n`;
       });
 
       if (Object.keys(currentDeck.reinf).length > 0) {
         textData += "\n// Reinforcements\n";
         Object.values(currentDeck.reinf).forEach(entry => {
-          textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
+          textData += `${entry.count}x ${entry.card.name || entry.card.cardnumber} [${entry.card.cardnumber}]\n`;
         });
       }
 
       if (Object.keys(currentDeck.side).length > 0) {
         textData += "\n// Sideboard\n";
         Object.values(currentDeck.side).forEach(entry => {
-          textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
+          textData += `${entry.count}x ${entry.card.name || entry.card.cardnumber} [${entry.card.cardnumber}]\n`;
         });
       }
 
@@ -813,11 +791,8 @@
                   const matchedCard = cardDatabase.find(c => c.cardnumber && c.cardnumber.toLowerCase() === cardNum.toLowerCase());
                   if (matchedCard) {
                     const pool = currentDeck[targetKey];
-                    if (pool[matchedCard.cardnumber]) {
-                      pool[matchedCard.cardnumber].count += 1;
-                    } else {
-                      pool[matchedCard.cardnumber] = { card: matchedCard, count: 1 };
-                    }
+                    if (pool[matchedCard.cardnumber]) pool[matchedCard.cardnumber].count += 1;
+                    else pool[matchedCard.cardnumber] = { card: matchedCard, count: 1 };
                   }
                 });
               }
@@ -846,18 +821,9 @@
         const cleanLine = line.trim();
         if (!cleanLine) return;
 
-        if (cleanLine.toLowerCase().includes('reinforcement')) {
-          currentSection = 'reinf';
-          return;
-        }
-        if (cleanLine.toLowerCase().includes('sideboard')) {
-          currentSection = 'side';
-          return;
-        }
-        if (cleanLine.toLowerCase().includes('main')) {
-          currentSection = 'main';
-          return;
-        }
+        if (cleanLine.toLowerCase().includes('reinforcement')) { currentSection = 'reinf'; return; }
+        if (cleanLine.toLowerCase().includes('sideboard')) { currentSection = 'side'; return; }
+        if (cleanLine.toLowerCase().includes('main')) { currentSection = 'main'; return; }
 
         const match = cleanLine.match(/^(\d+)x?\s+(.+?)(?:\s+\[(.*?)\])?$/i);
         if (match) {
@@ -872,11 +838,8 @@
 
           if (matchedCard) {
             const pool = currentDeck[currentSection];
-            if (pool[matchedCard.cardnumber]) {
-              pool[matchedCard.cardnumber].count += qty;
-            } else {
-              pool[matchedCard.cardnumber] = { card: matchedCard, count: qty };
-            }
+            if (pool[matchedCard.cardnumber]) pool[matchedCard.cardnumber].count += qty;
+            else pool[matchedCard.cardnumber] = { card: matchedCard, count: qty };
           }
         }
       });
