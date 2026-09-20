@@ -1,296 +1,890 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naruto CCG Deckbuilder</title>
-    <style>
-        :root {
-            --bg-color: #121214;
-            --panel-bg: #1e1e24;
-            --accent-color: #ff6b00;
-            --text-color: #e1e1e6;
-            --border-color: #2e2e38;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naruto CCG Deck Builder</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --panel-bg: #1e1e1e;
+      --border-color: #333333;
+      --text-color: #e0e0e0;
+      --accent-color: #ff9800;
+      --accent-hover: #e68a00;
+      --scrollbar-bg: #1a1a1a;
+      --scrollbar-thumb: #444444;
+      --scrollbar-thumb-hover: #666666;
+      
+      /* Trio Theme Colors */
+      --color-main: #ff9800; /* Naruto Orange */
+      --color-reinf: #4fc3f7; /* Sasuke Blue */
+      --color-side: #f48fb1;  /* Sakura Pink */
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-        }
+    /* Disable accidental text selection on rapid clicks */
+    body, .card-item, .deck-entry, .target-btn, .card-controls, .btn, header {
+      user-select: none;
+      -webkit-user-select: none;
+    }
 
-        h1 {
-            margin: 0;
-            color: var(--accent-color);
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 5px; border: 2px solid var(--scrollbar-bg); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+    * { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg); }
 
-        .controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-        input, select {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
+    header {
+      background-color: var(--panel-bg);
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
-        input:focus, select:focus {
-            outline: 1px solid var(--accent-color);
-        }
+    .filter-group { display: flex; align-items: center; gap: 8px; }
 
-        .layout {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 20px;
-        }
+    input, select {
+      background-color: #2a2a2a;
+      color: #fff;
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      border-radius: 4px;
+      outline: none;
+      user-select: text;
+      -webkit-user-select: text;
+    }
 
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 15px;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
+    input:focus, select:focus { border-color: var(--accent-color); }
 
-        .card-item {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            overflow: hidden;
-            transition: transform 0.15s ease, border-color 0.15s ease;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-        }
+    .app-container { display: flex; flex: 1; overflow: hidden; }
 
-        .card-item:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-color);
-        }
+    /* Left Panel */
+    .card-inspector {
+      width: 420px;
+      background-color: var(--panel-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
 
-        .card-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            background-color: #000;
-        }
+    .inspector-img {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.6);
+      display: block;
+    }
 
-        .card-info {
-            padding: 8px;
-            font-size: 0.8rem;
-        }
+    .inspector-details { display: flex; flex-direction: column; gap: 10px; font-size: 14px; user-select: text; -webkit-user-select: text; }
+    .inspector-details h4 { color: var(--accent-color); font-size: 24px; margin-top: 15px; margin-bottom: 5px; line-height: 1.2; }
+    .inspector-details p { word-break: break-word; line-height: 1.4; }
 
-        .card-title {
-            font-weight: bold;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      background: #262626;
+      padding: 6px 10px;
+      border-radius: 4px;
+    }
 
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            color: #a0a0b0;
-            margin-top: 4px;
-        }
+    .placeholder-text { color: #777; text-align: center; margin-top: 50px; }
 
-        .deck-panel {
-            background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    /* Middle Grid */
+    .card-browser { flex: 1; padding: 15px; overflow-y: auto; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 
-        .stats-badge {
-            font-size: 0.75rem;
-            background: #2a2a35;
-            padding: 2px 6px;
-            border-radius: 3px;
-        }
-    </style>
+    .card-item {
+      background-color: var(--panel-bg);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.1s ease, border-color 0.1s ease;
+    }
+
+    .card-item:hover { transform: translateY(-2px); border-color: var(--accent-color); }
+
+    .card-item img {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 750 / 1050;
+      background-color: #1a1a1a;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    .card-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      background: #181818;
+      border-top: 1px solid var(--border-color);
+      min-height: 40px;
+    }
+
+    .card-controls button {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-controls button:hover { background-color: var(--accent-color); color: #000; }
+    
+    .card-qty { 
+      font-weight: bold; 
+      font-size: 13px; 
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    /* Right Decklist Sidebar */
+    .decklist-sidebar {
+      width: 340px;
+      background-color: var(--panel-bg);
+      border-left: 1px solid var(--border-color);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .target-selector {
+      display: flex;
+      background: #121212;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .target-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #888;
+      padding: 6px 2px;
+      font-size: 10px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    /* Color-coded Active Targets */
+    .target-btn[data-target="main"].active { background-color: var(--color-main); color: #000; }
+    .target-btn[data-target="reinf"].active { background-color: var(--color-reinf); color: #000; }
+    .target-btn[data-target="side"].active { background-color: var(--color-side); color: #000; }
+
+    .deck-items {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .deck-section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent-color);
+      border-bottom: 1px solid #333;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+      margin-top: 4px;
+    }
+
+    .deck-entry {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      background-color: #262626;
+      border-radius: 4px;
+      border: 1px solid #333;
+      margin-bottom: 4px;
+    }
+
+    .deck-qty { font-weight: bold; color: var(--accent-color); min-width: 20px; font-size: 12px; }
+    .deck-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; font-size: 12px; }
+    .deck-number { color: #888; font-size: 10px; margin-left: 3px; }
+    .deck-name:hover { text-decoration: underline; color: #fff; }
+
+    .deck-entry-controls { display: flex; gap: 3px; }
+    .deck-entry-controls button {
+      background-color: #3a3a3a;
+      color: #fff;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .deck-entry-controls button:hover { background-color: var(--accent-color); color: #000; }
+
+    .btn {
+      background-color: var(--accent-color);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .btn:hover { background-color: var(--accent-hover); }
+
+    .btn-secondary {
+      background-color: #2a2a2a;
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover { background-color: #3a3a3a; border-color: #555; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <h1>Naruto CCG Deckbuilder</h1>
-        <div class="controls">
-            <input type="text" id="searchInput" placeholder="Search by name or number...">
-            <select id="setFilter">
-                <option value="">All Sets</option>
-            </select>
-            <select id="symbolFilter">
-                <option value="">All Symbols</option>
-                <option value="Fire">Fire</option>
-                <option value="Water">Water</option>
-                <option value="Lightning">Lightning</option>
-                <option value="Wind">Wind</option>
-                <option value="Earth">Earth</option>
-                <option value="Void">Void</option>
-            </select>
-        </div>
-    </header>
-
-    <div class="layout">
-        <main class="card-grid" id="cardGrid">
-            <!-- Cards populated dynamically -->
-        </main>
-
-        <aside class="deck-panel">
-            <h2>Current Deck</h2>
-            <div id="deckStats">Total Cards: 0</div>
-            <ul id="deckList" style="list-style: none; padding: 0;">
-                <!-- Deck items populated dynamically -->
-            </ul>
-        </aside>
+  <header>
+    <div class="filter-group">
+      <label for="search-input">Search:</label>
+      <input type="text" id="search-input" placeholder="Name or Card #..." oninput="filterCards()" />
+    </div>
+    
+    <div class="filter-group">
+      <label for="type-filter">Type:</label>
+      <select id="type-filter" onchange="filterCards()">
+        <option value="ALL">All Types</option>
+        <option value="Ninja">Ninja</option>
+        <option value="Jutsu">Jutsu</option>
+        <option value="Mission">Mission</option>
+        <option value="Client">Client</option>
+      </select>
     </div>
 
-    <script>
-        let cardDatabase = [];
-        let currentDeck = [];
+    <div class="filter-group">
+      <label for="set-filter">Set:</label>
+      <select id="set-filter" onchange="filterCards()">
+        <option value="ALL">All Sets</option>
+      </select>
+    </div>
+  </header>
 
-        // Fetch cards directly from exports/card_database.json
-        async function loadCards() {
-            try {
-                const response = await fetch('exports/card_database.json');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                const rawCards = await response.json();
+  <div class="app-container">
+    
+    <aside class="card-inspector">
+      <h3>Card Inspector</h3>
+      <div id="inspector-content">
+        <p class="placeholder-text">Click any card to view stats and text</p>
+      </div>
+    </aside>
 
-                // Normalize image paths relative to project root
-                cardDatabase = rawCards.map(card => {
-                    let imgPath = card.image_path || '';
-                    if (imgPath && !imgPath.startsWith('cards_database/')) {
-                        imgPath = `cards_database/${imgPath}`;
+    <section class="card-browser">
+      <div id="card-grid" class="card-grid"></div>
+    </section>
+
+    <aside class="decklist-sidebar">
+      <!-- Target Destination Selector -->
+      <div class="target-selector">
+        <button id="target-main" data-target="main" class="target-btn active" onclick="setAddTarget('main')">+ Mainboard</button>
+        <button id="target-reinf" data-target="reinf" class="target-btn" onclick="setAddTarget('reinf')">+ Reinforcements</button>
+        <button id="target-side" data-target="side" class="target-btn" onclick="setAddTarget('side')">+ Sideboard</button>
+      </div>
+
+      <div style="display: flex; gap: 6px;">
+        <button onclick="exportToTTS()" class="btn" style="flex: 1;">Export TTS</button>
+        <button onclick="exportTextDeck()" class="btn btn-secondary" style="flex: 1;">Export Text</button>
+      </div>
+
+      <div style="display: flex; gap: 6px;">
+        <label class="btn btn-secondary" style="flex: 1; font-size: 11px; padding: 6px;">
+          Import JSON
+          <input type="file" id="json-import-input" accept=".json" onchange="importJSONDeck(event)" style="display: none;" />
+        </label>
+        
+        <button onclick="importTextDeckPrompt()" class="btn btn-secondary" style="flex: 1; font-size: 11px; padding: 6px;">
+          Import Text
+        </button>
+      </div>
+
+      <h3 style="margin-top: 2px;">Deck <span id="deck-count">0</span></h3>
+
+      <div id="deck-items" class="deck-items"></div>
+    </aside>
+
+  </div>
+
+  <script>
+    const COLOR_MAIN = '#ff9800'; // Naruto Orange
+    const COLOR_REINF = '#4fc3f7'; // Sasuke Blue
+    const COLOR_SIDE = '#f48fb1';  // Sakura Pink
+
+    let cardDatabase = [];
+    
+    let currentDeck = {
+      main: {},
+      reinf: {},
+      side: {}
+    };
+
+    let activeAddTarget = 'main'; // 'main', 'reinf', or 'side'
+    let currentInspectedCardNumber = null;
+    let decklistRenderPending = false;
+
+    function setAddTarget(target) {
+      if (activeAddTarget === target) return;
+      activeAddTarget = target;
+      document.getElementById('target-main').classList.toggle('active', target === 'main');
+      document.getElementById('target-reinf').classList.toggle('active', target === 'reinf');
+      document.getElementById('target-side').classList.toggle('active', target === 'side');
+    }
+
+    function getCardImageUrl(card) {
+      return `./naruto_ccg_sets_database/${card.setfolder}/${card.imgname}`;
+    }
+
+    async function initApp() {
+      try {
+        const response = await fetch('cards.json');
+        cardDatabase = await response.json();
+        
+        populateSetFilter();
+        filterCards();
+      } catch (err) {
+        console.error("Failed to load cards.json:", err);
+      }
+    }
+
+    function populateSetFilter() {
+      const setSelect = document.getElementById('set-filter');
+      const setMap = new Map();
+      cardDatabase.forEach(c => {
+        if (c.setfolder) {
+          const displayName = c.set || c.setfolder.replace(/_/g, ' ');
+          setMap.set(c.setfolder, displayName);
+        }
+      });
+
+      Array.from(setMap.entries()).sort((a,b) => a[1].localeCompare(b[1])).forEach(([folder, name]) => {
+        const opt = document.createElement('option');
+        opt.value = folder;
+        opt.textContent = name;
+        setSelect.appendChild(opt);
+      });
+    }
+
+    function getFilteredCards() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const selectedSet = document.getElementById('set-filter').value;
+      const selectedType = document.getElementById('type-filter').value;
+
+      return cardDatabase.filter(card => {
+        const nameMatch = card.name ? card.name.toLowerCase().includes(query) : false;
+        const numberMatch = card.cardnumber ? card.cardnumber.toLowerCase().includes(query) : false;
+        const matchesQuery = nameMatch || numberMatch;
+
+        const matchesSet = (selectedSet === 'ALL') || (card.setfolder === selectedSet);
+        const matchesType = (selectedType === 'ALL') || (card.cardtype && card.cardtype.toLowerCase() === selectedType.toLowerCase());
+
+        return matchesQuery && matchesSet && matchesType;
+      });
+    }
+
+    function filterCards() {
+      renderCards(getFilteredCards());
+    }
+
+    function getFormattedQtyHTML(cardNumber) {
+      const mainCount = currentDeck.main[cardNumber] ? currentDeck.main[cardNumber].count : 0;
+      const reinfCount = currentDeck.reinf[cardNumber] ? currentDeck.reinf[cardNumber].count : 0;
+      const sideCount = currentDeck.side[cardNumber] ? currentDeck.side[cardNumber].count : 0;
+
+      const parts = [];
+      if (mainCount > 0) {
+        parts.push(`<span style="color: ${COLOR_MAIN};">x${mainCount}</span>`);
+      }
+      if (reinfCount > 0) {
+        parts.push(`<span style="color: ${COLOR_REINF};">x${reinfCount}</span>`);
+      }
+      if (sideCount > 0) {
+        parts.push(`<span style="color: ${COLOR_SIDE};">x${sideCount}</span>`);
+      }
+
+      return parts.join('<span style="color: #666; font-weight: normal;"> / </span>');
+    }
+
+    function renderCards(cardsToRender) {
+      const grid = document.getElementById('card-grid');
+      grid.innerHTML = '';
+
+      cardsToRender.forEach(card => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'card-item';
+        cardEl.setAttribute('data-card-number', card.cardnumber);
+        cardEl.onclick = () => inspectCard(card);
+
+        cardEl.innerHTML = `
+          <img 
+            src="${getCardImageUrl(card)}" 
+            alt="${card.name}" 
+            loading="lazy" 
+            width="750" 
+            height="1050"
+          />
+          <div class="card-controls" onclick="event.stopPropagation()">
+            <button onclick="removeCard('${card.cardnumber}', activeAddTarget)">-</button>
+            <span class="card-qty">${getFormattedQtyHTML(card.cardnumber)}</span>
+            <button onclick="addCard('${card.cardnumber}', activeAddTarget)">+</button>
+          </div>
+        `;
+        grid.appendChild(cardEl);
+      });
+    }
+
+    function updateSingleCardQty(cardNumber) {
+      const cardTile = document.querySelector(`[data-card-number="${cardNumber}"]`);
+      if (!cardTile) return;
+
+      const qtySpan = cardTile.querySelector('.card-qty');
+      if (qtySpan) {
+        qtySpan.innerHTML = getFormattedQtyHTML(cardNumber);
+      }
+    }
+
+    function scheduleDecklistRender() {
+      if (decklistRenderPending) return;
+      decklistRenderPending = true;
+      requestAnimationFrame(() => {
+        renderDecklist();
+        decklistRenderPending = false;
+      });
+    }
+
+    function addCard(cardNumber, target = activeAddTarget) {
+      const card = cardDatabase.find(c => c.cardnumber === cardNumber);
+      if (!card) return;
+
+      const pool = currentDeck[target];
+      if (pool[cardNumber]) {
+        pool[cardNumber].count += 1;
+      } else {
+        pool[cardNumber] = { card: card, count: 1 };
+      }
+      
+      scheduleDecklistRender();
+      updateSingleCardQty(cardNumber);
+    }
+
+    function removeCard(cardNumber, target = activeAddTarget) {
+      const pool = currentDeck[target];
+      if (!pool[cardNumber]) return;
+
+      pool[cardNumber].count -= 1;
+      if (pool[cardNumber].count <= 0) {
+        delete pool[cardNumber];
+      }
+      
+      scheduleDecklistRender();
+      updateSingleCardQty(cardNumber);
+    }
+
+    function inspectCard(card) {
+      if (!card || currentInspectedCardNumber === card.cardnumber) return;
+      currentInspectedCardNumber = card.cardnumber;
+
+      const inspector = document.getElementById('inspector-content');
+
+      const hasCosts = (card.entrancecost !== '' && card.entrancecost !== undefined) || (card.handcost !== '' && card.handcost !== undefined);
+      const hasStats = (card.combath || card.supporth || card.combati || card.supporti);
+
+      inspector.innerHTML = `
+        <img src="${getCardImageUrl(card)}" class="inspector-img" alt="${card.name}" />
+        <div class="inspector-details">
+          <h4>${card.name || 'Unknown'}</h4>
+          <p><strong>Type:</strong> ${card.cardtype || '-'}</p>
+          ${card.symbol ? `<p><strong>Symbol:</strong> ${card.symbol}</p>` : ''}
+
+          ${hasCosts ? `
+            <div class="stat-row">
+              <span><strong>Entrance Cost:</strong> ${card.entrancecost !== '' ? card.entrancecost : '-'}</span>
+              <span><strong>Hand Cost:</strong> ${card.handcost !== '' ? card.handcost : '-'}</span>
+            </div>
+          ` : ''}
+
+          ${card.jutsucost ? `
+            <div class="stat-row">
+              <span><strong>Jutsu Cost:</strong> ${card.jutsucost}</span>
+            </div>
+          ` : ''}
+
+          ${card.requirement ? `<p><strong>Requirement:</strong> ${card.requirement}</p>` : ''}
+          ${card.target ? `<p><strong>Target:</strong> ${card.target}</p>` : ''}
+
+          ${hasStats ? `
+            <div class="stat-row">
+              <span><strong>Healthy:</strong> ${card.combath \vert{}\vert{} '-'}/${card.supporth || '-'}</span>
+              <span><strong>Injured:</strong> ${card.combati \vert{}\vert{} '-'}/${card.supporti || '-'}</span>
+            </div>
+          ` : ''}
+
+          ${card.attribute ? `<p><strong>Combat Attribute:</strong> ${card.attribute}</p>` : ''}
+          ${card.characteristics ? `<p><strong>Characteristics:</strong> ${card.characteristics}</p>` : ''}
+          
+          ${card.effect ? `<p>${card.effect}</p>` : ''}
+          ${card.flavor ? `<p><em>"${card.flavor}"</em></p>` : ''}
+          
+          <p><strong>Number:</strong> ${card.cardnumber || '-'}</p>
+          <p><strong>Set:</strong> ${card.set || card.setfolder || '-'}</p>
+        </div>
+      `;
+    }
+
+    function renderDecklist() {
+      const container = document.getElementById('deck-items');
+      const countEl = document.getElementById('deck-count');
+      container.innerHTML = '';
+
+      let mainTotal = 0;
+      let reinfTotal = 0;
+      let sideTotal = 0;
+
+      const createEntryHTML = (entry, targetKey, badgeColor) => {
+        return `
+          <div class="deck-entry">
+            <span class="deck-qty" style="color: ${badgeColor}">${entry.count}x</span>
+            <span class="deck-name" onclick="inspectCard(cardDatabase.find(c => c.cardnumber === '${entry.card.cardnumber}'))">
+              ${entry.card.name} <span class="deck-number">[${entry.card.cardnumber || ''}]</span>
+            </span>
+            <div class="deck-entry-controls">
+              <button onclick="removeCard('${entry.card.cardnumber}', '${targetKey}')">-</button>
+              <button onclick="addCard('${entry.card.cardnumber}', '${targetKey}')">+</button>
+            </div>
+          </div>
+        `;
+      };
+
+      // 1. MAINBOARD CATEGORIES
+      const categories = { 'Ninja': [], 'Jutsu': [], 'Mission': [], 'Client': [], 'Other': [] };
+
+      Object.values(currentDeck.main).forEach(entry => {
+        mainTotal += entry.count;
+        const type = entry.card.cardtype || 'Other';
+        if (categories[type]) {
+          categories[type].push(entry);
+        } else {
+          categories['Other'].push(entry);
+        }
+      });
+
+      Object.keys(categories).forEach(type => {
+        const entries = categories[type];
+        if (entries.length > 0) {
+          const catCount = entries.reduce((sum, e) => sum + e.count, 0);
+          const catHeader = document.createElement('div');
+          catHeader.className = 'deck-section-title';
+          catHeader.style.color = COLOR_MAIN;
+          catHeader.innerText = `${type}s (${catCount})`;
+          container.appendChild(catHeader);
+
+          entries.forEach(entry => {
+            const div = document.createElement('div');
+            div.innerHTML = createEntryHTML(entry, 'main', COLOR_MAIN);
+            container.appendChild(div.firstElementChild);
+          });
+        }
+      });
+
+      // 2. REINFORCEMENTS
+      const reinfEntries = Object.values(currentDeck.reinf);
+      reinfTotal = reinfEntries.reduce((sum, e) => sum + e.count, 0);
+      if (reinfEntries.length > 0 || activeAddTarget === 'reinf') {
+        const reinfHeader = document.createElement('div');
+        reinfHeader.className = 'deck-section-title';
+        reinfHeader.style.color = COLOR_REINF;
+        reinfHeader.innerText = `Reinforcements (${reinfTotal})`;
+        container.appendChild(reinfHeader);
+
+        reinfEntries.forEach(entry => {
+          const div = document.createElement('div');
+          div.innerHTML = createEntryHTML(entry, 'reinf', COLOR_REINF);
+          container.appendChild(div.firstElementChild);
+        });
+      }
+
+      // 3. SIDEBOARD
+      const sideEntries = Object.values(currentDeck.side);
+      sideTotal = sideEntries.reduce((sum, e) => sum + e.count, 0);
+      if (sideEntries.length > 0 || activeAddTarget === 'side') {
+        const sideHeader = document.createElement('div');
+        sideHeader.className = 'deck-section-title';
+        sideHeader.style.color = COLOR_SIDE;
+        sideHeader.innerText = `Sideboard (${sideTotal})`;
+        container.appendChild(sideHeader);
+
+        sideEntries.forEach(entry => {
+          const div = document.createElement('div');
+          div.innerHTML = createEntryHTML(entry, 'side', COLOR_SIDE);
+          container.appendChild(div.firstElementChild);
+        });
+      }
+
+      let countParts = [`<span style="color: ${COLOR_MAIN};">${mainTotal}</span>`];
+      if (reinfTotal > 0 || activeAddTarget === 'reinf') {
+        countParts.push(`<span style="color: ${COLOR_REINF};">${reinfTotal}</span>`);
+      }
+      if (sideTotal > 0 || activeAddTarget === 'side') {
+        countParts.push(`<span style="color: ${COLOR_SIDE};">${sideTotal}</span>`);
+      }
+
+      countEl.innerHTML = countParts.join('<span style="color: #666; font-weight: normal;"> / </span>');
+    }
+
+    function updateUI() {
+      scheduleDecklistRender();
+      renderCards(getFilteredCards());
+    }
+
+    function exportToTTS() {
+      const allMainCards = [];
+      Object.values(currentDeck.main).forEach(entry => {
+        for (let i = 0; i < entry.count; i++) allMainCards.push(entry.card);
+      });
+
+      if (allMainCards.length === 0) {
+        alert("Mainboard is empty!");
+        return;
+      }
+
+      const baseURL = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
+      const cardBackURL = `${baseURL}/cardback.webp`;
+
+      const createTTSDeckObject = (cardList, deckName) => {
+        const customDeckDict = {};
+        const containedObjects = [];
+        const deckIDs = [];
+
+        cardList.forEach((card, index) => {
+          const deckKey = index + 1;
+          const cardId = deckKey * 100;
+          const cleanImgPath = getCardImageUrl(card).replace(/^\.\//, '');
+          const fullImageUrl = `${baseURL}/${cleanImgPath}`;
+
+          deckIDs.push(cardId);
+          customDeckDict[deckKey] = {
+            "FaceURL": fullImageUrl,
+            "BackURL": cardBackURL,
+            "NumWidth": 1, "NumHeight": 1,
+            "BackIsHidden": true, "UniqueBack": false
+          };
+
+          containedObjects.push({
+            "Name": "Card",
+            "Transform": { "posX": 0, "posY": 0, "posZ": 0, "rotX": 0, "rotY": 180, "rotZ": 180, "scaleX": 1.25, "scaleY": 1, "scaleZ": 1.25 },
+            "Nickname": card.name,
+            "Description": card.cardnumber,
+            "CardID": cardId,
+            "CustomDeck": { [deckKey]: customDeckDict[deckKey] }
+          });
+        });
+
+        return {
+          "Name": "DeckCustom",
+          "Nickname": deckName,
+          "Transform": { "posX": 0, "posY": 1, "posZ": 0, "rotX": 0, "rotY": 180, "rotZ": 180, "scaleX": 1.25, "scaleY": 1, "scaleZ": 1.25 },
+          "DeckIDs": deckIDs,
+          "CustomDeck": customDeckDict,
+          "ContainedObjects": containedObjects
+        };
+      };
+
+      const objectStates = [createTTSDeckObject(allMainCards, "Mainboard")];
+
+      const reinfCards = [];
+      Object.values(currentDeck.reinf).forEach(entry => {
+        for (let i = 0; i < entry.count; i++) reinfCards.push(entry.card);
+      });
+      if (reinfCards.length > 0) objectStates.push(createTTSDeckObject(reinfCards, "Reinforcements"));
+
+      const sideCards = [];
+      Object.values(currentDeck.side).forEach(entry => {
+        for (let i = 0; i < entry.count; i++) sideCards.push(entry.card);
+      });
+      if (sideCards.length > 0) objectStates.push(createTTSDeckObject(sideCards, "Sideboard"));
+
+      const ttsSaveObject = { "SaveName": "", "GameMode": "", "Date": "", "ObjectStates": objectStates };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ttsSaveObject, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "naruto_deck.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function exportTextDeck() {
+      let textData = "// Mainboard\n";
+      Object.values(currentDeck.main).forEach(entry => {
+        textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
+      });
+
+      if (Object.keys(currentDeck.reinf).length > 0) {
+        textData += "\n// Reinforcements\n";
+        Object.values(currentDeck.reinf).forEach(entry => {
+          textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
+        });
+      }
+
+      if (Object.keys(currentDeck.side).length > 0) {
+        textData += "\n// Sideboard\n";
+        Object.values(currentDeck.side).forEach(entry => {
+          textData += `${entry.count}x ${entry.card.name} [${entry.card.cardnumber}]\n`;
+        });
+      }
+
+      const blob = new Blob([textData], { type: 'text/plain;charset=utf-8' });
+      const anchor = document.createElement('a');
+      anchor.href = URL.createObjectURL(blob);
+      anchor.download = "naruto_decklist.txt";
+      anchor.click();
+      anchor.remove();
+    }
+
+    function importJSONDeck(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          currentDeck = { main: {}, reinf: {}, side: {} };
+
+          if (data.ObjectStates) {
+            data.ObjectStates.forEach(deckObj => {
+              let targetKey = 'main';
+              if (deckObj.Nickname === 'Reinforcements') targetKey = 'reinf';
+              if (deckObj.Nickname === 'Sideboard') targetKey = 'side';
+
+              if (deckObj.ContainedObjects) {
+                deckObj.ContainedObjects.forEach(obj => {
+                  const cardNum = obj.Description;
+                  const matchedCard = cardDatabase.find(c => c.cardnumber && c.cardnumber.toLowerCase() === cardNum.toLowerCase());
+                  if (matchedCard) {
+                    const pool = currentDeck[targetKey];
+                    if (pool[matchedCard.cardnumber]) {
+                      pool[matchedCard.cardnumber].count += 1;
+                    } else {
+                      pool[matchedCard.cardnumber] = { card: matchedCard, count: 1 };
                     }
-                    return {
-                        ...card,
-                        image_path: imgPath
-                    };
+                  }
                 });
+              }
+            });
+            updateUI();
+          } else {
+            alert("Unrecognized JSON format.");
+          }
+          event.target.value = '';
+        } catch (err) {
+          alert("Error parsing JSON: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
 
-                populateSetFilter();
-                renderCards(cardDatabase);
-            } catch (error) {
-                console.error("Failed to load database from exports/card_database.json:", error);
-                document.getElementById('cardGrid').innerHTML = `<p style="color: #ff4444;">Error loading database (exports/card_database.json). Run pipeline to generate JSON.</p>`;
+    function importTextDeckPrompt() {
+      const input = prompt("Paste your decklist here (supports section headers like // Sideboard):");
+      if (!input) return;
+
+      currentDeck = { main: {}, reinf: {}, side: {} };
+      let currentSection = 'main';
+      const lines = input.split('\n');
+
+      lines.forEach(line => {
+        const cleanLine = line.trim();
+        if (!cleanLine) return;
+
+        if (cleanLine.toLowerCase().includes('reinforcement')) {
+          currentSection = 'reinf';
+          return;
+        }
+        if (cleanLine.toLowerCase().includes('sideboard')) {
+          currentSection = 'side';
+          return;
+        }
+        if (cleanLine.toLowerCase().includes('main')) {
+          currentSection = 'main';
+          return;
+        }
+
+        const match = cleanLine.match(/^(\d+)x?\s+(.+?)(?:\s+\[(.*?)\])?$/i);
+        if (match) {
+          const qty = parseInt(match[1], 10);
+          const cardName = match[2].trim().toLowerCase();
+          const cardNumber = match[3] ? match[3].trim().toLowerCase() : null;
+
+          const matchedCard = cardDatabase.find(c => {
+            if (cardNumber && c.cardnumber) return c.cardnumber.toLowerCase() === cardNumber;
+            return c.name && c.name.toLowerCase() === cardName;
+          });
+
+          if (matchedCard) {
+            const pool = currentDeck[currentSection];
+            if (pool[matchedCard.cardnumber]) {
+              pool[matchedCard.cardnumber].count += qty;
+            } else {
+              pool[matchedCard.cardnumber] = { card: matchedCard, count: qty };
             }
+          }
         }
+      });
 
-        function populateSetFilter() {
-            const setFilter = document.getElementById('setFilter');
-            const sets = [...new Set(cardDatabase.map(c => c.card_set).filter(Boolean))];
-            
-            sets.forEach(setName => {
-                const option = document.createElement('option');
-                option.value = setName;
-                option.textContent = setName;
-                setFilter.appendChild(option);
-            });
-        }
+      updateUI();
+    }
 
-        function renderCards(cardsToRender) {
-            const grid = document.getElementById('cardGrid');
-            grid.innerHTML = '';
-
-            if (cardsToRender.length === 0) {
-                grid.innerHTML = '<p>No cards match the selected filters.</p>';
-                return;
-            }
-
-            cardsToRender.forEach(card => {
-                const cardEl = document.createElement('div');
-                cardEl.className = 'card-item';
-                cardEl.innerHTML = `
-                    <img src="${card.image_path}" alt="${card.card_name}" loading="lazy" onerror="this.src='https://via.placeholder.com/160x220?text=No+Image'">
-                    <div class="card-info">
-                        <div class="card-title">${card.card_name || 'Unknown Card'}</div>
-                        <div class="card-meta">
-                            <span>${card.card_number || ''}</span>
-                            <span class="stats-badge">${card.symbol || 'None'}</span>
-                        </div>
-                    </div>
-                `;
-                cardEl.addEventListener('click', () => addToDeck(card));
-                grid.appendChild(cardEl);
-            });
-        }
-
-        function filterCards() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const selectedSet = document.getElementById('setFilter').value;
-            const selectedSymbol = document.getElementById('symbolFilter').value;
-
-            const filtered = cardDatabase.filter(card => {
-                const nameMatch = (card.card_name || '').toLowerCase().includes(searchTerm);
-                const codeMatch = (card.card_number || '').toLowerCase().includes(searchTerm);
-                const setMatch = !selectedSet || card.card_set === selectedSet;
-                const symbolMatch = !selectedSymbol || (card.symbol || '').toLowerCase() === selectedSymbol.toLowerCase();
-
-                return (nameMatch || codeMatch) && setMatch && symbolMatch;
-            });
-
-            renderCards(filtered);
-        }
-
-        function addToDeck(card) {
-            currentDeck.push(card);
-            updateDeckUI();
-        }
-
-        function updateDeckUI() {
-            document.getElementById('deckStats').textContent = `Total Cards: ${currentDeck.length}`;
-            const list = document.getElementById('deckList');
-            list.innerHTML = '';
-
-            const counts = {};
-            currentDeck.forEach(c => {
-                const key = `${c.card_name} (${c.card_number})`;
-                counts[key] = (counts[key] || 0) + 1;
-            });
-
-            Object.entries(counts).forEach(([name, count]) => {
-                const li = document.createElement('li');
-                li.textContent = `${count}x ${name}`;
-                li.style.padding = '4px 0';
-                li.style.borderBottom = '1px solid var(--border-color)';
-                list.appendChild(li);
-            });
-        }
-
-        // Event Listeners
-        document.getElementById('searchInput').addEventListener('input', filterCards);
-        document.getElementById('setFilter').addEventListener('change', filterCards);
-        document.getElementById('symbolFilter').addEventListener('change', filterCards);
-
-        // Initial Load
-        document.addEventListener('DOMContentLoaded', loadCards);
-    </script>
+    window.onload = initApp;
+  </script>
 </body>
 </html>
