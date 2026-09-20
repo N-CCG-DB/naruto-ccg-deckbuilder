@@ -15,14 +15,12 @@ STRIPPABLE_SUFFIX_LETTERS = set("ear")
 
 # ---- Set folder normalization ----
 def normalize_setfolder(folder):
-    """Convert 'set_17.5_...' to 'set_175_...' (strip dots)."""
     if not folder:
         return folder
     return folder.replace(".", "")
 
 # ---- Card number normalization for matching ----
 def normalize_cardnum(num):
-    """Lowercase, strip spaces, strip leading zeros in numeric portion."""
     if not num:
         return ""
     s = num.strip().lower().replace(" ", "")
@@ -60,33 +58,39 @@ def split_stats(combined):
         return parts[0].strip(), parts[1].strip()
     return "", ""
 
+# ---- Is this DB entry a stub? ----
+def is_stub(entry):
+    """
+    An entry is a stub if its card_name equals its card_number,
+    or if it has no card_name at all. Stubs have no real data.
+    """
+    if not entry:
+        return True
+    name = (entry.get("card_name") or "").strip()
+    num = (entry.get("card_number") or "").strip()
+    if not name:
+        return True
+    if name.lower() == num.lower():
+        return True
+    return False
+
 # ---- Strip card number suffix from a name ----
 def strip_cardnum_from_name(name, cardnumber):
-    """
-    If the name ends with the card number (with or without a space), remove it.
-    Handles variants: for cardnumber 'm429', strips ' M429', 'M429', ' M429E', etc.
-    Also tries the base (without strippable suffix letters).
-    Returns cleaned name, or original if nothing to strip.
-    """
     if not name or not cardnumber:
         return name
 
     name_clean = name.strip()
     num_clean = cardnumber.strip()
 
-    # Build candidate suffixes to strip: full number, then progressively
-    # remove trailing strippable letters.
     candidates = [num_clean]
     current = num_clean
     while len(current) > 1 and current[-1].lower() in STRIPPABLE_SUFFIX_LETTERS:
         current = current[:-1]
         candidates.append(current)
 
-    # Sort by length, longest first, so we strip the most specific match
     candidates.sort(key=len, reverse=True)
 
     for suffix in candidates:
-        # Match " NAME SUFFIX" or "NAMESUFFIX" at the end (case-insensitive)
         pattern = re.compile(r"\s*" + re.escape(suffix) + r"\s*$", re.IGNORECASE)
         new_name = pattern.sub("", name_clean)
         if new_name != name_clean:
@@ -123,23 +127,28 @@ for entry in database:
 
     key = normalize_cardnum(num)
     if key:
-        if key in db_by_num:
-            db_duplicates[key].append(entry)
-        else:
+        # Prefer non-stub entries when duplicates exist
+        existing = db_by_num.get(key)
+        if existing is None or is_stub(existing):
             db_by_num[key] = entry
+        else:
+            db_duplicates[key].append(entry)
     if img_stem:
-        db_by_img[img_stem] = entry
+        existing = db_by_img.get(img_stem)
+        if existing is None or is_stub(existing):
+            db_by_img[img_stem] = entry
 
 # ---- Helper: look up base card data (with strippable suffix fallback) ----
 def find_db_entry(cardnumber):
     """
-    Look up an entry for cardnumber. If not found, progressively strip
-    trailing strippable letters ('e', 'a', 'r') and retry.
-    Never strips 'b'. Returns (entry, was_stripped) or (None, False).
+    Look up an entry for cardnumber. If the found entry is a stub (no data),
+    or if no entry exists, progressively strip trailing strippable letters
+    ('e', 'a', 'r') and retry. Never strips 'b'.
+    Returns (entry, was_stripped) or (None, False).
     """
     key = normalize_cardnum(cardnumber)
     entry = db_by_num.get(key)
-    if entry is not None:
+    if entry is not None and not is_stub(entry):
         return entry, False
 
     # Progressively strip strippable letters
@@ -148,9 +157,10 @@ def find_db_entry(cardnumber):
         current = current[:-1]
         key = normalize_cardnum(current)
         entry = db_by_num.get(key)
-        if entry is not None:
+        if entry is not None and not is_stub(entry):
             return entry, True
 
+    # Nothing better found — return the stub if that's all we had
     return None, False
 
 # ---- Match ----
@@ -158,7 +168,7 @@ matched = 0
 matched_direct = 0
 matched_base = 0
 unmatched = []
-base_fallback_used = []  # informational: cards that got data from their base
+base_fallback_used = []
 
 for img_entry in images:
     img_num = img_entry.get("cardnumber", "")
@@ -168,6 +178,8 @@ for img_entry in images:
 
     if db_entry is None and img_stem:
         db_entry = db_by_img.get(img_stem)
+        if db_entry is not None and is_stub(db_entry):
+            db_entry = None  # stub from img lookup doesn't count
 
     if db_entry is None:
         unmatched.append(img_entry)
@@ -180,7 +192,6 @@ for img_entry in images:
     else:
         matched_direct += 1
 
-    # Copy data
     raw_name = db_entry.get("card_name", "") or img_entry.get("name", "")
     img_entry["name"] = strip_cardnum_from_name(raw_name, db_entry.get("card_number", img_num))
 
@@ -188,7 +199,6 @@ for img_entry in images:
     if db_type:
         img_entry["cardtype"] = db_type
 
-    # Costs — suppress for Jutsu at the data layer for safety
     is_jutsu = (img_entry.get("cardtype", "").strip().lower() == "jutsu")
     if is_jutsu:
         img_entry["entrancecost"] = ""
@@ -198,7 +208,6 @@ for img_entry in images:
         img_entry["handcost"] = db_entry.get("hand_cost", "")
     img_entry["jutsucost"] = db_entry.get("chakra_cost", "")
 
-    # Stats
     h_atk, h_sup = split_stats(db_entry.get("healthy_stats", ""))
     i_atk, i_sup = split_stats(db_entry.get("injured_stats", ""))
     img_entry["combath"] = h_atk
@@ -209,7 +218,6 @@ for img_entry in images:
     img_entry["symbol"] = db_entry.get("symbol", "")
     img_entry["attribute"] = db_entry.get("characteristics", "")
 
-    # Set folder — keep the one from images (matches disk), normalize dots
     img_entry["setfolder"] = normalize_setfolder(img_entry.get("setfolder", ""))
 
 # ---- Report ----
@@ -220,11 +228,11 @@ print(f"Unmatched:            {len(unmatched)}")
 print()
 
 if base_fallback_used:
-    print(f"Cards that used base-card data (first 30):")
-    for cn in base_fallback_used[:30]:
+    print(f"Cards that used base-card data (first 40):")
+    for cn in base_fallback_used[:40]:
         print(f"  {cn}")
-    if len(base_fallback_used) > 30:
-        print(f"  ... and {len(base_fallback_used) - 30} more")
+    if len(base_fallback_used) > 40:
+        print(f"  ... and {len(base_fallback_used) - 40} more")
     print()
 
 if unmatched:
