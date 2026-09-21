@@ -11,9 +11,9 @@
     "handcost": "0",
     "symbol": "Lightning",
     "combath": "1",
-    "supporth": "1",
+    "supporth": "0",
     "combati": "3",
-    "supporti": "1",
+    "supporti": "0",
     "attribute": "Oil",
     "effect": "",
     "jutsucost": "",
@@ -33,7 +33,7 @@
     "handcost": "0",
     "symbol": "Fire",
     "combath": "3",
-    "supporth": "1",
+    "supporth": "0",
     "combati": "0",
     "supporti": "0",
     "attribute": "Taijutsu",
@@ -118,7 +118,7 @@
     "set": "Promos",
     "image_path": "promos/mus049.webp",
     "entrancecost": "3",
-    "handcost": "0",
+    "handcost": "1",
     "symbol": "Fire",
     "combath": "",
     "supporth": "",
@@ -365,13 +365,13 @@
     "combath": "0",
     "supporth": "0",
     "combati": "3",
-    "supporti": "1",
+    "supporti": "0",
     "attribute": "Oil",
     "effect": "",
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Genin/Male/Growth"
   },
   {
     "cardnumber": "n224",
@@ -393,7 +393,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Genin/Male/Growth/Clone Status"
   },
   {
     "cardnumber": "n270a",
@@ -415,7 +415,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Sand/Genin/Female/Mental Power:1"
   },
   {
     "cardnumber": "n295a",
@@ -426,18 +426,18 @@
     "set": "Promos",
     "image_path": "promos/n295a.webp",
     "entrancecost": "4",
-    "handcost": "1",
+    "handcost": "0",
     "symbol": "Wind",
     "combath": "5",
     "supporth": "2",
     "combati": "4",
-    "supporti": "1",
+    "supporti": "0",
     "attribute": "Sand",
     "effect": "",
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Sand/Genin/Male"
   },
   {
     "cardnumber": "n311",
@@ -449,7 +449,7 @@
     "image_path": "promos/n311.webp",
     "entrancecost": "1",
     "handcost": "0",
-    "symbol": "earth",
+    "symbol": "Еarth",
     "combath": "1",
     "supporth": "1",
     "combati": "1",
@@ -459,7 +459,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Genin/Female/Growth/Mental Power:1"
   },
   {
     "cardnumber": "n311a",
@@ -471,7 +471,7 @@
     "image_path": "promos/n311a.webp",
     "entrancecost": "1",
     "handcost": "0",
-    "symbol": "earth",
+    "symbol": "Еarth",
     "combath": "1",
     "supporth": "1",
     "combati": "1",
@@ -481,7 +481,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Genin/Female/Growth/Mental Power:1"
   },
   {
     "cardnumber": "n324",
@@ -503,7 +503,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Akatsuki/Rogue Ninja/Jonin/Male"
   },
   {
     "cardnumber": "n324a",
@@ -525,7 +525,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Akatsuki/Rogue Ninja/Jonin/Male"
   },
   {
     "cardnumber": "n370",
@@ -547,7 +547,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Satoosa/Male/Mental Power:3"
   },
   {
     "cardnumber": "n372",
@@ -569,7 +569,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Satoosa/Sannin/Female/Medical/Mental Power:3/Name:Tsunade"
   },
   {
     "cardnumber": "n419a",
@@ -580,7 +580,7 @@
     "set": "Promos",
     "image_path": "promos/n419a.webp",
     "entrancecost": "3",
-    "handcost": "1",
+    "handcost": "0",
     "symbol": "Wind",
     "combath": "4",
     "supporth": "3",
@@ -591,7 +591,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Genin/Female/Medical/Growth/Mental Power:3"
   },
   {
     "cardnumber": "n453",
@@ -613,7 +613,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Akatsuki/Rogue Ninja/Jonin/Male/Ambush/Sharingan Eye"
   },
   {
     "cardnumber": "n461e",
@@ -635,7 +635,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Sand/Male/Jonin"
   },
   {
     "cardnumber": "n465a",
@@ -657,7 +657,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Sand/Male/Satoosa/Name: Gaara of the Desert"
   },
   {
     "cardnumber": "n473",
@@ -679,7 +679,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Male/Jonin/Sharingan Eye/Mental Power:3"
   },
   {
     "cardnumber": "n480",
@@ -701,7 +701,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Akatsuki/Rogue Ninja/Jonin/Male"
   },
   {
     "cardnumber": "n480a",
@@ -723,7 +723,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Akatsuki/Rogue Ninja/Jonin/Male"
   },
   {
     "cardnumber": "n495",
@@ -745,7 +745,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Sand/Jonin/Male/Female/Mental Power:2/Platoon"
   },
   {
     "cardnumber": "n524a",
@@ -1101,7 +1101,7 @@
   },
   {
     "cardnumber": "nus027ae",
-    "name": "nus027ae",
+    "name": "Jiraiya",
     "cardtype": "Ninja",
     "setfolder": "promos",
     "imgname": "nus027ae.webp",
@@ -1123,7 +1123,7 @@
   },
   {
     "cardnumber": "nus035ae",
-    "name": "nus035ae",
+    "name": "Haku",
     "cardtype": "Ninja",
     "setfolder": "promos",
     "imgname": "nus035ae.webp",
@@ -1431,7 +1431,7 @@
   },
   {
     "cardnumber": "pr009e",
-    "name": "pr009e",
+    "name": "Kakashi Hatake",
     "cardtype": "Ninja",
     "setfolder": "promos",
     "imgname": "pr009e.webp",
@@ -3346,7 +3346,7 @@
   {
     "cardnumber": "pr089",
     "name": "Sakura Haruno",
-    "cardtype": "",
+    "cardtype": "Ninja",
     "setfolder": "promos",
     "imgname": "pr089.webp",
     "set": "Promos",
@@ -3807,8 +3807,8 @@
   },
   {
     "cardnumber": "prus014e",
-    "name": "prus014e",
-    "cardtype": "",
+    "name": "Multi Shadow Clone Jutsu",
+    "cardtype": "Jutsu",
     "setfolder": "promos",
     "imgname": "prus014e.webp",
     "set": "Promos",
@@ -5369,7 +5369,7 @@
   },
   {
     "cardnumber": "jus091e",
-    "name": "jus091e",
+    "name": "Counter by the Sharingan Eye",
     "cardtype": "Jutsu",
     "setfolder": "set_10_lineage_of_the_legends",
     "imgname": "jus091e.webp",
@@ -6359,7 +6359,7 @@
   },
   {
     "cardnumber": "mus091e",
-    "name": "mus091e",
+    "name": "Scum Recipe",
     "cardtype": "Mission",
     "setfolder": "set_10_lineage_of_the_legends",
     "imgname": "mus091e.webp",
@@ -7283,7 +7283,7 @@
   },
   {
     "cardnumber": "n365e",
-    "name": "n365e",
+    "name": "Itachi Uchiha",
     "cardtype": "Ninja",
     "setfolder": "set_10_lineage_of_the_legends",
     "imgname": "n365e.webp",
@@ -7415,7 +7415,7 @@
   },
   {
     "cardnumber": "n371e",
-    "name": "n371e",
+    "name": "The Fourth Hokage",
     "cardtype": "Ninja",
     "setfolder": "set_10_lineage_of_the_legends",
     "imgname": "n371e.webp",
@@ -8031,7 +8031,7 @@
   },
   {
     "cardnumber": "nus103e",
-    "name": "nus103e",
+    "name": "Shukaku",
     "cardtype": "Ninja",
     "setfolder": "set_10_lineage_of_the_legends",
     "imgname": "nus103e.webp",
@@ -9373,7 +9373,7 @@
   },
   {
     "cardnumber": "j377e",
-    "name": "j377e",
+    "name": "Rasengan",
     "cardtype": "Jutsu",
     "setfolder": "set_11_approaching_wind",
     "imgname": "j377e.webp",
@@ -9527,7 +9527,7 @@
   },
   {
     "cardnumber": "j384e",
-    "name": "j384e",
+    "name": "Water Style: Water Dragon Jutsu",
     "cardtype": "Jutsu",
     "setfolder": "set_11_approaching_wind",
     "imgname": "j384e.webp",
@@ -9769,7 +9769,7 @@
   },
   {
     "cardnumber": "m330e",
-    "name": "m330e",
+    "name": "Temporizing Threat",
     "cardtype": "Mission",
     "setfolder": "set_11_approaching_wind",
     "imgname": "m330e.webp",
@@ -13157,7 +13157,7 @@
   },
   {
     "cardnumber": "j435e",
-    "name": "j435e",
+    "name": "Reaper Death Seal",
     "cardtype": "Jutsu",
     "setfolder": "set_12_a_new_chronicle",
     "imgname": "j435e.webp",
@@ -14543,7 +14543,7 @@
   },
   {
     "cardnumber": "n461e",
-    "name": "n461e",
+    "name": "Kankuro",
     "cardtype": "Ninja",
     "setfolder": "set_12_a_new_chronicle",
     "imgname": "n461e.webp",
@@ -15049,7 +15049,7 @@
   },
   {
     "cardnumber": "n484e",
-    "name": "n484e",
+    "name": "Crow",
     "cardtype": "Ninja",
     "setfolder": "set_12_a_new_chronicle",
     "imgname": "n484e.webp",
@@ -15071,7 +15071,7 @@
   },
   {
     "cardnumber": "n485e",
-    "name": "n485e",
+    "name": "Black Ant",
     "cardtype": "Ninja",
     "setfolder": "set_12_a_new_chronicle",
     "imgname": "n485e.webp",
@@ -15093,7 +15093,7 @@
   },
   {
     "cardnumber": "n486e",
-    "name": "n486e",
+    "name": "Salamander",
     "cardtype": "Ninja",
     "setfolder": "set_12_a_new_chronicle",
     "imgname": "n486e.webp",
@@ -15467,7 +15467,7 @@
   },
   {
     "cardnumber": "n503e",
-    "name": "n503e",
+    "name": "Double-Headed Wolf",
     "cardtype": "Ninja",
     "setfolder": "set_12_a_new_chronicle",
     "imgname": "n503e.webp",
@@ -15687,7 +15687,7 @@
   },
   {
     "cardnumber": "n513e",
-    "name": "n513e",
+    "name": "Neji Hyuga",
     "cardtype": "Ninja",
     "setfolder": "set_12_a_new_chronicle",
     "imgname": "n513e.webp",
@@ -17843,7 +17843,7 @@
   },
   {
     "cardnumber": "m452e",
-    "name": "m452e",
+    "name": "Corps in Black",
     "cardtype": "Mission",
     "setfolder": "set_13_fateful_reunion",
     "imgname": "m452e.webp",
@@ -18305,7 +18305,7 @@
   },
   {
     "cardnumber": "n540e",
-    "name": "n540e",
+    "name": "Father and Mother",
     "cardtype": "Ninja",
     "setfolder": "set_13_fateful_reunion",
     "imgname": "n540e.webp",
@@ -18327,7 +18327,7 @@
   },
   {
     "cardnumber": "n541e",
-    "name": "n541e",
+    "name": "Deidara",
     "cardtype": "Ninja",
     "setfolder": "set_13_fateful_reunion",
     "imgname": "n541e.webp",
@@ -18481,7 +18481,7 @@
   },
   {
     "cardnumber": "n548e",
-    "name": "n548e",
+    "name": "Sasuke Uchiha",
     "cardtype": "Ninja",
     "setfolder": "set_13_fateful_reunion",
     "imgname": "n548e.webp",
@@ -19075,7 +19075,7 @@
   },
   {
     "cardnumber": "n575e",
-    "name": "n575e",
+    "name": "Naruto Uzumaki",
     "cardtype": "Ninja",
     "setfolder": "set_13_fateful_reunion",
     "imgname": "n575e.webp",
@@ -19779,7 +19779,7 @@
   },
   {
     "cardnumber": "j513e",
-    "name": "j513e",
+    "name": "Tricky Move",
     "cardtype": "Jutsu",
     "setfolder": "set_14_emerging_alliance",
     "imgname": "j513e.webp",
@@ -61073,7 +61073,7 @@
   },
   {
     "cardnumber": "n1379",
-    "name": "Double Headed Wolf",
+    "name": "Double-Headed Wolf",
     "cardtype": "Ninja",
     "setfolder": "set_24_sages_legacy",
     "imgname": "n1379.webp",
