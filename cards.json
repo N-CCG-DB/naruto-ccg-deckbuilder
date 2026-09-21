@@ -19,7 +19,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Genin/Male/Growth"
   },
   {
     "cardnumber": "ex002",
@@ -41,7 +41,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Genin/Male/Sharingan Eye"
   },
   {
     "cardnumber": "m621",
@@ -151,7 +151,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Genin/Male/Sharingan Eye/Growth"
   },
   {
     "cardnumber": "n124a",
@@ -173,7 +173,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Jonin/Male"
   },
   {
     "cardnumber": "n140a",
@@ -184,18 +184,18 @@
     "set": "Promos",
     "image_path": "promos/n140a.webp",
     "entrancecost": "2",
-    "handcost": "1",
+    "handcost": "0",
     "symbol": "Earth",
     "combath": "3",
-    "supporth": "1",
+    "supporth": "0",
     "combati": "3",
-    "supporti": "1",
+    "supporti": "0",
     "attribute": "Taijutsu",
     "effect": "",
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Genin/Male/Byakugan/Growth"
   },
   {
     "cardnumber": "n145",
@@ -217,7 +217,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Sand/Genin/Male"
   },
   {
     "cardnumber": "n146",
@@ -239,7 +239,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Sand/Genin/Female/Mental Power:1"
   },
   {
     "cardnumber": "n146a",
@@ -261,7 +261,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Sand/Genin/Female/Mental Power:1"
   },
   {
     "cardnumber": "n163a",
@@ -283,7 +283,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Satoosa/Male/Mental Power:3"
   },
   {
     "cardnumber": "n168",
@@ -305,7 +305,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Satoosa/Male/Mental Power:2"
   },
   {
     "cardnumber": "n168a",
@@ -327,7 +327,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Leaf/Satoosa/Male/Mental Power:2"
   },
   {
     "cardnumber": "n170a",
@@ -349,7 +349,7 @@
     "jutsucost": "",
     "rarity": "",
     "flavor": "",
-    "characteristics": ""
+    "characteristics": "Sand/Genin/Male"
   },
   {
     "cardnumber": "n187a",
