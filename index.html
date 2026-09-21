@@ -349,12 +349,20 @@
   </div>
 
   <script>
+    // ============================================================
+    // INSPECTOR MODE
+    // true  = minimal (name, type, number, set only)
+    // false = full (all card details)
+    // Change this line and refresh the page to switch modes.
+    // ============================================================
+    const MINIMAL_INSPECTOR = true;
+
     const COLOR_MAIN = '#ff9800';
     const COLOR_REINF = '#4fc3f7';
     const COLOR_SIDE = '#f48fb1';
 
     let cardDatabase = [];
-    let setList = [];  // [{folder, display}, ...] loaded from sets.json
+    let setList = [];
 
     let currentDeck = {
       main: {},
@@ -364,6 +372,7 @@
 
     let activeAddTarget = 'main';
     let currentInspectedCardNumber = null;
+    let lastInspectedCard = null;
     let decklistRenderPending = false;
 
     function setAddTarget(target) {
@@ -378,7 +387,6 @@
       return `./cards_database/${card.setfolder}/${card.imgname}`;
     }
 
-    // Get display name for a set folder. Falls back to raw folder name.
     function getSetDisplayName(folder) {
       const entry = setList.find(s => s.folder === folder);
       return entry ? entry.display : folder.replace(/_/g, ' ');
@@ -402,10 +410,8 @@
 
     function populateSetFilter() {
       const setSelect = document.getElementById('set-filter');
-      // Reset to just the "All Sets" option
       setSelect.innerHTML = '<option value="ALL">All Sets</option>';
 
-      // Only show sets that actually appear in the card database
       const presentFolders = new Set(cardDatabase.map(c => c.setfolder));
 
       setList.forEach(({ folder, display }) => {
@@ -518,10 +524,32 @@
     function inspectCard(card) {
       if (!card || currentInspectedCardNumber === card.cardnumber) return;
       currentInspectedCardNumber = card.cardnumber;
+      lastInspectedCard = card;
+      renderInspector();
+    }
+
+    function renderInspector() {
+      const card = lastInspectedCard;
+      if (!card) return;
 
       const inspector = document.getElementById('inspector-content');
-      const isJutsu = (card.cardtype || "").trim().toLowerCase() === "jutsu";
 
+      // ---- Minimal mode: name, type, number, set ----
+      if (MINIMAL_INSPECTOR) {
+        inspector.innerHTML = `
+          <img src="${getCardImageUrl(card)}" class="inspector-img" alt="${card.name}" />
+          <div class="inspector-details">
+            <h4>${card.name || 'Unknown'}</h4>
+            <p><strong>Type:</strong> ${card.cardtype || '-'}</p>
+            <p><strong>Number:</strong> ${card.cardnumber || '-'}</p>
+            <p><strong>Set:</strong> ${getSetDisplayName(card.setfolder)}</p>
+          </div>
+        `;
+        return;
+      }
+
+      // ---- Full mode ----
+      const isJutsu = (card.cardtype || "").trim().toLowerCase() === "jutsu";
       const hasCosts = !isJutsu && ((card.entrancecost !== '' && card.entrancecost !== undefined) || (card.handcost !== '' && card.handcost !== undefined));
       const hasStats = (card.combath || card.supporth || card.combati || card.supporti);
 
