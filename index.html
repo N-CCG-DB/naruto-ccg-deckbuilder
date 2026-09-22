@@ -69,10 +69,13 @@
 
     input:focus, select:focus { border-color: var(--accent-color); }
 
-    .app-container { display: flex; flex: 1; overflow: hidden; }
+    /* ---------- Layout ---------- */
+    .app-container { display: flex; flex: 1; overflow: hidden; position: relative; }
 
     .card-inspector {
       width: 420px;
+      min-width: 220px;
+      max-width: 60vw;
       background-color: var(--panel-bg);
       border-right: 1px solid var(--border-color);
       padding: 18px;
@@ -106,7 +109,7 @@
 
     .placeholder-text { color: #777; text-align: center; margin-top: 50px; }
 
-    .card-browser { flex: 1; padding: 15px; overflow-y: auto; }
+    .card-browser { flex: 1; padding: 15px; overflow-y: auto; min-width: 200px; }
     .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 
     .card-item {
@@ -169,6 +172,8 @@
 
     .decklist-sidebar {
       width: 340px;
+      min-width: 220px;
+      max-width: 60vw;
       background-color: var(--panel-bg);
       border-left: 1px solid var(--border-color);
       padding: 15px;
@@ -177,6 +182,26 @@
       gap: 12px;
       flex-shrink: 0;
     }
+
+    /* ---------- Resize handles ---------- */
+    .resize-handle {
+      width: 6px;
+      cursor: col-resize;
+      background: transparent;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 5;
+    }
+    .resize-handle::after {
+      content: "";
+      position: absolute;
+      top: 0; bottom: 0; left: 2px;
+      width: 2px;
+      background: var(--border-color);
+      transition: background 0.15s ease;
+    }
+    .resize-handle:hover::after,
+    .resize-handle.dragging::after { background: var(--accent-color); }
 
     .target-selector {
       display: flex;
@@ -276,6 +301,77 @@
     }
 
     .btn-secondary:hover { background-color: #3a3a3a; border-color: #555; }
+
+    /* ---------- Mobile toggle bar (hidden on desktop) ---------- */
+    .mobile-tabs {
+      display: none;
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 6px;
+      gap: 6px;
+    }
+    .mobile-tabs button {
+      flex: 1;
+      background: #2a2a2a;
+      color: #aaa;
+      border: 1px solid var(--border-color);
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .mobile-tabs button.active {
+      background: var(--accent-color);
+      color: #000;
+      border-color: var(--accent-color);
+    }
+
+    /* ---------- Mobile layout ---------- */
+    @media (max-width: 820px) {
+      header {
+        padding: 8px 10px;
+        gap: 8px;
+      }
+      header .filter-group { flex: 1 1 100%; }
+      header .filter-group input,
+      header .filter-group select { width: 100%; }
+
+      .app-container { flex-direction: column; }
+
+      .mobile-tabs { display: flex; }
+
+      .card-inspector,
+      .decklist-sidebar,
+      .card-browser {
+        width: 100% !important;
+        max-width: 100%;
+        min-width: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      /* By default show browser; hide others */
+      .card-inspector,
+      .decklist-sidebar { display: none; }
+
+      .app-container[data-mobile-view="inspector"] .card-inspector { display: flex; }
+      .app-container[data-mobile-view="inspector"] .card-browser,
+      .app-container[data-mobile-view="inspector"] .decklist-sidebar { display: none; }
+
+      .app-container[data-mobile-view="deck"] .decklist-sidebar { display: flex; }
+      .app-container[data-mobile-view="deck"] .card-browser,
+      .app-container[data-mobile-view="deck"] .card-inspector { display: none; }
+
+      .app-container[data-mobile-view="browser"] .card-browser { display: block; }
+      .app-container[data-mobile-view="browser"] .card-inspector,
+      .app-container[data-mobile-view="browser"] .decklist-sidebar { display: none; }
+
+      .card-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+
+      .resize-handle { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -305,20 +401,30 @@
     </div>
   </header>
 
-  <div class="app-container">
+  <div class="mobile-tabs">
+    <button data-view="browser" class="active" onclick="setMobileView('browser')">Cards</button>
+    <button data-view="inspector" onclick="setMobileView('inspector')">Inspector</button>
+    <button data-view="deck" onclick="setMobileView('deck')">Deck <span id="mobile-deck-count"></span></button>
+  </div>
 
-    <aside class="card-inspector">
+  <div class="app-container" data-mobile-view="browser">
+
+    <aside class="card-inspector" id="panel-inspector">
       <h3>Card Inspector</h3>
       <div id="inspector-content">
         <p class="placeholder-text">Click any card to view stats and text</p>
       </div>
     </aside>
 
-    <section class="card-browser">
+    <div class="resize-handle" id="handle-left" data-target="inspector"></div>
+
+    <section class="card-browser" id="card-browser">
       <div id="card-grid" class="card-grid"></div>
     </section>
 
-    <aside class="decklist-sidebar">
+    <div class="resize-handle" id="handle-right" data-target="deck"></div>
+
+    <aside class="decklist-sidebar" id="panel-deck">
       <div class="target-selector">
         <button id="target-main" data-target="main" class="target-btn active" onclick="setAddTarget('main')">+ Mainboard</button>
         <button id="target-reinf" data-target="reinf" class="target-btn" onclick="setAddTarget('reinf')">+ Reinforcements</button>
@@ -374,6 +480,82 @@
     let currentInspectedCardNumber = null;
     let lastInspectedCard = null;
     let decklistRenderPending = false;
+
+    // ---------- Mobile view switching ----------
+    function setMobileView(view) {
+      document.querySelector('.app-container').setAttribute('data-mobile-view', view);
+      document.querySelectorAll('.mobile-tabs button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === view);
+      });
+    }
+    window.setMobileView = setMobileView;
+
+    // ---------- Resizable panels ----------
+    (function initResize() {
+      const inspector = document.getElementById('panel-inspector');
+      const deck = document.getElementById('panel-deck');
+
+      const MIN = 220;
+      const MAX_INSPECTOR = () => Math.min(700, window.innerWidth * 0.6);
+      const MAX_DECK = () => Math.min(700, window.innerWidth * 0.6);
+
+      // Restore saved widths
+      try {
+        const saved = JSON.parse(localStorage.getItem('ccg_panel_sizes') || '{}');
+        if (saved.inspector) inspector.style.width = saved.inspector + 'px';
+        if (saved.deck) deck.style.width = saved.deck + 'px';
+      } catch (e) {}
+
+      function saveSizes() {
+        localStorage.setItem('ccg_panel_sizes', JSON.stringify({
+          inspector: parseInt(inspector.style.width, 10) || inspector.offsetWidth,
+          deck: parseInt(deck.style.width, 10) || deck.offsetWidth
+        }));
+      }
+
+      function makeResizable(handle, panel, isLeftSide) {
+        let startX = 0, startWidth = 0;
+
+        handle.addEventListener('mousedown', (e) => {
+          if (window.innerWidth <= 820) return;
+          e.preventDefault();
+          startX = e.clientX;
+          startWidth = panel.offsetWidth;
+          handle.classList.add('dragging');
+          document.body.style.cursor = 'col-resize';
+          document.body.style.userSelect = 'none';
+
+          function onMove(ev) {
+            const dx = ev.clientX - startX;
+            let newWidth = isLeftSide ? startWidth + dx : startWidth - dx;
+            const max = isLeftSide ? MAX_INSPECTOR() : MAX_DECK();
+            newWidth = Math.max(MIN, Math.min(max, newWidth));
+            panel.style.width = newWidth + 'px';
+          }
+
+          function onUp() {
+            handle.classList.remove('dragging');
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+            saveSizes();
+          }
+
+          document.addEventListener('mousemove', onMove);
+          document.addEventListener('mouseup', onUp);
+        });
+      }
+
+      makeResizable(document.getElementById('handle-left'), inspector, true);
+      makeResizable(document.getElementById('handle-right'), deck, false);
+    })();
+
+    // ---------- Scroll browser to top when filters change ----------
+    function scrollBrowserToTop() {
+      const browser = document.getElementById('card-browser');
+      if (browser) browser.scrollTop = 0;
+    }
 
     function setAddTarget(target) {
       if (activeAddTarget === target) return;
@@ -442,6 +624,7 @@
 
     function filterCards() {
       renderCards(getFilteredCards());
+      scrollBrowserToTop();
     }
 
     function getFormattedQtyHTML(cardNumber) {
@@ -526,6 +709,7 @@
       currentInspectedCardNumber = card.cardnumber;
       lastInspectedCard = card;
       renderInspector();
+      if (window.innerWidth <= 820) setMobileView('inspector');
     }
 
     function renderInspector() {
@@ -684,6 +868,9 @@
       if (sideTotal > 0 || activeAddTarget === 'side') countParts.push(`<span style="color: ${COLOR_SIDE};">${sideTotal}</span>`);
 
       countEl.innerHTML = countParts.join('<span style="color: #666; font-weight: normal;"> / </span>');
+
+      const mobileCount = document.getElementById('mobile-deck-count');
+      if (mobileCount) mobileCount.textContent = `(${mainTotal + reinfTotal + sideTotal})`;
     }
 
     function updateUI() {
