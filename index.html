@@ -49,12 +49,13 @@
       padding: 12px 20px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
-      gap: 15px;
+      gap: 12px;
       align-items: center;
       flex-wrap: wrap;
     }
 
-    .filter-group { display: flex; align-items: center; gap: 8px; }
+    .filter-group { display: flex; align-items: center; gap: 6px; }
+    .filter-group label { font-size: 13px; color: #bbb; white-space: nowrap; }
 
     input, select {
       background-color: #2a2a2a;
@@ -65,9 +66,12 @@
       outline: none;
       user-select: text;
       -webkit-user-select: text;
+      font-size: 13px;
     }
 
     input:focus, select:focus { border-color: var(--accent-color); }
+
+    #search-input { min-width: 220px; }
 
     /* ---------- Layout ---------- */
     .app-container { display: flex; flex: 1; overflow: hidden; position: relative; }
@@ -410,6 +414,7 @@
       header .filter-group { flex: 1 1 100%; }
       header .filter-group input,
       header .filter-group select { width: 100%; }
+      #search-input { min-width: 0; }
 
       .app-container { flex-direction: column; }
 
@@ -456,7 +461,27 @@
   <header>
     <div class="filter-group">
       <label for="search-input">Search:</label>
-      <input type="text" id="search-input" placeholder="Name, Card #, or ID..." oninput="filterCards()" />
+      <input type="text" id="search-input" placeholder="Type to search..." oninput="filterCards()" />
+    </div>
+
+    <div class="filter-group">
+      <label for="scope-filter">In:</label>
+      <select id="scope-filter" onchange="filterCards()">
+        <option value="ALL">All fields</option>
+        <option value="name">Name</option>
+        <option value="number">Card Number</option>
+        <option value="type">Type</option>
+        <option value="symbols">Symbols</option>
+        <option value="characteristics">Characteristics</option>
+        <option value="effectTitle">Effect Title</option>
+        <option value="effectText">Effect Text</option>
+        <option value="keywords">Keywords</option>
+        <option value="combatAttribute">Combat Attribute</option>
+        <option value="entranceCost">Entrance Cost</option>
+        <option value="handCost">Hand Cost</option>
+        <option value="chakraCost">Chakra Cost</option>
+        <option value="printedName">Printed Name</option>
+      </select>
     </div>
 
     <div class="filter-group">
@@ -474,6 +499,26 @@
       <label for="set-filter">Set:</label>
       <select id="set-filter" onchange="filterCards()">
         <option value="ALL">All Sets</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sort-select">Sort:</label>
+      <select id="sort-select" onchange="filterCards()">
+        <option value="name-asc">Name (A–Z)</option>
+        <option value="name-desc">Name (Z–A)</option>
+        <option value="number-asc">Card Number (asc)</option>
+        <option value="number-desc">Card Number (desc)</option>
+        <option value="entranceCost-asc">Entrance Cost (low→high)</option>
+        <option value="entranceCost-desc">Entrance Cost (high→low)</option>
+        <option value="handCost-asc">Hand Cost (low→high)</option>
+        <option value="handCost-desc">Hand Cost (high→low)</option>
+        <option value="healthyCombat-asc">Combat (Healthy) (low→high)</option>
+        <option value="healthyCombat-desc">Combat (Healthy) (high→low)</option>
+        <option value="healthySupport-asc">Support (Healthy) (low→high)</option>
+        <option value="healthySupport-desc">Support (Healthy) (high→low)</option>
+        <option value="type-asc">Type</option>
+        <option value="setFolder-asc">Set</option>
       </select>
     </div>
   </header>
@@ -546,7 +591,6 @@
     // INSPECTOR MODE
     // true  = the 13-row layout specced for the new database
     // false = same layout, plus Year / Keywords / Errata at the end
-    // Change this line and refresh to switch.
     const MINIMAL_INSPECTOR = true;
 
     const COLOR_MAIN = '#ff9800';
@@ -557,6 +601,7 @@
     const F = {
       cardId:          'Card ID',
       collectorNumber: 'Collector Number',
+      printedName:     'Printed Name',
       name:            'Display Name',
       type:            'Type',
       set:             'Set',
@@ -607,6 +652,12 @@
       if (!p || typeof p !== 'string') return '';
       const idx = p.indexOf('/');
       return idx === -1 ? '' : p.slice(0, idx);
+    }
+
+    // Safely render a string value for search comparison
+    function str(v) {
+      if (v === null || v === undefined) return '';
+      return String(v).toLowerCase();
     }
 
     // ---------- Mobile view switching ----------
@@ -728,13 +779,10 @@
     }
 
     // Derive one entry per set folder.
-    // Key:   folder derived from image_path (guaranteed unique per folder)
+    // Key:   folder derived from image_path
     // Label: the most common "Set" value among the folder's cards
-    // Sort:  natural sort on the folder key so set_1 < set_2 < set_175 < promos
-    // Duplicate labels are disambiguated with "(folder)" appended.
-    // Folders whose cards disagree on "Set" are logged to the console.
+    // Sort:  natural sort on the folder key
     function buildSetFolders() {
-      // folder -> Map(SetDisplayValue -> count)
       const folderSetVotes = new Map();
 
       cardDatabase.forEach(c => {
@@ -750,7 +798,6 @@
       });
 
       const entries = Array.from(folderSetVotes.entries()).map(([folder, votes]) => {
-        // Pick the highest-voted Set value; ties broken alphabetically
         let bestSet = null;
         let bestCount = -1;
         votes.forEach((count, val) => {
@@ -763,7 +810,6 @@
         return { folder, display };
       });
 
-      // Disambiguate duplicate display names
       const displayCounts = new Map();
       entries.forEach(e => displayCounts.set(e.display, (displayCounts.get(e.display) || 0) + 1));
       entries.forEach(e => {
@@ -772,12 +818,10 @@
         }
       });
 
-      // Natural sort on folder key
       entries.sort((a, b) => a.folder.localeCompare(b.folder, undefined, { numeric: true, sensitivity: 'base' }));
 
       setFolders = entries;
 
-      // Diagnostic: log any folder whose cards disagree on "Set"
       folderSetVotes.forEach((votes, folder) => {
         if (votes.size > 1) {
           console.warn(`Set inconsistency in folder "${folder}":`, Array.from(votes.entries()));
@@ -797,27 +841,131 @@
         setSelect.appendChild(opt);
       });
 
-      // Preserve current selection if it still exists
       if (previous && Array.from(setSelect.options).some(o => o.value === previous)) {
         setSelect.value = previous;
       }
     }
 
+    // ---------- Search tokenization ----------
+    // Returns an array of lowercase tokens from the raw query.
+    // Multi-token AND: a card matches only if every token matches.
+    function getSearchTokens() {
+      const raw = document.getElementById('search-input').value || '';
+      return raw.toLowerCase().trim().split(/\s+/).filter(t => t.length > 0);
+    }
+
+    // Per-field matchers. Each returns true if `token` matches the card for
+    // that field's rule.
+    const FIELD_MATCHERS = {
+      name:            (c, t) => str(c[F.name]).includes(t),
+      printedName:     (c, t) => str(c[F.printedName]).includes(t),
+      type:            (c, t) => str(c[F.type]) === t,
+      symbols:         (c, t) => str(c[F.symbols]).includes(t),
+      characteristics: (c, t) => str(c[F.characteristics]).includes(t),
+      effectTitle:     (c, t) => str(c[F.effectTitle]).includes(t),
+      effectText:      (c, t) => str(c[F.effectText]).includes(t),
+      keywords:        (c, t) => str(c[F.keywords]).includes(t),
+      combatAttribute: (c, t) => str(c[F.combatAttribute]).includes(t),
+      chakraCost:      (c, t) => str(c[F.chakraCost]).includes(t),
+
+      // Card Number folds in both Collector Number and Card ID.
+      number: (c, t) => {
+        return str(c[F.collectorNumber]).includes(t) || str(c[F.cardId]).includes(t);
+      },
+
+      // Numeric-exact matchers: if token parses as a number, require exact
+      // numeric equality; otherwise fall back to substring on the raw field.
+      entranceCost: (c, t) => {
+        const n = Number(t);
+        if (Number.isFinite(n)) {
+          const v = Number(c[F.entranceCost]);
+          return Number.isFinite(v) && v === n;
+        }
+        return str(c[F.entranceCost]).includes(t);
+      },
+      handCost: (c, t) => {
+        const n = Number(t);
+        if (Number.isFinite(n)) {
+          const v = Number(c[F.handCost]);
+          return Number.isFinite(v) && v === n;
+        }
+        return str(c[F.handCost]).includes(t);
+      },
+    };
+
+    // "ALL" runs every token against every field. A token is satisfied if
+    // any field matches it (OR across fields). Tokens are ANDed together.
+    const ALL_FIELDS = Object.keys(FIELD_MATCHERS);
+
+    function cardMatchesSearch(card, tokens, scope) {
+      if (tokens.length === 0) return true;
+      if (scope === 'ALL') {
+        return tokens.every(token =>
+          ALL_FIELDS.some(field => FIELD_MATCHERS[field](card, token))
+        );
+      }
+      const matcher = FIELD_MATCHERS[scope];
+      if (!matcher) return true;
+      return tokens.every(token => matcher(card, token));
+    }
+
+    // ---------- Sorting ----------
+    function getSortSpec() {
+      const raw = document.getElementById('sort-select').value || 'name-asc';
+      const idx = raw.lastIndexOf('-');
+      return { key: raw.slice(0, idx), dir: raw.slice(idx + 1) === 'desc' ? -1 : 1 };
+    }
+
+    // Natural comparator for strings (so N-2 < N-10)
+    const naturalCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+    function naturalCmp(a, b) {
+      return naturalCollator.compare(a, b);
+    }
+
+    // Compares two cards by the active sort key. Nulls always sort last
+    // regardless of direction. Falls back to Collector Number ascending.
+    function makeComparator(spec) {
+      const { key, dir } = spec;
+      return (a, b) => {
+        let primary = 0;
+
+        if (key === 'name') {
+          primary = naturalCmp(a[F.name] || '', b[F.name] || '');
+        } else if (key === 'number') {
+          primary = naturalCmp(a[F.collectorNumber] || '', b[F.collectorNumber] || '');
+        } else if (key === 'type') {
+          primary = naturalCmp(a[F.type] || '', b[F.type] || '');
+        } else if (key === 'setFolder') {
+          primary = naturalCmp(getSetFolder(a), getSetFolder(b));
+        } else if (key === 'entranceCost' || key === 'handCost' || key === 'healthyCombat' || key === 'healthySupport') {
+          const av = a[F[key]];
+          const bv = b[F[key]];
+          const an = isBlank(av) ? null : Number(av);
+          const bn = isBlank(bv) ? null : Number(bv);
+          // Nulls always last regardless of direction
+          if (an === null && bn === null) primary = 0;
+          else if (an === null) return 1;   // a is null, push to end
+          else if (bn === null) return -1;  // b is null, push to end
+          else primary = an - bn;
+        }
+
+        if (primary !== 0) return primary * dir;
+
+        // Tiebreak: Collector Number ascending, natural
+        return naturalCmp(a[F.collectorNumber] || '', b[F.collectorNumber] || '');
+      };
+    }
+
     // ---------- Filtering ----------
     function getFilteredCards() {
-      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const tokens = getSearchTokens();
+      const scope = document.getElementById('scope-filter').value;
       const selectedSet = document.getElementById('set-filter').value;
       const selectedType = document.getElementById('type-filter').value;
+      const sortSpec = getSortSpec();
 
-      return cardDatabase.filter(card => {
-        const name  = (card[F.name] || '').toLowerCase();
-        const num   = (card[F.collectorNumber] || '').toLowerCase();
-        const id    = (card[F.cardId] || '').toLowerCase();
-
-        const matchesQuery = !query
-          || name.includes(query)
-          || num.includes(query)
-          || id.includes(query);
+      const filtered = cardDatabase.filter(card => {
+        const matchesQuery = cardMatchesSearch(card, tokens, scope);
 
         const matchesSet = (selectedSet === 'ALL') || (getSetFolder(card) === selectedSet);
         const matchesType = (selectedType === 'ALL')
@@ -825,6 +973,9 @@
 
         return matchesQuery && matchesSet && matchesType;
       });
+
+      filtered.sort(makeComparator(sortSpec));
+      return filtered;
     }
 
     function filterCards() {
@@ -927,10 +1078,16 @@
       return `<p><strong>${label}:</strong> ${value}</p>`;
     }
 
+    // Two-column box. Either side may be blank; blank sides render as "-".
     function statRow(leftLabel, leftVal, rightLabel, rightVal) {
       const l = isBlank(leftVal) ? '-' : leftVal;
       const r = isBlank(rightVal) ? '-' : rightVal;
       return `<div class="stat-row"><span><strong>${leftLabel}:</strong> ${l}</span><span><strong>${rightLabel}:</strong> ${r}</span></div>`;
+    }
+
+    // Full-width single-item box, same styling as statRow.
+    function singleBox(label, value) {
+      return `<div class="stat-row"><span><strong>${label}:</strong> ${value}</span></div>`;
     }
 
     function renderInspector() {
@@ -977,11 +1134,12 @@
       // 4. Characteristics — Ninja, Client
       if (isNinja || isClient) html += row('Characteristics', chars);
 
-      // 5. Entrance Cost — Ninja, Mission, Client
-      if (isNinja || isMission || isClient) html += row('Entrance Cost', fmtNum(ent));
-
-      // 6. Hand Cost — Ninja, Mission, Client
-      if (isNinja || isMission || isClient) html += row('Hand Cost', fmtNum(hand));
+      // 5-6. Entrance + Hand Cost in a single box — Ninja, Mission, Client
+      if (isNinja || isMission || isClient) {
+        if (!(isBlank(ent) && isBlank(hand))) {
+          html += statRow('Entrance Cost', fmtNum(ent), 'Hand Cost', fmtNum(hand));
+        }
+      }
 
       // 7. Healthy stats — Ninja
       if (isNinja && !(isBlank(hc) && isBlank(hs))) {
@@ -996,11 +1154,12 @@
       // 9. Combat Attribute — Ninja
       if (isNinja) html += row('Combat Attribute', attr);
 
-      // 10. Jutsu Cost — Jutsu
-      if (isJutsu) html += row('Jutsu Cost', chakra);
+      // 10. Jutsu Cost — Jutsu — full-width single-item box
+      if (isJutsu && !isBlank(chakra)) {
+        html += singleBox('Jutsu Cost', chakra);
+      }
 
       // 11. Effect — all types
-      //     [EFFECT TITLE UPPERCASED] then Effect Text (line breaks preserved)
       if (!isBlank(eTitle) || !isBlank(eText)) {
         let effectHtml = '<div class="effect-block">';
         if (!isBlank(eTitle)) {
@@ -1057,7 +1216,6 @@
         `;
       };
 
-      // Mainboard grouped by Type
       const groups = { 'Ninja': [], 'Jutsu': [], 'Mission': [], 'Client': [] };
 
       Object.entries(currentDeck.main).forEach(([key, entry]) => {

@@ -437,3 +437,43 @@ values.
 12. Effect Text must preserve \n. Do not collapse whitespace or use
     innerText where it would strip breaks - the display relies on
     `white-space: pre-line`.
+
+## Addendum: Set Dropdown Derivation (post-migration fix)
+
+An early version of the post-migration build derived the Set dropdown
+label from the FIRST card's "Set" value inside each folder. That broke
+when the source data had inconsistent "Set" values across a folder's
+cards, producing duplicated labels (e.g. ten "Promo Cards" entries) and
+dropping others entirely.
+
+The current implementation in buildSetFolders() does this:
+
+1. Group strictly by folder, where folder = image_path.split('/')[0].
+   This is guaranteed unique per folder and always matches the disk
+   layout. It is the dropdown's <option value>.
+2. For each folder, count how many cards agree on each "Set" value.
+   The label is the majority vote. Ties break alphabetically.
+3. If a folder has no cards with a "Set" value, the label falls back
+   to the folder name with underscores replaced by spaces.
+4. If two folders resolve to the same label, append " (folder_key)"
+   to disambiguate. This makes duplicate labels visible in the UI so
+   the data problem can be spotted and fixed at the source.
+5. Entries are natural-sorted on the folder key, so set_1 < set_2 <
+   set_10 < set_17 < set_175 < set_18 < promos.
+6. Any folder whose cards disagree on "Set" is logged via
+   console.warn("Set inconsistency in folder ..."). Open devtools
+   after load to see which folders have dirty source data.
+
+Do NOT revert to first-card-wins label selection. Do NOT key the
+dropdown by the "Set" value. The folder is the source of truth for
+identity; "Set" is only a label hint.
+
+If the "Set" field ever gets cleaned up at the source, no code change
+is needed here — the majority vote will simply start agreeing with
+itself and the console warnings will disappear.
+
+Long-term option (not implemented, kept as a fallback): replace the
+majority-vote label logic with a hard-coded SET_DISPLAY_NAMES map of
+the 33 canonical folder -> display-name pairs already listed in this
+brief. That removes any dependence on the "Set" field for the
+dropdown entirely. Consider this if the source data cannot be fixed.
