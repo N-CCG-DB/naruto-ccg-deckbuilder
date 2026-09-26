@@ -539,7 +539,7 @@
   <script>
     // ============================================================
     // DATA SOURCE: narutoccgdatabase.json
-    // Schema (Title Case keys) is defined in PROJECT_HANDOFF.md.
+    // Schema (Title Case keys) is documented in PROJECT_BRIEF.md.
     // cards.json / sets.json are no longer read by this page.
     // ============================================================
 
@@ -580,7 +580,7 @@
 
     let cardDatabase = [];        // flat array of master-DB card objects
     let cardIndex = new Map();    // lowercased Card ID -> card
-    let setFolders = [];          // [{folder, display}] derived from image_path + Set
+    let setFolders = [];          // [{folder, display}] derived from image_path
 
     let currentDeck = { main: {}, reinf: {}, side: {} };
 
@@ -594,7 +594,7 @@
       return v === null || v === undefined || v === '';
     }
 
-    // Renders 0.0 -> "0", 1.5 -> "1.5", null/"" -> "" (caller decides to skip)
+    // Renders 0.0 -> "0", 1.5 -> "1.5". Non-numeric values pass through.
     function fmtNum(v) {
       if (isBlank(v)) return '';
       const n = Number(v);
@@ -727,28 +727,80 @@
       }
     }
 
-    // Derive one entry per set folder, display name from the card's "Set"
+    // Derive one entry per set folder.
+    // Key:   folder derived from image_path (guaranteed unique per folder)
+    // Label: the most common "Set" value among the folder's cards
+    // Sort:  natural sort on the folder key so set_1 < set_2 < set_175 < promos
+    // Duplicate labels are disambiguated with "(folder)" appended.
+    // Folders whose cards disagree on "Set" are logged to the console.
     function buildSetFolders() {
-      const byFolder = new Map();
+      // folder -> Map(SetDisplayValue -> count)
+      const folderSetVotes = new Map();
+
       cardDatabase.forEach(c => {
         const folder = getSetFolder(c);
         if (!folder) return;
-        if (!byFolder.has(folder)) {
-          byFolder.set(folder, c[F.set] || folder.replace(/_/g, ' '));
+
+        if (!folderSetVotes.has(folder)) folderSetVotes.set(folder, new Map());
+        const setVal = c[F.set];
+        if (setVal) {
+          const votes = folderSetVotes.get(folder);
+          votes.set(setVal, (votes.get(setVal) || 0) + 1);
         }
       });
-      setFolders = Array.from(byFolder.entries()).map(([folder, display]) => ({ folder, display }));
+
+      const entries = Array.from(folderSetVotes.entries()).map(([folder, votes]) => {
+        // Pick the highest-voted Set value; ties broken alphabetically
+        let bestSet = null;
+        let bestCount = -1;
+        votes.forEach((count, val) => {
+          if (count > bestCount || (count === bestCount && (bestSet === null || val < bestSet))) {
+            bestSet = val;
+            bestCount = count;
+          }
+        });
+        const display = bestSet || folder.replace(/_/g, ' ');
+        return { folder, display };
+      });
+
+      // Disambiguate duplicate display names
+      const displayCounts = new Map();
+      entries.forEach(e => displayCounts.set(e.display, (displayCounts.get(e.display) || 0) + 1));
+      entries.forEach(e => {
+        if (displayCounts.get(e.display) > 1) {
+          e.display = `${e.display} (${e.folder})`;
+        }
+      });
+
+      // Natural sort on folder key
+      entries.sort((a, b) => a.folder.localeCompare(b.folder, undefined, { numeric: true, sensitivity: 'base' }));
+
+      setFolders = entries;
+
+      // Diagnostic: log any folder whose cards disagree on "Set"
+      folderSetVotes.forEach((votes, folder) => {
+        if (votes.size > 1) {
+          console.warn(`Set inconsistency in folder "${folder}":`, Array.from(votes.entries()));
+        }
+      });
     }
 
     function populateSetFilter() {
       const setSelect = document.getElementById('set-filter');
+      const previous = setSelect.value;
       setSelect.innerHTML = '<option value="ALL">All Sets</option>';
+
       setFolders.forEach(({ folder, display }) => {
         const opt = document.createElement('option');
         opt.value = folder;
         opt.textContent = display;
         setSelect.appendChild(opt);
       });
+
+      // Preserve current selection if it still exists
+      if (previous && Array.from(setSelect.options).some(o => o.value === previous)) {
+        setSelect.value = previous;
+      }
     }
 
     // ---------- Filtering ----------
@@ -1005,15 +1057,13 @@
         `;
       };
 
-      // Mainboard grouped by Type (guaranteed to be one of the four)
+      // Mainboard grouped by Type
       const groups = { 'Ninja': [], 'Jutsu': [], 'Mission': [], 'Client': [] };
 
       Object.entries(currentDeck.main).forEach(([key, entry]) => {
         mainTotal += entry.count;
         const t = (entry.card[F.type] || '').trim();
         if (groups[t]) groups[t].push([key, entry]);
-        // Stray types are dropped from grouping but still counted above.
-        // Given the DB guarantees four types, this branch is defensive only.
       });
 
       ['Ninja', 'Jutsu', 'Mission', 'Client'].forEach(type => {
@@ -1210,8 +1260,6 @@
 
               if (deckObj.ContainedObjects) {
                 deckObj.ContainedObjects.forEach(obj => {
-                  // Description is the lowercased Card ID we wrote on export,
-                  // but we also accept older files where it was the lowercase cardnumber.
                   const desc = (obj.Description || '').toLowerCase();
                   const matched = cardIndex.get(desc);
                   if (matched) {
@@ -1253,10 +1301,6 @@
         if (lower.includes('sideboard'))     { currentSection = 'side';  return; }
         if (lower.includes('main'))          { currentSection = 'main';  return; }
 
-        // Formats accepted:
-        //   3x Card Name [cardid]
-        //   3 Card Name [cardid]
-        //   3x Card Name
         const match = cleanLine.match(/^(\d+)x?\s+(.+?)(?:\s+\[(.*?)\])?$/i);
         if (!match) return;
 
@@ -1267,7 +1311,6 @@
         let matched = null;
         if (idPart) matched = cardIndex.get(idPart);
         if (!matched && idPart) {
-          // fall back: maybe they used the Collector Number in brackets
           matched = cardDatabase.find(c =>
             (c[F.collectorNumber] || '').toLowerCase() === idPart
           );

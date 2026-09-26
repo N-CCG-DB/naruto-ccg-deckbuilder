@@ -19,24 +19,36 @@ Repo: https://github.com/N-CCG-DB/naruto-ccg-deckbuilder
 - Plain HTML / CSS / JavaScript. No build step, no frameworks.
 - GitHub Pages for hosting (case-sensitive, Linux-based).
 - Python for offline data pipeline (image listing, merging, compression).
-- JSON for card data and set metadata.
+- JSON for card data.
+
+## RECENT MIGRATION - READ THIS FIRST
+
+As of the latest change, `index.html` reads `narutoccgdatabase.json`.
+It no longer fetches `cards.json` or `sets.json`. Those two files are
+still on disk but dormant - nothing reads them. They are kept for
+rollback safety only.
+
+The new database has a different shape and schema than the old one.
+Details below. Do not assume the old schema when touching the app.
 
 ## File Layout (project root)
 
     naruto-ccg-deckbuilder/
     ├── index.html                    the app (single file: HTML+CSS+JS)
-    ├── cards.json                    canonical card database (site reads this)
-    ├── sets.json                     set display names + dropdown order
+    ├── narutoccgdatabase.json        * LIVE card database (site reads this)
+    ├── cards.json                    DORMANT - no longer read by the site
+    ├── sets.json                     DORMANT - no longer read by the site
+    ├── cards.json.backup             legacy backup from the old pipeline
     ├── cardback.webp                 card back for Tabletop Simulator export
-    ├── cards.json.backup             auto-backup written by merge_cards.py
-    ├── convert_incoming.py           converts incoming_cards/ staging data
     ├── PROJECT_BRIEF.md              this file
+    ├── PROJECT_HANDOFF.md            pipeline notes for the master DB build
     ├── README.md                     user-facing docs
+    ├── convert_incoming.py           converts incoming_cards/ staging data
     ├── cards_database/               ALL card images, one folder per set
     ├── incoming_cards/               staging (not used by the site)
     └── unused/                       archived scripts, not part of the pipeline
         ├── exports/
-        │   └── card_database.json    rich card data source
+        │   └── card_database.json    rich card data source (old pipeline)
         ├── list_images.py            walks cards_database/ to cards_from_images.json
         ├── merge_cards.py            merges images + exports/card_database.json to cards.json
         ├── run_pipeline.py           (legacy) driver script
@@ -46,58 +58,94 @@ Repo: https://github.com/N-CCG-DB/naruto-ccg-deckbuilder
         ├── scraped_naruto_cards.json raw scrape (not used by the site)
         └── .processed_manifest.json  pipeline bookkeeping
 
-> **Note:** The entire Python pipeline lives in `unused/` as of the
-> last reorganization. The live site only needs `index.html`,
-> `cards.json`, `sets.json`, `cardback.webp`, and `cards_database/`.
-> If the pipeline is ever needed again, restore the scripts from
-> `unused/` back to the root.
+Note: The entire Python pipeline lives in `unused/`. The live site
+only needs `index.html`, `narutoccgdatabase.json`, `cardback.webp`,
+and `cards_database/`.
 
-## Canonical Card Schema (cards.json)
+## Canonical Card Schema - narutoccgdatabase.json
 
-Every card has exactly these fields:
+Top-level shape is a dict keyed by sheet name, each value an array of
+card objects:
 
-| Field | Type | Notes |
+    {
+      "Promo Cards": [ { ...card... }, ... ],
+      "01 Path to Hokage": [ ... ],
+      "02 Coils of the Snake": [ ... ],
+      ...
+    }
+
+`index.html` flattens this into a single array at load time. Do not
+change the file shape without updating the loader.
+
+Each card object uses Title Case keys with spaces. Every card has
+exactly these fields:
+
+| Key | Type | Notes |
 |---|---|---|
-| cardnumber | string | Lowercase. e.g. n370, pr005ra, ex001 |
-| name | string | Display name, no trailing card number |
-| cardtype | string | Ninja / Jutsu / Mission / Client / blank |
-| setfolder | string | Folder under cards_database/, no dots |
-| imgname | string | Filename only, lowercase |
-| set | string | Display name (legacy; site prefers sets.json) |
-| entrancecost | string | Empty for Jutsu |
-| handcost | string | Empty for Jutsu |
-| symbol | string | e.g. Fire, Fire/Water |
-| combath | string | Healthy combat |
-| supporth | string | Healthy support |
-| combati | string | Injured combat |
-| supporti | string | Injured support |
-| attribute | string | "Combat Attribute" in the UI |
-| effect | string | Card text; may contain <br> |
-| jutsucost | string | Jutsu cost string, e.g. "L L 1" |
-| rarity | string | |
-| flavor | string | Italic quote in the inspector |
-| characteristics | string | e.g. "Leaf / Genin / Male / Growth" |
+| Card ID | string | Lowercase internal ID, e.g. ex001, nus010, pr005r. Primary key. |
+| Collector Number | string | Display form, e.g. EX-001, N-370. What users see. |
+| Printed Name | string | Name as printed on the card |
+| Display Name | string | Clean name - this is what the site shows |
+| Type | string | Exactly one of: Ninja, Jutsu, Mission, Client |
+| Set | string | Display name of the set, e.g. Promo Cards |
+| Year | number or null | e.g. 2006 |
+| Symbols | string | e.g. Fire/Lightning, Earth/Fire (may contain /) |
+| Entrance Cost | number or null | Floats in the JSON (0.0, 3.0). Blank for Jutsu. |
+| Hand Cost | number or null | Same. Blank for Jutsu. |
+| Healthy Combat | number or null | Ninja only |
+| Healthy Support | number or null | Ninja only |
+| Injured Combat | number or null | Ninja only |
+| Injured Support | number or null | Ninja only |
+| Combat Attribute | string or null | Ninja only, e.g. Oil |
+| Chakra Cost | string or null | Jutsu only, e.g. "L L 1" |
+| Characteristics | string or null | Comma-separated. Ninja + Client. |
+| Effect Title | string or null | Uppercased in the UI, wrapped in [ ] |
+| Effect Text | string or null | Preserves real \n for multi-line display |
+| Keywords | string or null | e.g. GROWTH, Permanent |
+| Errata | string or null | |
+| image_path | string | e.g. promos/ex001.webp - no leading ./, no cards_database/ prefix |
 
-Do not rename fields. index.html references them directly.
+Rules:
+
+- `Type` is never null and never "Other". Four values only.
+- Empty cells are `null`, not `""` and not `"None"`. The old
+  `cards.json` used `"None"` for some fields; the new DB does not.
+  Do not add `"None"` handling.
+- Numeric fields that are present come through as JSON numbers
+  (0.0, 3.0). `index.html` renders them as integers.
+- Effect Text line breaks are literal `\n` inside the string. The
+  inspector renders them with `white-space: pre-line`.
+
+Do not rename keys. `index.html` references them via a central `F`
+field map at the top of the script.
 
 ## Image Path Convention
 
-index.html builds URLs like:
+`index.html` builds URLs like:
 
-    ./cards_database/{setfolder}/{imgname}
+    ./cards_database/{image_path}
+
+`image_path` already contains `{setfolder}/{imgname}` - so
+`promos/ex001.webp` becomes `./cards_database/promos/ex001.webp`.
 
 Rules:
-- All images live under cards_database/
+
+- All images live under `cards_database/`
 - One subfolder per set
-- Filenames are lowercase and match imgname exactly
-- GitHub Pages is case-sensitive. If imgname says N370.webp but the
-  file is n370.webp, the image will 404 on the live site even if
-  it works locally.
+- Filenames are lowercase and match the image_path exactly
+- GitHub Pages is case-sensitive. If `image_path` says `ex001.webp`
+  but the file is `EX001.webp`, the image will 404 on the live site.
+
+The set folder for filtering is derived from `image_path`, not from
+a separate field: `image_path.split('/')[0]`. This guarantees the
+filter matches the disk layout with no lookup table.
 
 ## Set Folders (canonical list)
 
 Folder keys must match exactly. Dots are removed from folder names
 (set_17.5 becomes set_175) even though the display name keeps the dot.
+The display name shown in the dropdown comes from each card's `Set`
+field, not from a hard-coded list.
 
 | Folder key | Display Name |
 |---|---|
@@ -133,14 +181,12 @@ Folder keys must match exactly. Dots are removed from folder names
 | set_26_avengers_wrath | Avenger's Wrath |
 | set_27_heros_ascension | Hero's Ascension |
 | set_28_ultimate_ninja_storm_3 | Ultimate Ninja Storm 3 |
-| promos | Promos |
+| promos | Promo Cards |
 
-sets.json is the authoritative list for the dropdown order (array,
-top-to-bottom).
+## Card Type Rules (from Card ID prefix)
 
-## Card Type Rules (from cardnumber prefix)
-
-Used by merge_cards.py when the DB doesn't specify a type:
+Legacy reference - `Type` is now explicit in the JSON. Only needed if
+rebuilding from source:
 
 | Prefix | Type |
 |---|---|
@@ -148,62 +194,120 @@ Used by merge_cards.py when the DB doesn't specify a type:
 | j, jus | Jutsu |
 | m, mus | Mission |
 | c, cus | Client |
-| p, pr, prus, ps | Unknown — promos, manual entry required |
 
-Suffix letters on card numbers:
-- e (errata), a (alt art), r, ra — same data as base card
-- b — legit separate card, do not fall back
+Suffix letters on IDs: e (errata), a (alt art), r / ra (reprint),
+b (separate card, never merged).
 
-merge_cards.py walks backward stripping e/a/r until it finds a
-non-stub entry. It never strips b.
+## Data Pipeline (for maintainers)
 
-## Data Pipeline
+Heads up: The Python pipeline scripts currently live in `unused/`.
+They produced `cards.json` under the old schema and are not used to
+build `narutoccgdatabase.json`. See `PROJECT_HANDOFF.md` for how the
+master DB was built.
 
-Run from the project root:
-
-### 1. Rebuild image list
-
-    python list_images.py
-
-Walks cards_database/, writes cards_from_images.json.
-Run this any time you add, remove, or rename card images.
-
-### 2. Merge with rich card data
-
-    python merge_cards.py
-
-Reads cards_from_images.json + exports/card_database.json,
-writes cards.json (backing up the old one to cards.json.backup).
-
-Rules the merge enforces:
-- cardtype guessed from prefix if DB doesn't provide one
-- Jutsu cards get blank entrancecost / handcost
-- Card name has any trailing card number stripped
-- Suffixed variants (e, a, r, ra) inherit data from their base card
-- b-suffix cards are kept independent
-- setfolder dots stripped to match disk folders
-
-### 3. Commit and push
-
-    git add .
-    git commit -m "describe what changed"
-    git push
+If the site ever needs to go back to `cards.json`, restore the scripts
+from `unused/` to the root and re-run `list_images.py` plus
+`merge_cards.py`. Do not do this without an explicit request.
 
 ## What index.html Reads
 
-- fetch('cards.json')    card data
-- fetch('sets.json')     set dropdown order + display names
-- Image URLs built from cards_database/{setfolder}/{imgname}
+- `fetch('narutoccgdatabase.json')` - card data
+- Image URLs from `cards_database/{image_path}`
 
-No build step. Open with Live Server, or git push for GitHub Pages
-to pick it up.
+It does not fetch `cards.json` or `sets.json`. The set dropdown is
+built at runtime from the data.
+
+No build step. Open with Live Server, or git push for GitHub Pages.
 
 ## UI Behavior (index.html)
 
 The app is a single file with three panels: Card Inspector (left),
 Card Browser (center), Decklist (right).
 
-### Layout & resizing
+### Data loading
+
+- Fetches `narutoccgdatabase.json`
+- Flattens `{sheet: [cards]}` into one array
+- Builds `cardIndex` - a `Map` keyed by lowercased `Card ID` - for
+  O(1) lookups during import and deck operations
+- Builds the set dropdown from the union of `image_path` folders,
+  taking the display name from each card's `Set` field
+
+### Field map (F)
+
+All master-DB keys are referenced through a single `F` object at the
+top of the script:
+
+    const F = {
+      cardId:          'Card ID',
+      collectorNumber: 'Collector Number',
+      name:            'Display Name',
+      type:            'Type',
+      set:             'Set',
+      year:            'Year',
+      symbols:         'Symbols',
+      entranceCost:    'Entrance Cost',
+      handCost:        'Hand Cost',
+      healthyCombat:   'Healthy Combat',
+      healthySupport:  'Healthy Support',
+      injuredCombat:   'Injured Combat',
+      injuredSupport:  'Injured Support',
+      combatAttribute: 'Combat Attribute',
+      chakraCost:      'Chakra Cost',
+      characteristics: 'Characteristics',
+      effectTitle:     'Effect Title',
+      effectText:      'Effect Text',
+      keywords:        'Keywords',
+      errata:          'Errata',
+      imagePath:       'image_path',
+    };
+
+Never write a raw master-DB key string elsewhere in the file. Use `F`.
+
+### Deck key convention
+
+Deck pools (`currentDeck.main` / `.reinf` / `.side`) are keyed by
+lowercased `Card ID`. Everything that adds, removes, or looks up a
+card goes through `cardKey(card)`.
+
+### Inspector
+
+Two modes, controlled by the `MINIMAL_INSPECTOR` constant at the top
+of the script. Flip it and refresh - no rebuild needed.
+
+`MINIMAL_INSPECTOR = true` (default) renders these rows in this order,
+hidden if the underlying value is null / "" / undefined:
+
+| # | Row | Source | Visible for |
+|---|---|---|---|
+| 1 | Name | Display Name | all |
+| 2 | Type | Type | all |
+| 3 | Symbols | Symbols | all |
+| 4 | Characteristics | Characteristics | Ninja, Client |
+| 5 | Entrance Cost | Entrance Cost | Ninja, Mission, Client |
+| 6 | Hand Cost | Hand Cost | Ninja, Mission, Client |
+| 7 | Combat / Support (Healthy) | Healthy Combat / Healthy Support | Ninja |
+| 8 | Combat / Support (Injured) | Injured Combat / Injured Support | Ninja |
+| 9 | Combat Attribute | Combat Attribute | Ninja |
+| 10 | Jutsu Cost | Chakra Cost | Jutsu |
+| 11 | Effect | [EFFECT TITLE] uppercased + newline + Effect Text | all |
+| 12 | Card Number | Collector Number | all |
+| 13 | Set | Set | all |
+
+Rules baked into the renderer:
+
+- Numeric fields render as integers (0.0 becomes 0)
+- Effect block uses `white-space: pre-line` so \n in `Effect Text`
+  displays as real line breaks
+- Effect Title is uppercased and wrapped in square brackets
+- If Title is present but Text is not (or vice versa), only the
+  present part renders
+- Rows never print the literal string null
+
+`MINIMAL_INSPECTOR = false` appends Year, Keywords, Errata rows at
+the bottom, also hidden when blank. Nothing else changes.
+
+### Layout and resizing
 
 - Only the Card Inspector is user-resizable via a drag handle on its
   right edge. Width is clamped between 240px and 70% of viewport.
@@ -215,9 +319,9 @@ Card Browser (center), Decklist (right).
 ### Collapsible decklist
 
 - The Decklist panel is a fixed 340px wide column that can be
-  collapsed to 0 via the "Hide ▶" button in its header.
-- When collapsed, a floating "◀ Show Deck" tab appears at the
-  top-right of the Card Browser to bring it back.
+  collapsed to 0 via the Hide button in its header.
+- When collapsed, a floating Show Deck tab appears at the top-right
+  of the Card Browser to bring it back.
 - Always starts expanded on page load.
 - Collapse is disabled on mobile (tab bar handles visibility there).
 
@@ -230,44 +334,106 @@ Card Browser (center), Decklist (right).
 
 - Breakpoint: `max-width: 820px`.
 - Panels stack vertically. A `.mobile-tabs` bar at the top switches
-  between "Cards", "Inspector", and "Deck" views via
-  `data-mobile-view` on `.app-container`.
+  between Cards, Inspector, and Deck views via `data-mobile-view`
+  on `.app-container`.
 - Card grid shrinks to `minmax(120px, 1fr)`.
 - Clicking any card auto-switches to the Inspector view.
 
 ### Filter scroll reset
 
-- Changing search / type / set calls `scrollBrowserToTop()` so the
+- Changing search, type, or set calls `scrollBrowserToTop()` so the
   browser snaps back to the top of the results.
 
-### Inspector modes
+### Search
 
-- `MINIMAL_INSPECTOR` constant at the top of the script controls
-  display:
-  - `true` → name, type, number, set only
-  - `false` → full stats, effect, flavor, rarity, etc.
-- Flip the constant and refresh to switch. No rebuild needed.
+Matches, case-insensitively, against:
+
+- Display Name
+- Collector Number
+- Card ID
+
+## Export / Import Formats
+
+### TTS JSON (exportToTTS)
+
+Standard Tabletop Simulator `DeckCustom` save object with one
+`ObjectStates` entry per non-empty zone (Mainboard, Reinforcements,
+Sideboard). Card `Description` is the lowercased `Card ID`. Image
+URLs point at `{origin}/cards_database/{image_path}`.
+
+Format is unchanged from the old build - old exports still load.
+
+### Text export (exportTextDeck)
+
+    // Mainboard
+    3x Card Name [cardid]
+
+    // Reinforcements
+    1x Card Name [cardid]
+
+    // Sideboard
+    2x Card Name [cardid]
+
+Only non-empty sections are written.
+
+### TTS import (importJSONDeck)
+
+Walks `ContainedObjects`, reads `Description` (lowercased), matches
+against `cardIndex`. Falls back silently if no match. Section is
+selected by `Nickname` on the parent deck object.
+
+### Text import (importTextDeckPrompt)
+
+Accepts `3x Name [id]` or `3 Name [id]` or `3x Name`. Matching order:
+
+1. Lowercased `Card ID` (from brackets)
+2. Lowercased `Collector Number` (from brackets)
+3. Lowercased `Display Name`
+
+Section headers detected by substring: reinforcement, sideboard, main.
+
+Backwards compatible with old decklists that used lowercase IDs like
+`nus001` / `jus001`, because those are still the lowercased `Card ID`
+values.
 
 ## Known Issues / TODO
 
-- ~129 promo cards (p prefix) have no cardtype — manual entry needed
-- ~217 cards had no matching data in exports/card_database.json
-  during the last merge — they display with their cardnumber as the
-  name and blank stats
-- exports/card_database.json contains stub entries (name equals
-  card_number, all fields empty) for some variants. merge_cards.py
-  treats these as misses and looks up the base card instead. If the
-  base is missing too, the entry is written blank.
+- ~129 promo cards may still have sparse data (missing Effect Text,
+  missing Chakra Cost). No longer a type problem - `Type` is always
+  populated in the new DB.
+- Cards that reference missing image files will render a broken img.
+  There is no placeholder fallback. If you add one, use a neutral
+  background and no text.
+- `cards.json` and `sets.json` are still in the repo for rollback but
+  nothing references them. Deleting them is safe but not required.
+- `PROJECT_HANDOFF.md` documents the old Excel to master-DB pipeline.
+  It does not describe the current site.
 
 ## Rules for AI Assistants Working on This Project
 
-1. Never rename fields in cards.json. index.html references them.
-2. Never add dots to setfolder values. Disk folders have no dots.
-3. Never assume case-insensitive paths. GitHub Pages is case-sensitive.
-4. Ask before restructuring the pipeline. The Python scripts now live
-   in `unused/` and are not part of the live deployment.
-5. Test in a browser after every change. The site should still filter,
-   build decks, resize, collapse the decklist, and export.
-6. Commit working states before making risky changes.
-7. Panel sizes are intentionally NOT persisted. Do not add localStorage
-   save/restore for panel widths unless the user asks.
+1. The live data source is `narutoccgdatabase.json`. Do not switch
+   back to `cards.json` or `sets.json` without an explicit request.
+2. Never reference master-DB keys directly. Go through the `F` field
+   map at the top of `index.html`.
+3. Never add `"None"` or `"NaN"` string handling. The new DB uses
+   real `null` for blanks. Guard with the `isBlank()` helper.
+4. Never add dots to folder keys. Disk folders have no dots.
+5. Never assume case-insensitive paths. GitHub Pages is
+   case-sensitive.
+6. Deck pools are keyed by lowercased `Card ID`. Do not change this
+   without also updating import matching and the text export.
+7. Ask before restructuring the pipeline. The Python scripts live in
+   `unused/` and are not part of the live deployment.
+8. Test in a browser after every change. The site should still
+   filter, build decks, resize, collapse the decklist, and export.
+   Test at least one Ninja, one Jutsu, one Mission, and one Client
+   in the inspector.
+9. Commit working states before making risky changes.
+10. Panel sizes are intentionally NOT persisted. Do not add
+    localStorage save/restore for panel widths unless the user asks.
+11. The `MINIMAL_INSPECTOR` constant is the only intended switch for
+    inspector verbosity. Do not add new inspector modes without being
+    asked.
+12. Effect Text must preserve \n. Do not collapse whitespace or use
+    innerText where it would strip breaks - the display relies on
+    `white-space: pre-line`.
