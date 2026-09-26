@@ -911,7 +911,7 @@
 
     // ---------- Sorting ----------
     function getSortSpec() {
-      const raw = document.getElementById('sort-select').value || 'name-asc';
+      const raw = document.getElementById('sort-select').value || 'number-asc';
       const idx = raw.lastIndexOf('-');
       return { key: raw.slice(0, idx), dir: raw.slice(idx + 1) === 'desc' ? -1 : 1 };
     }
