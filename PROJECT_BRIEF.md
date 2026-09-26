@@ -28,21 +28,29 @@ Repo: https://github.com/N-CCG-DB/naruto-ccg-deckbuilder
     ├── cards.json                    canonical card database (site reads this)
     ├── sets.json                     set display names + dropdown order
     ├── cardback.webp                 card back for Tabletop Simulator export
-    ├── list_images.py                walks cards_database/ to cards_from_images.json
-    ├── merge_cards.py                merges images + exports/card_database.json to cards.json
-    ├── compress.py                   (legacy) image compression pipeline
-    ├── run_pipeline.py               (legacy) driver script
-    ├── sync_sheets.py                (legacy) Google Sheets sync
-    ├── update_database_from_scraped.py (legacy) scrape to DB script
-    ├── cards_from_images.json        output of list_images.py
     ├── cards.json.backup             auto-backup written by merge_cards.py
-    ├── missing_data.json             (optional) cards needing manual data
+    ├── convert_incoming.py           converts incoming_cards/ staging data
+    ├── PROJECT_BRIEF.md              this file
+    ├── README.md                     user-facing docs
     ├── cards_database/               ALL card images, one folder per set
-    ├── exports/
-    │   └── card_database.json        rich card data source (names, stats, effects)
     ├── incoming_cards/               staging (not used by the site)
-    ├── scraped_naruto_cards.json     raw scrape (not used by the site)
-    └── .processed_manifest.json      pipeline bookkeeping
+    └── unused/                       archived scripts, not part of the pipeline
+        ├── exports/
+        │   └── card_database.json    rich card data source
+        ├── list_images.py            walks cards_database/ to cards_from_images.json
+        ├── merge_cards.py            merges images + exports/card_database.json to cards.json
+        ├── run_pipeline.py           (legacy) driver script
+        ├── sync_sheets.py            (legacy) Google Sheets sync
+        ├── update_database_from_scraped.py (legacy) scrape to DB script
+        ├── cards_from_images.json    output of list_images.py
+        ├── scraped_naruto_cards.json raw scrape (not used by the site)
+        └── .processed_manifest.json  pipeline bookkeeping
+
+> **Note:** The entire Python pipeline lives in `unused/` as of the
+> last reorganization. The live site only needs `index.html`,
+> `cards.json`, `sets.json`, `cardback.webp`, and `cards_database/`.
+> If the pipeline is ever needed again, restore the scripts from
+> `unused/` back to the root.
 
 ## Canonical Card Schema (cards.json)
 
@@ -190,6 +198,56 @@ Rules the merge enforces:
 No build step. Open with Live Server, or git push for GitHub Pages
 to pick it up.
 
+## UI Behavior (index.html)
+
+The app is a single file with three panels: Card Inspector (left),
+Card Browser (center), Decklist (right).
+
+### Layout & resizing
+
+- Only the Card Inspector is user-resizable via a drag handle on its
+  right edge. Width is clamped between 240px and 70% of viewport.
+- Resize is desktop-only (`window.innerWidth > 820`). On mobile the
+  panels stack and are switched via the mobile tab bar.
+- Panel widths are NOT persisted. Refresh returns to CSS defaults
+  (inspector 420px, decklist 340px fixed).
+
+### Collapsible decklist
+
+- The Decklist panel is a fixed 340px wide column that can be
+  collapsed to 0 via the "Hide ▶" button in its header.
+- When collapsed, a floating "◀ Show Deck" tab appears at the
+  top-right of the Card Browser to bring it back.
+- Always starts expanded on page load.
+- Collapse is disabled on mobile (tab bar handles visibility there).
+
+### Inspector image
+
+- `.inspector-img` has no max-width; it fills the panel width minus
+  padding, so dragging the panel wider makes the card image larger.
+
+### Mobile layout
+
+- Breakpoint: `max-width: 820px`.
+- Panels stack vertically. A `.mobile-tabs` bar at the top switches
+  between "Cards", "Inspector", and "Deck" views via
+  `data-mobile-view` on `.app-container`.
+- Card grid shrinks to `minmax(120px, 1fr)`.
+- Clicking any card auto-switches to the Inspector view.
+
+### Filter scroll reset
+
+- Changing search / type / set calls `scrollBrowserToTop()` so the
+  browser snaps back to the top of the results.
+
+### Inspector modes
+
+- `MINIMAL_INSPECTOR` constant at the top of the script controls
+  display:
+  - `true` → name, type, number, set only
+  - `false` → full stats, effect, flavor, rarity, etc.
+- Flip the constant and refresh to switch. No rebuild needed.
+
 ## Known Issues / TODO
 
 - ~129 promo cards (p prefix) have no cardtype — manual entry needed
@@ -206,9 +264,10 @@ to pick it up.
 1. Never rename fields in cards.json. index.html references them.
 2. Never add dots to setfolder values. Disk folders have no dots.
 3. Never assume case-insensitive paths. GitHub Pages is case-sensitive.
-4. Ask before restructuring the pipeline. list_images.py and
-   merge_cards.py are the two scripts that matter. The other Python
-   files are legacy.
+4. Ask before restructuring the pipeline. The Python scripts now live
+   in `unused/` and are not part of the live deployment.
 5. Test in a browser after every change. The site should still filter,
-   build decks, and export.
+   build decks, resize, collapse the decklist, and export.
 6. Commit working states before making risky changes.
+7. Panel sizes are intentionally NOT persisted. Do not add localStorage
+   save/restore for panel widths unless the user asks.

@@ -18,6 +18,20 @@ Live site: https://n-ccg-db.github.io/naruto-ccg-deckbuilder/
 - Import decks back from either format
 - Dark theme, keyboard-friendly, no account required
 
+### Layout features
+
+- **Resizable Card Inspector.** Drag the handle on its right edge to
+  widen or narrow the panel. The card image scales with the panel.
+- **Collapsible Decklist.** Click "Hide ▶" in the deck header to
+  collapse the panel, and "◀ Show Deck" to bring it back.
+- **Responsive mobile layout.** On phones the panels stack and a
+  bottom tab bar switches between Cards, Inspector, and Deck.
+- **Filters reset scroll.** Changing the set, type, or search
+  automatically jumps the card browser back to the top.
+
+Panel sizes reset on page refresh — by design, so the app always
+starts in a consistent state.
+
 ## How to Use
 
 Just open the live site. No install, no sign-up.
@@ -27,7 +41,8 @@ Just open the live site. No install, no sign-up.
 3. Use + / - on any card to add/remove from your deck
 4. Switch target zone with the Mainboard / Reinforcements / Sideboard
    buttons
-5. Export when you're done. The TTS export is ready to load straight
+5. Collapse the decklist with "Hide ▶" if you want more room for cards
+6. Export when you're done. The TTS export is ready to load straight
    into Tabletop Simulator as a deck object.
 
 ## Running Locally
@@ -49,8 +64,18 @@ browser blocks fetch on local files.
 
 ## Data Pipeline (for maintainers)
 
+> **Heads up:** The Python pipeline scripts currently live in
+> `unused/`. They are kept for archival purposes and can be restored
+> to the project root if the database needs to be rebuilt. The live
+> site does not depend on them.
+
 Card data lives in cards.json. Images live in cards_database/, one
 folder per set. To regenerate after adding or renaming images:
+
+    # First, move the pipeline scripts back to the root:
+    #   unused/list_images.py      -> list_images.py
+    #   unused/merge_cards.py      -> merge_cards.py
+    #   unused/exports/            -> exports/
 
     python list_images.py    walks cards_database/ to cards_from_images.json
     python merge_cards.py    merges with exports/card_database.json to cards.json
@@ -67,9 +92,10 @@ See PROJECT_BRIEF.md for the full schema, folder conventions, and rules.
 | cards.json | Canonical card database |
 | sets.json | Set display names + dropdown order |
 | cards_database/ | Card images, one folder per set |
-| exports/card_database.json | Rich card data source |
-| list_images.py | Rebuilds image list from cards_database/ |
-| merge_cards.py | Produces cards.json from images + rich data |
+| cardback.webp | Card back image used by the TTS export |
+| convert_incoming.py | Converts staged data from incoming_cards/ |
+| incoming_cards/ | Staging area for new card data |
+| unused/ | Archived scripts (image listing, merging, scraping) |
 | PROJECT_BRIEF.md | Full technical documentation |
 
 ## Card Image Credits

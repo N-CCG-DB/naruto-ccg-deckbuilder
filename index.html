@@ -107,6 +107,23 @@
       border-radius: 4px;
     }
 
+    /* Effect block: preserves \n line breaks from the source data */
+    .effect-block {
+      background: #262626;
+      padding: 8px 10px;
+      border-radius: 4px;
+      white-space: pre-line;
+      line-height: 1.45;
+      font-size: 13px;
+    }
+    .effect-block .effect-title {
+      display: block;
+      font-weight: bold;
+      color: var(--accent-color);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
     .placeholder-text { color: #777; text-align: center; margin-top: 50px; }
 
     .card-browser { flex: 1; padding: 15px; overflow-y: auto; min-width: 200px; }
@@ -193,14 +210,12 @@
       min-width: 0;
     }
 
-    /* Collapsed state */
     .decklist-sidebar.collapsed {
       width: 0;
       border-left-width: 0;
       padding: 0;
     }
 
-    /* Small floating tab to re-open the collapsed decklist */
     .decklist-toggle-tab {
       position: absolute;
       top: 12px;
@@ -220,7 +235,6 @@
     .decklist-toggle-tab.visible { display: block; }
     .decklist-toggle-tab:hover { background: var(--accent-hover); }
 
-    /* Collapse button inside the decklist header */
     .decklist-header {
       display: flex;
       align-items: center;
@@ -240,7 +254,6 @@
     }
     .collapse-btn:hover { background: #3a3a3a; border-color: #555; }
 
-    /* ---------- Resize handle for inspector only ---------- */
     .resize-handle {
       width: 6px;
       cursor: col-resize;
@@ -368,7 +381,6 @@
     .btn-row { display: flex; gap: 6px; }
     .btn-row > * { flex: 1; }
 
-    /* ---------- Mobile toggle bar (hidden on desktop) ---------- */
     .mobile-tabs {
       display: none;
       background: var(--panel-bg);
@@ -393,7 +405,6 @@
       border-color: var(--accent-color);
     }
 
-    /* ---------- Mobile layout ---------- */
     @media (max-width: 820px) {
       header { padding: 8px 10px; gap: 8px; }
       header .filter-group { flex: 1 1 100%; }
@@ -445,7 +456,7 @@
   <header>
     <div class="filter-group">
       <label for="search-input">Search:</label>
-      <input type="text" id="search-input" placeholder="Name or Card #..." oninput="filterCards()" />
+      <input type="text" id="search-input" placeholder="Name, Card #, or ID..." oninput="filterCards()" />
     </div>
 
     <div class="filter-group">
@@ -527,30 +538,76 @@
 
   <script>
     // ============================================================
-    // INSPECTOR MODE
-    // true  = minimal (name, type, number, set only)
-    // false = full (all card details)
-    // Change this line and refresh the page to switch modes.
+    // DATA SOURCE: narutoccgdatabase.json
+    // Schema (Title Case keys) is defined in PROJECT_HANDOFF.md.
+    // cards.json / sets.json are no longer read by this page.
     // ============================================================
+
+    // INSPECTOR MODE
+    // true  = the 13-row layout specced for the new database
+    // false = same layout, plus Year / Keywords / Errata at the end
+    // Change this line and refresh to switch.
     const MINIMAL_INSPECTOR = true;
 
     const COLOR_MAIN = '#ff9800';
     const COLOR_REINF = '#4fc3f7';
     const COLOR_SIDE = '#f48fb1';
 
-    let cardDatabase = [];
-    let setList = [];
-
-    let currentDeck = {
-      main: {},
-      reinf: {},
-      side: {}
+    // ---- Field map: internal name -> key in narutoccgdatabase.json ----
+    const F = {
+      cardId:          'Card ID',
+      collectorNumber: 'Collector Number',
+      name:            'Display Name',
+      type:            'Type',
+      set:             'Set',
+      year:            'Year',
+      symbols:         'Symbols',
+      entranceCost:    'Entrance Cost',
+      handCost:        'Hand Cost',
+      healthyCombat:   'Healthy Combat',
+      healthySupport:  'Healthy Support',
+      injuredCombat:   'Injured Combat',
+      injuredSupport:  'Injured Support',
+      combatAttribute: 'Combat Attribute',
+      chakraCost:      'Chakra Cost',
+      characteristics: 'Characteristics',
+      effectTitle:     'Effect Title',
+      effectText:      'Effect Text',
+      keywords:        'Keywords',
+      errata:          'Errata',
+      imagePath:       'image_path',
     };
 
+    let cardDatabase = [];        // flat array of master-DB card objects
+    let cardIndex = new Map();    // lowercased Card ID -> card
+    let setFolders = [];          // [{folder, display}] derived from image_path + Set
+
+    let currentDeck = { main: {}, reinf: {}, side: {} };
+
     let activeAddTarget = 'main';
-    let currentInspectedCardNumber = null;
+    let currentInspectedCardId = null;
     let lastInspectedCard = null;
     let decklistRenderPending = false;
+
+    // ---------- small helpers ----------
+    function isBlank(v) {
+      return v === null || v === undefined || v === '';
+    }
+
+    // Renders 0.0 -> "0", 1.5 -> "1.5", null/"" -> "" (caller decides to skip)
+    function fmtNum(v) {
+      if (isBlank(v)) return '';
+      const n = Number(v);
+      if (!Number.isFinite(n)) return String(v);
+      return Number.isInteger(n) ? String(n) : String(n);
+    }
+
+    function getSetFolder(card) {
+      const p = card[F.imagePath];
+      if (!p || typeof p !== 'string') return '';
+      const idx = p.indexOf('/');
+      return idx === -1 ? '' : p.slice(0, idx);
+    }
 
     // ---------- Mobile view switching ----------
     function setMobileView(view) {
@@ -571,7 +628,7 @@
     }
     window.toggleDecklist = toggleDecklist;
 
-    // ---------- Resizable inspector panel (no persistence) ----------
+    // ---------- Resizable inspector panel (not persisted) ----------
     (function initResize() {
       const inspector = document.getElementById('panel-inspector');
       const handle = document.getElementById('handle-left');
@@ -625,38 +682,68 @@
     }
 
     function getCardImageUrl(card) {
-      return `./cards_database/${card.setfolder}/${card.imgname}`;
+      const rel = card[F.imagePath];
+      if (!rel) return '';
+      return `./cards_database/${rel}`;
     }
 
-    function getSetDisplayName(folder) {
-      const entry = setList.find(s => s.folder === folder);
-      return entry ? entry.display : folder.replace(/_/g, ' ');
+    // Stable key for deck pools: lowercased Card ID
+    function cardKey(card) {
+      const id = card[F.cardId];
+      return id ? String(id).toLowerCase() : '';
     }
 
+    // ---------- Load & normalize ----------
     async function initApp() {
       try {
-        const [cardsRes, setsRes] = await Promise.all([
-          fetch('cards.json'),
-          fetch('sets.json')
-        ]);
-        cardDatabase = await cardsRes.json();
-        setList = await setsRes.json();
+        const res = await fetch('narutoccgdatabase.json');
+        if (!res.ok) throw new Error(`HTTP ${res.status} for narutoccgdatabase.json`);
+        const raw = await res.json();
 
+        // Flatten {sheet_name: [cards...]} into one array
+        cardDatabase = [];
+        if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+          Object.values(raw).forEach(arr => {
+            if (Array.isArray(arr)) cardDatabase.push(...arr);
+          });
+        } else if (Array.isArray(raw)) {
+          cardDatabase = raw;
+        }
+
+        // Build lookup by lowercased Card ID
+        cardIndex = new Map();
+        cardDatabase.forEach(c => {
+          const k = cardKey(c);
+          if (k && !cardIndex.has(k)) cardIndex.set(k, c);
+        });
+
+        buildSetFolders();
         populateSetFilter();
         filterCards();
       } catch (err) {
-        console.error("Failed to load data:", err);
+        console.error("Failed to load narutoccgdatabase.json:", err);
+        document.getElementById('card-grid').innerHTML =
+          `<p style="color:#f88; padding:20px;">Failed to load narutoccgdatabase.json — check the console and confirm the file is present at the project root.</p>`;
       }
+    }
+
+    // Derive one entry per set folder, display name from the card's "Set"
+    function buildSetFolders() {
+      const byFolder = new Map();
+      cardDatabase.forEach(c => {
+        const folder = getSetFolder(c);
+        if (!folder) return;
+        if (!byFolder.has(folder)) {
+          byFolder.set(folder, c[F.set] || folder.replace(/_/g, ' '));
+        }
+      });
+      setFolders = Array.from(byFolder.entries()).map(([folder, display]) => ({ folder, display }));
     }
 
     function populateSetFilter() {
       const setSelect = document.getElementById('set-filter');
       setSelect.innerHTML = '<option value="ALL">All Sets</option>';
-
-      const presentFolders = new Set(cardDatabase.map(c => c.setfolder));
-
-      setList.forEach(({ folder, display }) => {
-        if (!presentFolders.has(folder)) return;
+      setFolders.forEach(({ folder, display }) => {
         const opt = document.createElement('option');
         opt.value = folder;
         opt.textContent = display;
@@ -664,18 +751,25 @@
       });
     }
 
+    // ---------- Filtering ----------
     function getFilteredCards() {
       const query = document.getElementById('search-input').value.toLowerCase().trim();
       const selectedSet = document.getElementById('set-filter').value;
       const selectedType = document.getElementById('type-filter').value;
 
       return cardDatabase.filter(card => {
-        const nameMatch = card.name ? card.name.toLowerCase().includes(query) : false;
-        const numberMatch = card.cardnumber ? card.cardnumber.toLowerCase().includes(query) : false;
-        const matchesQuery = nameMatch || numberMatch;
+        const name  = (card[F.name] || '').toLowerCase();
+        const num   = (card[F.collectorNumber] || '').toLowerCase();
+        const id    = (card[F.cardId] || '').toLowerCase();
 
-        const matchesSet = (selectedSet === 'ALL') || (card.setfolder === selectedSet);
-        const matchesType = (selectedType === 'ALL') || (card.cardtype && card.cardtype.toLowerCase() === selectedType.toLowerCase());
+        const matchesQuery = !query
+          || name.includes(query)
+          || num.includes(query)
+          || id.includes(query);
+
+        const matchesSet = (selectedSet === 'ALL') || (getSetFolder(card) === selectedSet);
+        const matchesType = (selectedType === 'ALL')
+          || ((card[F.type] || '').toLowerCase() === selectedType.toLowerCase());
 
         return matchesQuery && matchesSet && matchesType;
       });
@@ -686,48 +780,52 @@
       scrollBrowserToTop();
     }
 
-    function getFormattedQtyHTML(cardNumber) {
-      const mainCount = currentDeck.main[cardNumber] ? currentDeck.main[cardNumber].count : 0;
-      const reinfCount = currentDeck.reinf[cardNumber] ? currentDeck.reinf[cardNumber].count : 0;
-      const sideCount = currentDeck.side[cardNumber] ? currentDeck.side[cardNumber].count : 0;
+    // ---------- Quantity badge on card tiles ----------
+    function getFormattedQtyHTML(key) {
+      const mainCount  = currentDeck.main[key]  ? currentDeck.main[key].count  : 0;
+      const reinfCount = currentDeck.reinf[key] ? currentDeck.reinf[key].count : 0;
+      const sideCount  = currentDeck.side[key]  ? currentDeck.side[key].count  : 0;
 
       const parts = [];
-      if (mainCount > 0) parts.push(`<span style="color: ${COLOR_MAIN};">x${mainCount}</span>`);
+      if (mainCount > 0)  parts.push(`<span style="color: ${COLOR_MAIN};">x${mainCount}</span>`);
       if (reinfCount > 0) parts.push(`<span style="color: ${COLOR_REINF};">x${reinfCount}</span>`);
-      if (sideCount > 0) parts.push(`<span style="color: ${COLOR_SIDE};">x${sideCount}</span>`);
+      if (sideCount > 0)  parts.push(`<span style="color: ${COLOR_SIDE};">x${sideCount}</span>`);
 
       return parts.join('<span style="color: #666; font-weight: normal;"> / </span>');
     }
 
+    // ---------- Card grid ----------
     function renderCards(cardsToRender) {
       const grid = document.getElementById('card-grid');
       grid.innerHTML = '';
 
       cardsToRender.forEach(card => {
+        const key = cardKey(card);
         const cardEl = document.createElement('div');
         cardEl.className = 'card-item';
-        cardEl.setAttribute('data-card-number', card.cardnumber);
+        cardEl.setAttribute('data-card-key', key);
         cardEl.onclick = () => inspectCard(card);
 
         cardEl.innerHTML = `
-          <img src="${getCardImageUrl(card)}" alt="${card.name}" loading="lazy" width="750" height="1050" />
+          <img src="${getCardImageUrl(card)}" alt="${card[F.name] || ''}" loading="lazy" width="750" height="1050" />
           <div class="card-controls" onclick="event.stopPropagation()">
-            <button onclick="removeCard('${card.cardnumber}', activeAddTarget)">-</button>
-            <span class="card-qty">${getFormattedQtyHTML(card.cardnumber)}</span>
-            <button onclick="addCard('${card.cardnumber}', activeAddTarget)">+</button>
+            <button onclick="removeCard('${key}', activeAddTarget)">-</button>
+            <span class="card-qty">${getFormattedQtyHTML(key)}</span>
+            <button onclick="addCard('${key}', activeAddTarget)">+</button>
           </div>
         `;
         grid.appendChild(cardEl);
       });
     }
 
-    function updateSingleCardQty(cardNumber) {
-      const cardTile = document.querySelector(`[data-card-number="${cardNumber}"]`);
-      if (!cardTile) return;
-      const qtySpan = cardTile.querySelector('.card-qty');
-      if (qtySpan) qtySpan.innerHTML = getFormattedQtyHTML(cardNumber);
+    function updateSingleCardQty(key) {
+      const tile = document.querySelector(`[data-card-key="${key}"]`);
+      if (!tile) return;
+      const qtySpan = tile.querySelector('.card-qty');
+      if (qtySpan) qtySpan.innerHTML = getFormattedQtyHTML(key);
     }
 
+    // ---------- Deck mutators ----------
     function scheduleDecklistRender() {
       if (decklistRenderPending) return;
       decklistRenderPending = true;
@@ -737,38 +835,50 @@
       });
     }
 
-    function addCard(cardNumber, target = activeAddTarget) {
-      const card = cardDatabase.find(c => c.cardnumber === cardNumber);
+    function addCard(key, target = activeAddTarget) {
+      const card = cardIndex.get(key);
       if (!card) return;
 
       const pool = currentDeck[target];
-      if (pool[cardNumber]) {
-        pool[cardNumber].count += 1;
-      } else {
-        pool[cardNumber] = { card: card, count: 1 };
-      }
+      if (pool[key]) pool[key].count += 1;
+      else pool[key] = { card, count: 1 };
 
       scheduleDecklistRender();
-      updateSingleCardQty(cardNumber);
+      updateSingleCardQty(key);
     }
 
-    function removeCard(cardNumber, target = activeAddTarget) {
+    function removeCard(key, target = activeAddTarget) {
       const pool = currentDeck[target];
-      if (!pool[cardNumber]) return;
+      if (!pool[key]) return;
 
-      pool[cardNumber].count -= 1;
-      if (pool[cardNumber].count <= 0) delete pool[cardNumber];
+      pool[key].count -= 1;
+      if (pool[key].count <= 0) delete pool[key];
 
       scheduleDecklistRender();
-      updateSingleCardQty(cardNumber);
+      updateSingleCardQty(key);
     }
 
+    // ---------- Inspector ----------
     function inspectCard(card) {
-      if (!card || currentInspectedCardNumber === card.cardnumber) return;
-      currentInspectedCardNumber = card.cardnumber;
+      if (!card) return;
+      const key = cardKey(card);
+      if (currentInspectedCardId === key) return;
+      currentInspectedCardId = key;
       lastInspectedCard = card;
       renderInspector();
       if (window.innerWidth <= 820) setMobileView('inspector');
+    }
+
+    // Build a single row <p><strong>Label:</strong> value</p>, or '' if blank
+    function row(label, value) {
+      if (isBlank(value)) return '';
+      return `<p><strong>${label}:</strong> ${value}</p>`;
+    }
+
+    function statRow(leftLabel, leftVal, rightLabel, rightVal) {
+      const l = isBlank(leftVal) ? '-' : leftVal;
+      const r = isBlank(rightVal) ? '-' : rightVal;
+      return `<div class="stat-row"><span><strong>${leftLabel}:</strong> ${l}</span><span><strong>${rightLabel}:</strong> ${r}</span></div>`;
     }
 
     function renderInspector() {
@@ -776,68 +886,99 @@
       if (!card) return;
 
       const inspector = document.getElementById('inspector-content');
+      const type = (card[F.type] || '').trim();
+      const typeLc = type.toLowerCase();
 
-      // ---- Minimal mode: name, type, number, set ----
-      if (MINIMAL_INSPECTOR) {
-        inspector.innerHTML = `
-          <img src="${getCardImageUrl(card)}" class="inspector-img" alt="${card.name}" />
-          <div class="inspector-details">
-            <h4>${card.name || 'Unknown'}</h4>
-            <p><strong>Type:</strong> ${card.cardtype || '-'}</p>
-            <p><strong>Number:</strong> ${card.cardnumber || '-'}</p>
-            <p><strong>Set:</strong> ${getSetDisplayName(card.setfolder)}</p>
-          </div>
-        `;
-        return;
+      const isNinja   = typeLc === 'ninja';
+      const isJutsu   = typeLc === 'jutsu';
+      const isMission = typeLc === 'mission';
+      const isClient  = typeLc === 'client';
+
+      const name    = card[F.name] || '';
+      const symbols = card[F.symbols];
+      const chars   = card[F.characteristics];
+      const ent     = card[F.entranceCost];
+      const hand    = card[F.handCost];
+      const hc      = card[F.healthyCombat];
+      const hs      = card[F.healthySupport];
+      const ic      = card[F.injuredCombat];
+      const is      = card[F.injuredSupport];
+      const attr    = card[F.combatAttribute];
+      const chakra  = card[F.chakraCost];
+      const eTitle  = card[F.effectTitle];
+      const eText   = card[F.effectText];
+      const num     = card[F.collectorNumber];
+      const set     = card[F.set];
+
+      let html = `<img src="${getCardImageUrl(card)}" class="inspector-img" alt="${name}" />`;
+      html += `<div class="inspector-details">`;
+
+      // 1. Name
+      html += `<h4>${name || 'Unknown'}</h4>`;
+
+      // 2. Type
+      html += row('Type', type);
+
+      // 3. Symbols
+      html += row('Symbols', symbols);
+
+      // 4. Characteristics — Ninja, Client
+      if (isNinja || isClient) html += row('Characteristics', chars);
+
+      // 5. Entrance Cost — Ninja, Mission, Client
+      if (isNinja || isMission || isClient) html += row('Entrance Cost', fmtNum(ent));
+
+      // 6. Hand Cost — Ninja, Mission, Client
+      if (isNinja || isMission || isClient) html += row('Hand Cost', fmtNum(hand));
+
+      // 7. Healthy stats — Ninja
+      if (isNinja && !(isBlank(hc) && isBlank(hs))) {
+        html += statRow('Combat (Healthy)', fmtNum(hc), 'Support (Healthy)', fmtNum(hs));
       }
 
-      // ---- Full mode ----
-      const isJutsu = (card.cardtype || "").trim().toLowerCase() === "jutsu";
-      const hasCosts = !isJutsu && ((card.entrancecost !== '' && card.entrancecost !== undefined) || (card.handcost !== '' && card.handcost !== undefined));
-      const hasStats = (card.combath || card.supporth || card.combati || card.supporti);
+      // 8. Injured stats — Ninja
+      if (isNinja && !(isBlank(ic) && isBlank(is))) {
+        html += statRow('Combat (Injured)', fmtNum(ic), 'Support (Injured)', fmtNum(is));
+      }
 
-      inspector.innerHTML = `
-        <img src="${getCardImageUrl(card)}" class="inspector-img" alt="${card.name}" />
-        <div class="inspector-details">
-          <h4>${card.name || 'Unknown'}</h4>
-          <p><strong>Type:</strong> ${card.cardtype || '-'}</p>
-          ${card.symbol ? `<p><strong>Symbol:</strong> ${card.symbol}</p>` : ''}
+      // 9. Combat Attribute — Ninja
+      if (isNinja) html += row('Combat Attribute', attr);
 
-          ${hasCosts ? `
-            <div class="stat-row">
-              <span><strong>Entrance Cost:</strong> ${card.entrancecost !== '' ? card.entrancecost : '-'}</span>
-              <span><strong>Hand Cost:</strong> ${card.handcost !== '' ? card.handcost : '-'}</span>
-            </div>
-          ` : ''}
+      // 10. Jutsu Cost — Jutsu
+      if (isJutsu) html += row('Jutsu Cost', chakra);
 
-          ${card.jutsucost ? `
-            <div class="stat-row">
-              <span><strong>Jutsu Cost:</strong> ${card.jutsucost}</span>
-            </div>
-          ` : ''}
+      // 11. Effect — all types
+      //     [EFFECT TITLE UPPERCASED] then Effect Text (line breaks preserved)
+      if (!isBlank(eTitle) || !isBlank(eText)) {
+        let effectHtml = '<div class="effect-block">';
+        if (!isBlank(eTitle)) {
+          effectHtml += `<span class="effect-title">[${String(eTitle).toUpperCase()}]</span>`;
+        }
+        if (!isBlank(eText)) {
+          effectHtml += String(eText);
+        }
+        effectHtml += '</div>';
+        html += effectHtml;
+      }
 
-          ${card.requirement ? `<p><strong>Requirement:</strong> ${card.requirement}</p>` : ''}
-          ${card.target ? `<p><strong>Target:</strong> ${card.target}</p>` : ''}
+      // 12. Card Number — all types
+      html += row('Card Number', num);
 
-          ${hasStats ? `
-            <div class="stat-row">
-              <span><strong>Healthy:</strong> ${card.combath || '-'}/${card.supporth || '-'}</span>
-              <span><strong>Injured:</strong> ${card.combati || '-'}/${card.supporti || '-'}</span>
-            </div>
-          ` : ''}
+      // 13. Set — all types
+      html += row('Set', set);
 
-          ${card.attribute ? `<p><strong>Combat Attribute:</strong> ${card.attribute}</p>` : ''}
-          ${card.characteristics ? `<p><strong>Characteristics:</strong> ${card.characteristics}</p>` : ''}
+      // Optional extras when MINIMAL_INSPECTOR is false
+      if (!MINIMAL_INSPECTOR) {
+        html += row('Year', fmtNum(card[F.year]));
+        html += row('Keywords', card[F.keywords]);
+        html += row('Errata', card[F.errata]);
+      }
 
-          ${card.effect ? `<p>${card.effect}</p>` : ''}
-          ${card.flavor ? `<p><em>"${card.flavor}"</em></p>` : ''}
-
-          <p><strong>Number:</strong> ${card.cardnumber || '-'}</p>
-          <p><strong>Set:</strong> ${getSetDisplayName(card.setfolder)}</p>
-        </div>
-      `;
+      html += `</div>`;
+      inspector.innerHTML = html;
     }
 
+    // ---------- Decklist rendering ----------
     function renderDecklist() {
       const container = document.getElementById('deck-items');
       const countEl = document.getElementById('deck-count');
@@ -847,85 +988,86 @@
       let reinfTotal = 0;
       let sideTotal = 0;
 
-      const createEntryHTML = (entry, targetKey, badgeColor) => {
-        const displayName = entry.card.name || entry.card.cardnumber;
+      const entryHTML = (entry, key, targetKey, badgeColor) => {
+        const displayName = entry.card[F.name] || entry.card[F.collectorNumber] || key;
+        const num = entry.card[F.collectorNumber] || '';
         return `
           <div class="deck-entry">
             <span class="deck-qty" style="color: ${badgeColor}">${entry.count}x</span>
-            <span class="deck-name" onclick="inspectCard(cardDatabase.find(c => c.cardnumber === '${entry.card.cardnumber}'))">
-              ${displayName} <span class="deck-number">[${entry.card.cardnumber || ''}]</span>
+            <span class="deck-name" onclick="inspectCard(cardIndex.get('${key}'))">
+              ${displayName} <span class="deck-number">[${num}]</span>
             </span>
             <div class="deck-entry-controls">
-              <button onclick="removeCard('${entry.card.cardnumber}', '${targetKey}')">-</button>
-              <button onclick="addCard('${entry.card.cardnumber}', '${targetKey}')">+</button>
+              <button onclick="removeCard('${key}', '${targetKey}')">-</button>
+              <button onclick="addCard('${key}', '${targetKey}')">+</button>
             </div>
           </div>
         `;
       };
 
-      const categories = { 'Ninja': [], 'Jutsu': [], 'Mission': [], 'Client': [], 'Other': [] };
+      // Mainboard grouped by Type (guaranteed to be one of the four)
+      const groups = { 'Ninja': [], 'Jutsu': [], 'Mission': [], 'Client': [] };
 
-      Object.values(currentDeck.main).forEach(entry => {
+      Object.entries(currentDeck.main).forEach(([key, entry]) => {
         mainTotal += entry.count;
-        const type = entry.card.cardtype || 'Other';
-        if (categories[type]) categories[type].push(entry);
-        else categories['Other'].push(entry);
+        const t = (entry.card[F.type] || '').trim();
+        if (groups[t]) groups[t].push([key, entry]);
+        // Stray types are dropped from grouping but still counted above.
+        // Given the DB guarantees four types, this branch is defensive only.
       });
 
-      Object.keys(categories).forEach(type => {
-        const entries = categories[type];
-        if (entries.length > 0) {
-          const catCount = entries.reduce((sum, e) => sum + e.count, 0);
-          const catHeader = document.createElement('div');
-          catHeader.className = 'deck-section-title';
-          catHeader.style.color = COLOR_MAIN;
-          catHeader.innerText = `${type}s (${catCount})`;
-          container.appendChild(catHeader);
+      ['Ninja', 'Jutsu', 'Mission', 'Client'].forEach(type => {
+        const entries = groups[type];
+        if (entries.length === 0) return;
+        const catCount = entries.reduce((sum, [, e]) => sum + e.count, 0);
+        const header = document.createElement('div');
+        header.className = 'deck-section-title';
+        header.style.color = COLOR_MAIN;
+        header.innerText = `${type}s (${catCount})`;
+        container.appendChild(header);
 
-          entries.forEach(entry => {
-            const div = document.createElement('div');
-            div.innerHTML = createEntryHTML(entry, 'main', COLOR_MAIN);
-            container.appendChild(div.firstElementChild);
-          });
-        }
+        entries.forEach(([key, entry]) => {
+          const div = document.createElement('div');
+          div.innerHTML = entryHTML(entry, key, 'main', COLOR_MAIN);
+          container.appendChild(div.firstElementChild);
+        });
       });
 
-      const reinfEntries = Object.values(currentDeck.reinf);
-      reinfTotal = reinfEntries.reduce((sum, e) => sum + e.count, 0);
+      const reinfEntries = Object.entries(currentDeck.reinf);
+      reinfTotal = reinfEntries.reduce((sum, [, e]) => sum + e.count, 0);
       if (reinfEntries.length > 0 || activeAddTarget === 'reinf') {
-        const reinfHeader = document.createElement('div');
-        reinfHeader.className = 'deck-section-title';
-        reinfHeader.style.color = COLOR_REINF;
-        reinfHeader.innerText = `Reinforcements (${reinfTotal})`;
-        container.appendChild(reinfHeader);
+        const header = document.createElement('div');
+        header.className = 'deck-section-title';
+        header.style.color = COLOR_REINF;
+        header.innerText = `Reinforcements (${reinfTotal})`;
+        container.appendChild(header);
 
-        reinfEntries.forEach(entry => {
+        reinfEntries.forEach(([key, entry]) => {
           const div = document.createElement('div');
-          div.innerHTML = createEntryHTML(entry, 'reinf', COLOR_REINF);
+          div.innerHTML = entryHTML(entry, key, 'reinf', COLOR_REINF);
           container.appendChild(div.firstElementChild);
         });
       }
 
-      const sideEntries = Object.values(currentDeck.side);
-      sideTotal = sideEntries.reduce((sum, e) => sum + e.count, 0);
+      const sideEntries = Object.entries(currentDeck.side);
+      sideTotal = sideEntries.reduce((sum, [, e]) => sum + e.count, 0);
       if (sideEntries.length > 0 || activeAddTarget === 'side') {
-        const sideHeader = document.createElement('div');
-        sideHeader.className = 'deck-section-title';
-        sideHeader.style.color = COLOR_SIDE;
-        sideHeader.innerText = `Sideboard (${sideTotal})`;
-        container.appendChild(sideHeader);
+        const header = document.createElement('div');
+        header.className = 'deck-section-title';
+        header.style.color = COLOR_SIDE;
+        header.innerText = `Sideboard (${sideTotal})`;
+        container.appendChild(header);
 
-        sideEntries.forEach(entry => {
+        sideEntries.forEach(([key, entry]) => {
           const div = document.createElement('div');
-          div.innerHTML = createEntryHTML(entry, 'side', COLOR_SIDE);
+          div.innerHTML = entryHTML(entry, key, 'side', COLOR_SIDE);
           container.appendChild(div.firstElementChild);
         });
       }
 
-      let countParts = [`<span style="color: ${COLOR_MAIN};">${mainTotal}</span>`];
+      const countParts = [`<span style="color: ${COLOR_MAIN};">${mainTotal}</span>`];
       if (reinfTotal > 0 || activeAddTarget === 'reinf') countParts.push(`<span style="color: ${COLOR_REINF};">${reinfTotal}</span>`);
-      if (sideTotal > 0 || activeAddTarget === 'side') countParts.push(`<span style="color: ${COLOR_SIDE};">${sideTotal}</span>`);
-
+      if (sideTotal > 0  || activeAddTarget === 'side')  countParts.push(`<span style="color: ${COLOR_SIDE};">${sideTotal}</span>`);
       countEl.innerHTML = countParts.join('<span style="color: #666; font-weight: normal;"> / </span>');
 
       const mobileCount = document.getElementById('mobile-deck-count');
@@ -937,6 +1079,7 @@
       renderCards(getFilteredCards());
     }
 
+    // ---------- Export: TTS ----------
     function exportToTTS() {
       const allMainCards = [];
       Object.values(currentDeck.main).forEach(entry => {
@@ -959,8 +1102,9 @@
         cardList.forEach((card, index) => {
           const deckKey = index + 1;
           const cardId = deckKey * 100;
-          const cleanImgPath = getCardImageUrl(card).replace(/^\.\//, '');
-          const fullImageUrl = `${baseURL}/${cleanImgPath}`;
+          const rel = card[F.imagePath] || '';
+          const cleanRel = rel.replace(/^\.\//, '');
+          const fullImageUrl = `${baseURL}/cards_database/${cleanRel}`;
 
           deckIDs.push(cardId);
           customDeckDict[deckKey] = {
@@ -973,8 +1117,8 @@
           containedObjects.push({
             "Name": "Card",
             "Transform": { "posX": 0, "posY": 0, "posZ": 0, "rotX": 0, "rotY": 180, "rotZ": 180, "scaleX": 1.25, "scaleY": 1, "scaleZ": 1.25 },
-            "Nickname": card.name || card.cardnumber,
-            "Description": card.cardnumber,
+            "Nickname": card[F.name] || card[F.collectorNumber] || '',
+            "Description": cardKey(card),
             "CardID": cardId,
             "CustomDeck": { [deckKey]: customDeckDict[deckKey] }
           });
@@ -1007,31 +1151,35 @@
       const ttsSaveObject = { "SaveName": "", "GameMode": "", "Date": "", "ObjectStates": objectStates };
 
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ttsSaveObject, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", "naruto_deck.json");
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
+      const a = document.createElement('a');
+      a.setAttribute("href", dataStr);
+      a.setAttribute("download", "naruto_deck.json");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
     }
 
+    // ---------- Export: plain text ----------
     function exportTextDeck() {
       let textData = "// Mainboard\n";
-      Object.values(currentDeck.main).forEach(entry => {
-        textData += `${entry.count}x ${entry.card.name || entry.card.cardnumber} [${entry.card.cardnumber}]\n`;
+      Object.entries(currentDeck.main).forEach(([key, entry]) => {
+        const n = entry.card[F.name] || entry.card[F.collectorNumber] || key;
+        textData += `${entry.count}x ${n} [${key}]\n`;
       });
 
       if (Object.keys(currentDeck.reinf).length > 0) {
         textData += "\n// Reinforcements\n";
-        Object.values(currentDeck.reinf).forEach(entry => {
-          textData += `${entry.count}x ${entry.card.name || entry.card.cardnumber} [${entry.card.cardnumber}]\n`;
+        Object.entries(currentDeck.reinf).forEach(([key, entry]) => {
+          const n = entry.card[F.name] || entry.card[F.collectorNumber] || key;
+          textData += `${entry.count}x ${n} [${key}]\n`;
         });
       }
 
       if (Object.keys(currentDeck.side).length > 0) {
         textData += "\n// Sideboard\n";
-        Object.values(currentDeck.side).forEach(entry => {
-          textData += `${entry.count}x ${entry.card.name || entry.card.cardnumber} [${entry.card.cardnumber}]\n`;
+        Object.entries(currentDeck.side).forEach(([key, entry]) => {
+          const n = entry.card[F.name] || entry.card[F.collectorNumber] || key;
+          textData += `${entry.count}x ${n} [${key}]\n`;
         });
       }
 
@@ -1043,6 +1191,7 @@
       anchor.remove();
     }
 
+    // ---------- Import: TTS JSON ----------
     function importJSONDeck(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1057,16 +1206,19 @@
             data.ObjectStates.forEach(deckObj => {
               let targetKey = 'main';
               if (deckObj.Nickname === 'Reinforcements') targetKey = 'reinf';
-              if (deckObj.Nickname === 'Sideboard') targetKey = 'side';
+              if (deckObj.Nickname === 'Sideboard')      targetKey = 'side';
 
               if (deckObj.ContainedObjects) {
                 deckObj.ContainedObjects.forEach(obj => {
-                  const cardNum = obj.Description;
-                  const matchedCard = cardDatabase.find(c => c.cardnumber && c.cardnumber.toLowerCase() === cardNum.toLowerCase());
-                  if (matchedCard) {
+                  // Description is the lowercased Card ID we wrote on export,
+                  // but we also accept older files where it was the lowercase cardnumber.
+                  const desc = (obj.Description || '').toLowerCase();
+                  const matched = cardIndex.get(desc);
+                  if (matched) {
+                    const key = cardKey(matched);
                     const pool = currentDeck[targetKey];
-                    if (pool[matchedCard.cardnumber]) pool[matchedCard.cardnumber].count += 1;
-                    else pool[matchedCard.cardnumber] = { card: matchedCard, count: 1 };
+                    if (pool[key]) pool[key].count += 1;
+                    else pool[key] = { card: matched, count: 1 };
                   }
                 });
               }
@@ -1083,6 +1235,7 @@
       reader.readAsText(file);
     }
 
+    // ---------- Import: text ----------
     function importTextDeckPrompt() {
       const input = prompt("Paste your decklist here (supports section headers like // Sideboard):");
       if (!input) return;
@@ -1095,26 +1248,41 @@
         const cleanLine = line.trim();
         if (!cleanLine) return;
 
-        if (cleanLine.toLowerCase().includes('reinforcement')) { currentSection = 'reinf'; return; }
-        if (cleanLine.toLowerCase().includes('sideboard')) { currentSection = 'side'; return; }
-        if (cleanLine.toLowerCase().includes('main')) { currentSection = 'main'; return; }
+        const lower = cleanLine.toLowerCase();
+        if (lower.includes('reinforcement')) { currentSection = 'reinf'; return; }
+        if (lower.includes('sideboard'))     { currentSection = 'side';  return; }
+        if (lower.includes('main'))          { currentSection = 'main';  return; }
 
+        // Formats accepted:
+        //   3x Card Name [cardid]
+        //   3 Card Name [cardid]
+        //   3x Card Name
         const match = cleanLine.match(/^(\d+)x?\s+(.+?)(?:\s+\[(.*?)\])?$/i);
-        if (match) {
-          const qty = parseInt(match[1], 10);
-          const cardName = match[2].trim().toLowerCase();
-          const cardNumber = match[3] ? match[3].trim().toLowerCase() : null;
+        if (!match) return;
 
-          const matchedCard = cardDatabase.find(c => {
-            if (cardNumber && c.cardnumber) return c.cardnumber.toLowerCase() === cardNumber;
-            return c.name && c.name.toLowerCase() === cardName;
-          });
+        const qty = parseInt(match[1], 10);
+        const namePart = match[2].trim().toLowerCase();
+        const idPart = match[3] ? match[3].trim().toLowerCase() : null;
 
-          if (matchedCard) {
-            const pool = currentDeck[currentSection];
-            if (pool[matchedCard.cardnumber]) pool[matchedCard.cardnumber].count += qty;
-            else pool[matchedCard.cardnumber] = { card: matchedCard, count: qty };
-          }
+        let matched = null;
+        if (idPart) matched = cardIndex.get(idPart);
+        if (!matched && idPart) {
+          // fall back: maybe they used the Collector Number in brackets
+          matched = cardDatabase.find(c =>
+            (c[F.collectorNumber] || '').toLowerCase() === idPart
+          );
+        }
+        if (!matched) {
+          matched = cardDatabase.find(c =>
+            (c[F.name] || '').toLowerCase() === namePart
+          );
+        }
+
+        if (matched) {
+          const key = cardKey(matched);
+          const pool = currentDeck[currentSection];
+          if (pool[key]) pool[key].count += qty;
+          else pool[key] = { card: matched, count: qty };
         }
       });
 
