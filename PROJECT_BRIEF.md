@@ -477,3 +477,113 @@ majority-vote label logic with a hard-coded SET_DISPLAY_NAMES map of
 the 33 canonical folder -> display-name pairs already listed in this
 brief. That removes any dependence on the "Set" field for the
 dropdown entirely. Consider this if the source data cannot be fixed.
+
+## Addendum: Cost Boxes, Scoped Search, and Sorting
+
+Three additions were made to index.html after the migration to
+narutoccgdatabase.json. All three are self-contained and do not
+require any data changes.
+
+### A. Cost Boxes in the Inspector
+
+Two cost layouts changed in renderInspector():
+
+1. Entrance Cost and Hand Cost now render inside a single two-column
+   .stat-row box, matching the shape of the Healthy and Injured stat
+   boxes. This applies to Ninja, Mission, and Client cards.
+   Implementation: statRow('Entrance Cost', fmtNum(ent), 'Hand Cost', fmtNum(hand)).
+   The box only renders if at least one of the two values is
+   non-blank; a missing side shows "-" inside the box.
+
+2. Jutsu Cost now renders in a full-width single-item box using the
+   same .stat-row styling, via the singleBox() helper. It only
+   renders when Chakra Cost is non-blank.
+
+Do not revert these to plain <p> rows. The box layout is intentional
+and matches the combat/support boxes for visual consistency.
+
+### B. Scoped Search
+
+The header now has two search controls: a text input (#search-input)
+and a scope dropdown (#scope-filter). Default scope is "All fields",
+which reproduces the previous multi-token AND behavior.
+
+Scope options and their match rules:
+
+| Scope value       | Match rule                                                |
+|-------------------|-----------------------------------------------------------|
+| ALL               | multi-token AND, each token OR'd across every field below |
+| name              | Display Name, substring, case-insensitive                 |
+| number            | Collector Number OR Card ID, substring, case-insensitive  |
+| type              | exact match against the four Type values, case-insensitive|
+| symbols           | Symbols, substring, case-insensitive                      |
+| characteristics   | Characteristics, substring, case-insensitive              |
+| effectTitle       | Effect Title, substring, case-insensitive                 |
+| effectText        | Effect Text, substring, case-insensitive                  |
+| keywords          | Keywords, substring, case-insensitive                     |
+| combatAttribute   | Combat Attribute, substring, case-insensitive             |
+| entranceCost      | exact numeric match if the token parses as a number,      |
+|                   | substring fallback otherwise                              |
+| handCost          | same rule as entranceCost                                 |
+| chakraCost        | Chakra Cost, substring, case-insensitive                  |
+| printedName       | Printed Name, substring, case-insensitive                 |
+
+Year and Errata are deliberately NOT searchable fields. Do not add
+them without an explicit request.
+
+Multi-token behavior: the raw query is lowercased and split on
+whitespace. Every token must match (AND). In "All fields" mode, a
+token is considered matched if it matches ANY field (OR across
+fields). There is no field-prefix syntax, no scoped operators, and
+no debounce. Do not add debounce unless profiling shows a real lag.
+
+The match logic lives in FIELD_MATCHERS and cardMatchesSearch().
+Add a new searchable field by adding one entry to FIELD_MATCHERS
+and one <option> to #scope-filter with a matching value.
+
+### C. Sort Dropdown
+
+The header now has a #sort-select control. Options and their
+semantics:
+
+| Option value             | Behavior                                  |
+|--------------------------|-------------------------------------------|
+| number-asc (default)     | Collector Number, natural sort, ascending |
+| number-desc              | Collector Number, natural sort, descending|
+| name-asc                 | Display Name, natural sort, ascending     |
+| name-desc                | Display Name, natural sort, descending    |
+| entranceCost-asc / -desc | Entrance Cost numeric, direction as shown |
+| handCost-asc / -desc     | Hand Cost numeric, direction as shown     |
+| healthyCombat-asc / -desc| Healthy Combat numeric, direction as shown|
+| healthySupport-asc/-desc | Healthy Support numeric, direction as shown|
+| type-asc                 | Type, alphabetical                        |
+| setFolder-asc            | Set folder (derived from image_path)      |
+
+Rules baked into the sorter:
+
+- Natural sort via Intl.Collator with numeric:true, so N-2 sorts
+  before N-10.
+- Nulls always sort last regardless of direction. A card with no
+  Entrance Cost is not treated as "cost 0" — it moves to the end.
+- Ties always fall back to Collector Number ascending, natural sort.
+  This makes the grid order deterministic across renders.
+- Default is number-asc, set both as the selected <option> in HTML
+  and as the fallback string in getSortSpec().
+
+Do not add a Year sort. Do not add direction toggles separate from
+the dropdown — direction is baked into each option value so one
+select fully describes the sort.
+
+The sort logic lives in getSortSpec() and makeComparator(). Add a
+new sortable field by adding one branch to makeComparator() and
+one or two <option> entries to #sort-select.
+
+### Header Layout
+
+The header now contains five filter groups, in this order:
+Search, In (scope), Type, Set, Sort. On desktop they wrap into up
+to two rows. On mobile (<=820px) each group takes a full row via
+the existing 1 1 100% flex rule and the inputs stretch to full
+width. Do not reorder these groups without a specific reason; the
+current order mirrors the flow of "what am I searching for -> in
+which field -> what type -> in which set -> in what order".
