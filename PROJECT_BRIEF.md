@@ -587,3 +587,36 @@ the existing 1 1 100% flex rule and the inputs stretch to full
 width. Do not reorder these groups without a specific reason; the
 current order mirrors the flow of "what am I searching for -> in
 which field -> what type -> in which set -> in what order".
+
+## Addendum: TTS Export Zone Separation
+
+Earlier versions of exportToTTS() produced a save where all three
+deck zones (Mainboard, Reinforcements, Sideboard) spawned at the
+same transform position, so Tabletop Simulator stacked them into a
+single visual pile. Users could not tell the zones apart on load.
+
+The exporter now offsets each zone along the X axis:
+
+  Mainboard       -> posX: 0
+  Reinforcements  -> posX: 3
+  Sideboard       -> posX: 6
+
+All three share posY: 1 and posZ: 0. 3 units is roughly one and a
+half card widths at scale 1.25, which gives clean visual separation
+without overlap. Zones with zero cards are still omitted entirely
+(unchanged behavior).
+
+Implementation detail: createTTSDeckObject() takes an offsetX
+argument, and each call site passes 0, 3, or 6. The per-card
+Transform inside ContainedObjects is intentionally left at
+{posX:0, posY:0, posZ:0} because contained cards inherit the deck
+object's transform — only the deck itself needs the offset.
+
+Do NOT reset these offsets to 0. Do NOT stack the three zones on
+the same position. If more zones are added later, continue the
+pattern (posX: 9 for a fourth zone, etc.).
+
+The TTS save structure (ObjectStates array with DeckCustom entries)
+is otherwise unchanged. Card Description remains the lowercased
+Card ID. Image URLs and card back URL are unchanged. Existing
+exports remain importable.

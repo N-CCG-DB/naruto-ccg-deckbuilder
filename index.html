@@ -1288,6 +1288,8 @@
     }
 
     // ---------- Export: TTS ----------
+    // Each zone spawns as its own pile, spaced 3 units apart on the X axis
+    // so they don't stack on top of each other in Tabletop Simulator.
     function exportToTTS() {
       const allMainCards = [];
       Object.values(currentDeck.main).forEach(entry => {
@@ -1302,7 +1304,7 @@
       const baseURL = window.location.origin + window.location.pathname.replace(/\/index\.html$/, '').replace(/\/$/, '');
       const cardBackURL = `${baseURL}/cardback.webp`;
 
-      const createTTSDeckObject = (cardList, deckName) => {
+      const createTTSDeckObject = (cardList, deckName, offsetX) => {
         const customDeckDict = {};
         const containedObjects = [];
         const deckIDs = [];
@@ -1335,26 +1337,27 @@
         return {
           "Name": "DeckCustom",
           "Nickname": deckName,
-          "Transform": { "posX": 0, "posY": 1, "posZ": 0, "rotX": 0, "rotY": 180, "rotZ": 180, "scaleX": 1.25, "scaleY": 1, "scaleZ": 1.25 },
+          "Transform": { "posX": offsetX, "posY": 1, "posZ": 0, "rotX": 0, "rotY": 180, "rotZ": 180, "scaleX": 1.25, "scaleY": 1, "scaleZ": 1.25 },
           "DeckIDs": deckIDs,
           "CustomDeck": customDeckDict,
           "ContainedObjects": containedObjects
         };
       };
 
-      const objectStates = [createTTSDeckObject(allMainCards, "Mainboard")];
+      // Zone X offsets: Mainboard 0, Reinforcements 3, Sideboard 6
+      const objectStates = [createTTSDeckObject(allMainCards, "Mainboard", 0)];
 
       const reinfCards = [];
       Object.values(currentDeck.reinf).forEach(entry => {
         for (let i = 0; i < entry.count; i++) reinfCards.push(entry.card);
       });
-      if (reinfCards.length > 0) objectStates.push(createTTSDeckObject(reinfCards, "Reinforcements"));
+      if (reinfCards.length > 0) objectStates.push(createTTSDeckObject(reinfCards, "Reinforcements", 3));
 
       const sideCards = [];
       Object.values(currentDeck.side).forEach(entry => {
         for (let i = 0; i < entry.count; i++) sideCards.push(entry.card);
       });
-      if (sideCards.length > 0) objectStates.push(createTTSDeckObject(sideCards, "Sideboard"));
+      if (sideCards.length > 0) objectStates.push(createTTSDeckObject(sideCards, "Sideboard", 6));
 
       const ttsSaveObject = { "SaveName": "", "GameMode": "", "Date": "", "ObjectStates": objectStates };
 
