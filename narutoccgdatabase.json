@@ -1549,8 +1549,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 0.0,
       "Healthy Support": 1.0,
-      "Injured Combat": 1.0,
-      "Injured Support": 0.0,
+      "Injured Combat": 0.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Weapon",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Female, Growth, Mental Power: 3",
@@ -2710,7 +2710,7 @@
       "Effect Text": "When this Ninja is sent out to Battle and opposed, it gets +0/+X during the turn. X = the value of this Ninja's Mental Power.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "promos/n146a.webp"
+      "image_path": "promos/n146.webp"
     },
     {
       "Card ID": "n163_alt",
@@ -2758,7 +2758,7 @@
       "Effect Text": "Valid: When this Ninja becomes the user of a Water Jutsu, reduce its cost by 1 Water, if there is any.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "promos/n168a.webp"
+      "image_path": "promos/n168.webp"
     },
     {
       "Card ID": "n168_promo",
@@ -2869,8 +2869,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 4.0,
       "Healthy Support": 3.0,
-      "Injured Combat": 1.0,
-      "Injured Support": 0.0,
+      "Injured Combat": 0.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Weapon",
       "Chakra Cost": null,
       "Characteristics": "Sand, Genin, Female, Mental Power: 1",
@@ -2998,7 +2998,7 @@
       "Effect Text": "When this Ninja is put in play, you can select and discard up to 3 of your opponent's Chakras.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "promos/n324a.webp"
+      "image_path": "promos/n324.webp"
     },
     {
       "Card ID": "n370",
@@ -3214,7 +3214,7 @@
       "Effect Text": "During your Mission Phase, you can place a Ninja Blade coin (symbolizing a Bomb coin) on 1 of your opponent's in-play Ninjas.\nValid: During the Exchange of Jutsu, you can discard 2 of your Chakras with an \"Earth\" Symbol. In that case, give 1 Damage to 1 of your opponent's Ninjas with 1 or more Bomb coins on it.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "promos/n480a.webp"
+      "image_path": "promos/n480.webp"
     },
     {
       "Card ID": "n495",
@@ -3397,8 +3397,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 0.0,
       "Healthy Support": 1.0,
-      "Injured Combat": 1.0,
-      "Injured Support": 0.0,
+      "Injured Combat": 0.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Weapon",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Female, Mental Power: 3, Growth",
@@ -3445,8 +3445,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 0.0,
       "Healthy Support": 1.0,
-      "Injured Combat": 1.0,
-      "Injured Support": 0.0,
+      "Injured Combat": 0.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Weapon",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Female, Growth, Mental Power: 3",
@@ -3517,8 +3517,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 0.0,
       "Healthy Support": 1.0,
-      "Injured Combat": 1.0,
-      "Injured Support": 0.0,
+      "Injured Combat": 0.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Mind",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Female, Growth, Mental Power: 1",
