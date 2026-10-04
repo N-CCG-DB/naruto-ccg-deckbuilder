@@ -2590,7 +2590,7 @@
       "Effect Text": "Valid: During the Exchange of Jutsu, you can discard 1 Chakra. In that case, select 1 of the characteristics of an in-play Ninja. This Ninja gets that characteristic during the turn.",
       "Keywords": "GROWTH",
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_3_curse_of_the_sand/n086e.webp"
+      "image_path": "promos/n086ae.webp"
     },
     {
       "Card ID": "n124_alt",
@@ -2662,7 +2662,7 @@
       "Effect Text": "When this Ninja is sent out to Battle and opposed, you can search for 1 \"Sand Cocoon\" Jutsu card in your Deck, show it to your opponent and place it in your hand. Then, shuffle your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_4_revenge_and_rebirth/n145.webp"
+      "image_path": "promos/n145.webp"
     },
     {
       "Card ID": "n146_alt",
@@ -2854,7 +2854,7 @@
       "Effect Text": "Valid: While your opponent has \"Sasuke Uchiha\" in play, this Ninja gets +2/+0.",
       "Keywords": "GROWTH",
       "Errata": null,
-      "image_path": "set_7_quest_for_power/n224.webp"
+      "image_path": "promos/n224.webp"
     },
     {
       "Card ID": "n270_alt",
@@ -3421,8 +3421,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 0.0,
       "Healthy Support": 1.0,
-      "Injured Combat": 1.0,
-      "Injured Support": 0.0,
+      "Injured Combat": 0.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Weapon",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Female, Growth, Mental Power: 3",
@@ -3430,7 +3430,7 @@
       "Effect Text": "Effect: When you place a Growth coin on 1 of your other Ninjas due to the effect of Growth, place a Growth coin on this Ninja as well.",
       "Keywords": "GROWTH",
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_6_eternal_rivalry/nus005e.webp"
+      "image_path": "promos/nus005e.webp"
     },
     {
       "Card ID": "nus006_alt",
@@ -3502,7 +3502,7 @@
       "Effect Text": "At the end of your turn, if this Ninja was not moved to the Battlefield during that turn, you can heal 1 of your injured \"Genin\" Ninjas without \"Platoon\".",
       "Keywords": "GROWTH",
       "Errata": null,
-      "image_path": "set_6_eternal_rivalry/nus012.webp"
+      "image_path": "promos/nus012.webp"
     },
     {
       "Card ID": "nus013_alt",
@@ -3694,7 +3694,7 @@
       "Effect Text": "When this Ninja wins a Victory, an Outstanding Victory, or is removed from play, you can look at all of your opponent's Battle Rewards if there is any, select 1 card among them, and place it in your hand.",
       "Keywords": "PLATOON",
       "Errata": null,
-      "image_path": "set_6_eternal_rivalry/nus040.webp"
+      "image_path": "promos/nus040.webp"
     },
     {
       "Card ID": "pr005r",
@@ -14589,7 +14589,7 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 5.0,
       "Healthy Support": 2.0,
-      "Injured Combat": 4.0,
+      "Injured Combat": 2.0,
       "Injured Support": 2.0,
       "Combat Attribute": "Insect",
       "Chakra Cost": null,
@@ -14638,7 +14638,7 @@
       "Healthy Combat": 5.0,
       "Healthy Support": 3.0,
       "Injured Combat": 0.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Shadow",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Jonin, Male",
@@ -20357,7 +20357,7 @@
       "Injured Support": 1.0,
       "Combat Attribute": "Ice",
       "Chakra Cost": null,
-      "Characteristics": "Mist, Rouge Ninja, Male",
+      "Characteristics": "Mist, Rogue Ninja, Male",
       "Effect Title": "Camouflage",
       "Effect Text": "During the Mission Phase or the Exchange of Jutsu, you can injure another Ninja in this Ninja’s Team. In that case, that Ninja cannot be the target of your opponent’s Jutsu cards during this turn. Heal that injured Ninja at the end of the turn.",
       "Keywords": null,
@@ -23499,8 +23499,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 3.0,
       "Healthy Support": 3.0,
-      "Injured Combat": 2.0,
-      "Injured Support": 1.0,
+      "Injured Combat": 1.0,
+      "Injured Support": 2.0,
       "Combat Attribute": "Medicine",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Special Jonin, Female, Medical, Mental Power: 1",
@@ -26142,7 +26142,7 @@
       "Healthy Combat": 1.0,
       "Healthy Support": 1.0,
       "Injured Combat": 1.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Sound",
       "Chakra Cost": null,
       "Characteristics": "Sound, Genin, Male",
@@ -26166,7 +26166,7 @@
       "Healthy Combat": 2.0,
       "Healthy Support": 1.0,
       "Injured Combat": 1.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Sound",
       "Chakra Cost": null,
       "Characteristics": "Sound, Genin, Male",
@@ -26188,9 +26188,9 @@
       "Entrance Cost": 2.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 3.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 3.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Byakugan, Growth",
@@ -26214,7 +26214,7 @@
       "Healthy Combat": 8.0,
       "Healthy Support": 1.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Medicine",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Satoosa, Sannin, Female, Medical, Mental Power: 3",
@@ -26286,7 +26286,7 @@
       "Healthy Combat": 3.0,
       "Healthy Support": 1.0,
       "Injured Combat": 2.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Fang",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Ninja Dog, Animal, Platoon",
@@ -26308,7 +26308,7 @@
       "Entrance Cost": 0.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 1.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 0.0,
       "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
@@ -26694,7 +26694,7 @@
       "Healthy Combat": 5.0,
       "Healthy Support": 2.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Sand",
       "Chakra Cost": null,
       "Characteristics": "Sand, Genin, Male",
@@ -26884,7 +26884,7 @@
       "Entrance Cost": 1.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 2.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 0.0,
       "Injured Support": 0.0,
       "Combat Attribute": "Food",
@@ -27438,7 +27438,7 @@
       "Healthy Combat": 5.0,
       "Healthy Support": 3.0,
       "Injured Combat": 3.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Ninjutsu",
       "Chakra Cost": null,
       "Characteristics": "Fuma Clan, Male",
@@ -29790,9 +29790,9 @@
       "Entrance Cost": 2.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 5.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Oil/Taijutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Clone Status, Byakugan, Platoon",
@@ -29816,7 +29816,7 @@
       "Healthy Combat": 5.0,
       "Healthy Support": 2.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Sand",
       "Chakra Cost": null,
       "Characteristics": "Sand, Genin, Male",
@@ -30008,7 +30008,7 @@
       "Healthy Combat": 8.0,
       "Healthy Support": 1.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Medicine",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Sannin, Female, Medical, Mental Power: 3",
@@ -30054,9 +30054,9 @@
       "Entrance Cost": 1.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 2.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Ninjutsu/Oil",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Ninja Toad, Platoon",
@@ -30126,9 +30126,9 @@
       "Entrance Cost": 2.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 3.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 3.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Byakugan, Growth",
@@ -30174,9 +30174,9 @@
       "Entrance Cost": 5.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 7.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 6.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Byakugan, Platoon",
@@ -30246,7 +30246,7 @@
       "Entrance Cost": 0.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 2.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 0.0,
       "Injured Support": 0.0,
       "Combat Attribute": "Food",
@@ -30318,9 +30318,9 @@
       "Entrance Cost": 1.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 3.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 1.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Flame",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Sharingan Eye, Growth",
@@ -31160,7 +31160,7 @@
       "Healthy Combat": 5.0,
       "Healthy Support": 2.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Sand",
       "Chakra Cost": null,
       "Characteristics": "Sand, Genin, Male",
@@ -33802,7 +33802,7 @@
       "Healthy Combat": 5.0,
       "Healthy Support": 2.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Weapon",
       "Chakra Cost": null,
       "Characteristics": "Knight, Male, Gelel, Mental Power: 1",
@@ -34040,9 +34040,9 @@
       "Entrance Cost": 8.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 9.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 8.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Sand",
       "Chakra Cost": null,
       "Characteristics": "Sand, Animal, Name: Gaara of the Desert",
@@ -34136,7 +34136,7 @@
       "Entrance Cost": 0.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 2.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 0.0,
       "Injured Support": 0.0,
       "Combat Attribute": "Food",
@@ -34256,9 +34256,9 @@
       "Entrance Cost": 5.0,
       "Hand Cost": 1.0,
       "Healthy Combat": 6.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 5.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Sand",
       "Chakra Cost": null,
       "Characteristics": "Sand, Genin, Male, Name: Gaara of the Desert",
@@ -34280,9 +34280,9 @@
       "Entrance Cost": 4.0,
       "Hand Cost": 1.0,
       "Healthy Combat": 7.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 5.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Male, Female, Byakugan, Main Branch, Platoon",
@@ -34328,9 +34328,9 @@
       "Entrance Cost": 5.0,
       "Hand Cost": 1.0,
       "Healthy Combat": 6.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 5.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Jonin, Male",
@@ -34402,7 +34402,7 @@
       "Healthy Combat": 2.0,
       "Healthy Support": 1.0,
       "Injured Combat": 0.0,
-      "Injured Support": 0.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Manipulation",
       "Chakra Cost": null,
       "Characteristics": "Sand, Genin, Male",
@@ -34448,7 +34448,7 @@
       "Entrance Cost": 0.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 2.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 0.0,
       "Injured Support": 0.0,
       "Combat Attribute": "Food",
@@ -34522,7 +34522,7 @@
       "Healthy Combat": 6.0,
       "Healthy Support": 1.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Rogue Ninja, Male, Sharingan Eye, State 2",
@@ -35242,7 +35242,7 @@
       "Healthy Combat": 8.0,
       "Healthy Support": 1.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Medicine",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Satoosa, Sannin, Female, Medical, Mental Power: 3, Name: Tsunade",
@@ -35411,7 +35411,7 @@
       "Healthy Support": 2.0,
       "Injured Combat": 0.0,
       "Injured Support": 1.0,
-      "Combat Attribute": "Stealing",
+      "Combat Attribute": "Steal",
       "Chakra Cost": null,
       "Characteristics": "Itinerant Ninja, Male",
       "Effect Title": "Stealing Jutsu",
@@ -35434,8 +35434,8 @@
       "Healthy Combat": 4.0,
       "Healthy Support": 2.0,
       "Injured Combat": 3.0,
-      "Injured Support": 1.0,
-      "Combat Attribute": "Stealing",
+      "Injured Support": 0.0,
+      "Combat Attribute": "Steal",
       "Chakra Cost": null,
       "Characteristics": "Itinerant Ninja, Male",
       "Effect Title": "Stealing Jutsu",
@@ -35459,7 +35459,7 @@
       "Healthy Support": 2.0,
       "Injured Combat": 4.0,
       "Injured Support": 1.0,
-      "Combat Attribute": "Stealing",
+      "Combat Attribute": "Steal",
       "Chakra Cost": null,
       "Characteristics": "Itinerant Ninja, Male",
       "Effect Title": "Coup Plot",
@@ -54148,7 +54148,7 @@
       "Effect Text": "Valid: This Ninja cannot be the user of Jutsu cards.\nValid: If this Ninja is discarded after being in play, move it to the bottom of your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_3_curse_of_the_sand/n102.webp"
+      "image_path": "set_15_fortold_prophecy/n102.webp"
     },
     {
       "Card ID": "n144",
@@ -54196,7 +54196,7 @@
       "Effect Text": "Valid: This Ninja cannot be the user of Jutsu cards.\nValid: if this Ninja is discarded after being in play, move it to the bottom of your Deck instead.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_5_dream_legacy/n198.webp"
+      "image_path": "set_15_fortold_prophecy/n198.webp"
     },
     {
       "Card ID": "n260",
@@ -54220,7 +54220,7 @@
       "Effect Text": "Valid: All your in-play Ninjas with \"Uchiha\" in their names get +2/+0 except this Ninja.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_8_battle_for_destiny/n260.webp"
+      "image_path": "set_15_fortold_prophecy/n260.webp"
     },
     {
       "Card ID": "n261",
@@ -54260,7 +54260,7 @@
       "Healthy Combat": 5.0,
       "Healthy Support": 3.0,
       "Injured Combat": 3.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Ninjutsu",
       "Chakra Cost": null,
       "Characteristics": "Fuma Clan, Male",
@@ -54268,7 +54268,7 @@
       "Effect Text": null,
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_8_battle_for_destiny/n303.webp"
+      "image_path": "set_15_fortold_prophecy/n303.webp"
     },
     {
       "Card ID": "n320",
@@ -54292,7 +54292,7 @@
       "Effect Text": "This Ninja can use any Jutsu card with a \"Water\" symbol and printed Jutsu cost of 3 or less regardless of the Jutsu card's Requirements. (Each specific symbol in the Jutsu cost also counts as 1.)",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_9_the_chosen/n320.webp"
+      "image_path": "set_15_fortold_prophecy/n320.webp"
     },
     {
       "Card ID": "n384",
@@ -63118,7 +63118,7 @@
       "Entrance Cost": 1.0,
       "Hand Cost": 0.0,
       "Healthy Combat": 3.0,
-      "Healthy Support": 1.0,
+      "Healthy Support": 0.0,
       "Injured Combat": 0.0,
       "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
@@ -63128,7 +63128,7 @@
       "Effect Text": "While you have 2 or less cards in your hand, this Ninja gets +2/+0.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_6_eternal_rivalry/nus004.webp"
+      "image_path": "set_17_will_of_fire/nus004.webp"
     },
     {
       "Card ID": "n005",
@@ -63176,7 +63176,7 @@
       "Effect Text": null,
       "Keywords": null,
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_1_path_of_the_hokage/n038.webp"
+      "image_path": "set_17_will_of_fire/n038e.webp"
     },
     {
       "Card ID": "nUS069",
@@ -63192,7 +63192,7 @@
       "Healthy Combat": 5.0,
       "Healthy Support": 2.0,
       "Injured Combat": 4.0,
-      "Injured Support": 1.0,
+      "Injured Support": 0.0,
       "Combat Attribute": "Sand",
       "Chakra Cost": null,
       "Characteristics": "Sand, Genin, Male",
@@ -63200,7 +63200,7 @@
       "Effect Text": "During your Mission Phase, you can select and move 1 card with a \"Wind\" symbol in your Discard Pile to your Chakra area.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_9_the_chosen/nus069.webp"
+      "image_path": "set_17_will_of_fire/nus069.webp"
     },
     {
       "Card ID": "n074",
@@ -63224,7 +63224,7 @@
       "Effect Text": "When this Ninja is put in play, move 1 of your cards in your Discard Pile to your Chakra area.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_2_coils_of_the_snake/n074.webp"
+      "image_path": "set_17_will_of_fire/n074.webp"
     },
     {
       "Card ID": "nUS121",
@@ -63272,7 +63272,7 @@
       "Effect Text": "When this Ninja is put in play, draw 1 card.\nValid: Every \"Akatsuki\" Ninja in your opponent's hand gets -1 Entrance cost.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_5_dream_legacy/n187.webp"
+      "image_path": "set_17_will_of_fire/n187.webp"
     },
     {
       "Card ID": "n242",
@@ -63296,7 +63296,7 @@
       "Effect Text": "Valid: While \"Kiba Inuzuka\" is in the same Team as this Ninja, that \"Kiba Inuzuka\" gets +1/+0.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_7_quest_for_power/n242.webp"
+      "image_path": "set_17_will_of_fire/n242.webp"
     },
     {
       "Card ID": "n332",
@@ -63320,7 +63320,7 @@
       "Effect Text": "Mission cards cannot be negated.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_9_the_chosen/n332.webp"
+      "image_path": "set_17_will_of_fire/n332.webp"
     },
     {
       "Card ID": "n430",
@@ -68866,7 +68866,7 @@
       "Effect Text": "During your Mission Phase, if you have \"Naruto Uzumaki\" in play, you can move 1 Jutsu card from your Discard Pile to your hand.",
       "Keywords": null,
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_6_eternal_rivalry/nus027e.webp"
+      "image_path": "set_175_tournament_pack_1/nus027bea.webp"
     },
     {
       "Card ID": "nus035b",
@@ -68890,7 +68890,7 @@
       "Effect Text": "During the Mission Phase or the Exchange of Jutsu, you can injure another Ninja in this Ninja's Team. In that case, that Ninja cannot be the target of your opponent's Jutsu cards during this turn. Heal that injured Ninja at the end of the turn.",
       "Keywords": null,
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_6_eternal_rivalry/nus035e.webp"
+      "image_path": "set_175_tournament_pack_1/nus035bea.webp"
     },
     {
       "Card ID": "nus072b",
@@ -89692,7 +89692,7 @@
       "Effect Text": "This Ninja can use any Jutsu card with a \"Water\" symbol and printed Jutsu cost of 3 or less regardless of the Jutsu card's Requirements. (Each specific symbol in the Jutsu cost also counts as 1.)",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_9_the_chosen/n320.webp"
+      "image_path": "set_235_tournament_pack_4/n320.webp"
     },
     {
       "Card ID": "n365",
