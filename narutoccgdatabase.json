@@ -14238,7 +14238,7 @@
       "Effect Text": "At the beginning of your turn, if you have no Clients in your Village, you can search for 1 Client in your Deck and deploy it. Then, shuffle your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n144.webp"
+      "image_path": "set_4_revenge_and_rebirth/n144e.webp"
     },
     {
       "Card ID": "n145",
@@ -35538,7 +35538,7 @@
       "Effect Text": "When this Ninja is sent out to Block, you can reveal the bottom card of your Deck. If it is a Ninja card, move it to your hand. If not, return it to your Deck and shuffle it.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n384.webp"
+      "image_path": "set_10_lineage_of_the_legends/n384.webp"
     },
     {
       "Card ID": "n385",
@@ -39284,7 +39284,7 @@
       "Effect Text": "If this Ninja has a Meteorite coin, this Ninja cannot receive any Damage while it is Battling against 1 or more Ninjas with an Entrance cost of 2 or less.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n409.webp"
+      "image_path": "set_11_approaching_wind/n409.webp"
     },
     {
       "Card ID": "n410",
@@ -43150,7 +43150,7 @@
       "Effect Text": "When this Ninja is sent out to Battle and opposed, the Head Ninja Battling against this Ninja's Team gets -X/+0. X = the value of that Ninja's current status Support value.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n479.webp"
+      "image_path": "set_12_a_new_chronicle/n479.webp"
     },
     {
       "Card ID": "n480",
@@ -43942,7 +43942,7 @@
       "Effect Text": null,
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n512.webp"
+      "image_path": "set_12_a_new_chronicle/n512.webp"
     },
     {
       "Card ID": "n513",
@@ -47640,7 +47640,7 @@
       "Effect Text": "Valid: This Ninja cannot be included in a Team with a Ninja with 2 or less Entrance cost.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n555.webp"
+      "image_path": "set_13_fateful_reunion/n555.webp"
     },
     {
       "Card ID": "n556",
@@ -48024,7 +48024,7 @@
       "Effect Text": "Valid: During the Mission Phase, you can flip a Ninja Blade coin; If it's heads, double the original Combat value (both healthy and injured status) of this Ninja during the turn. If it's tails, the original Combat value (both healthy and injured status) of this Ninja becomes 0 during the turn.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n571.webp"
+      "image_path": "set_13_fateful_reunion/n571.webp"
     },
     {
       "Card ID": "n572",
@@ -48120,7 +48120,7 @@
       "Effect Text": "Valid: During the turn 1 or more other Ninjas are put in play, this Ninja gets +1/+0.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n575e.webp"
+      "image_path": "set_13_fateful_reunion/n575e.webp"
     },
     {
       "Card ID": "n576",
@@ -51266,7 +51266,7 @@
       "Effect Text": "When this Ninja is put in play, you can search for 1 Mission card with a \"Water\" Symbol in your Deck, show it to your opponent and place it in your hand. Then, shuffle your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n615.webp"
+      "image_path": "set_14_emerging_alliance/n615.webp"
     },
     {
       "Card ID": "n616",
@@ -51305,8 +51305,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 2.0,
       "Healthy Support": 1.0,
-      "Injured Combat": 1.0,
-      "Injured Support": 0.0,
+      "Injured Combat": 0.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Sound",
       "Chakra Cost": null,
       "Characteristics": "Sound, Genin, Male, Ambush",
@@ -51314,7 +51314,7 @@
       "Effect Text": "When this Ninja is put in play, you can put two Ninja Blade coins symbolizing -1/-1 on 1 of your opponent's Ninjas with an Entrance cost of 0.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n617.webp"
+      "image_path": "set_14_emerging_alliance/n617.webp"
     },
     {
       "Card ID": "n618",
@@ -51338,7 +51338,7 @@
       "Effect Text": "During the Exchange of Jutsu, you can discard 1 of your Chakras with a \"Water\" Symbol. In that case, negate the effect texts of 1 Ninja Battling against this Ninja during this turn.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n618.webp"
+      "image_path": "set_14_emerging_alliance/n618.webp"
     },
     {
       "Card ID": "n619",
@@ -51359,10 +51359,10 @@
       "Chakra Cost": null,
       "Characteristics": "Sound, Genin, Female, Ambush, Mental Power: 1",
       "Effect Title": "The Rear Guard",
-      "Effect Text": "Valid: Your \"Dosu Kinuta\" and/or \"Zaku\" in this Ninja's Team get +1/+1 and cannot be affected by the effects of your opponent's Ninjas.",
+      "Effect Text": "Valid: Your \"Dosu Kinuta\" and/or \"Zaku Abumi\" Ninjas in this Ninja's Team get +1/+1 and cannot be affected by the effects of your opponent's Ninjas.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n619e.webp"
+      "image_path": "set_14_emerging_alliance/n619e.webp"
     },
     {
       "Card ID": "n620",
@@ -51506,7 +51506,7 @@
       "Effect Text": "Valid: When this Ninja's Team wins a Victory or an Outstanding Victory, reveal the top 5 cards of your opponent's Deck and remove all the Ninja cards among them from game. Then, return the rest and your opponent shuffles their Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/n625.webp"
+      "image_path": "set_14_emerging_alliance/n625.webp"
     },
     {
       "Card ID": "n626",
@@ -54523,8 +54523,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 2.0,
       "Healthy Support": 1.0,
-      "Injured Combat": 1.0,
-      "Injured Support": 0.0,
+      "Injured Combat": 0.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Sound",
       "Chakra Cost": null,
       "Characteristics": "Sound, Genin, Male, Ambush",
@@ -59637,7 +59637,7 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 3.0,
       "Healthy Support": 3.0,
-      "Injured Combat": 1.0,
+      "Injured Combat": 2.0,
       "Injured Support": 2.0,
       "Combat Attribute": "Fang/Medicine",
       "Chakra Cost": null,
@@ -59877,7 +59877,7 @@
       "Hand Cost": 1.0,
       "Healthy Combat": 6.0,
       "Healthy Support": 2.0,
-      "Injured Combat": 1.0,
+      "Injured Combat": 2.0,
       "Injured Support": 2.0,
       "Combat Attribute": "Weapon",
       "Chakra Cost": null,
