@@ -86858,7 +86858,7 @@
       "Effect Text": "[Attacker | Mission] (0): Draw 1 card. Then, move 1 card in your hand to the top of your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_23_invasion/n1272.webp"
+      "image_path": "set_23_invasion/n1272b.webp"
     },
     {
       "Card ID": "n1273",
@@ -94607,8 +94607,8 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 2.0,
       "Healthy Support": 2.0,
-      "Injured Combat": 0.0,
-      "Injured Support": 2.0,
+      "Injured Combat": 1.0,
+      "Injured Support": 1.0,
       "Combat Attribute": "Weapon",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Male",
@@ -95519,7 +95519,7 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 5.0,
       "Healthy Support": 5.0,
-      "Injured Combat": 0.0,
+      "Injured Combat": 2.0,
       "Injured Support": 2.0,
       "Combat Attribute": "Mind/Shadow/Food",
       "Chakra Cost": null,
