@@ -16779,7 +16779,7 @@
       "Chakra Cost": null,
       "Characteristics": "Leaf, Ninja Academy Student, Female",
       "Effect Title": null,
-      "Effect Text": "Whenever you heal an injured Ninja, draw 1 card.",
+      "Effect Text": "Effect: Everytime you heal 1 of your injured Ninjas, draw 1 card.",
       "Keywords": null,
       "Errata": null,
       "image_path": "set_4_revenge_and_rebirth/c019.webp"
@@ -35079,10 +35079,10 @@
       "Chakra Cost": null,
       "Characteristics": "Akatsuki, Rogue Ninja, Jonin, Male, Sharingan Eye",
       "Effect Title": "Formidable Visual Jutsu",
-      "Effect Text": "Valid: When this Ninja is put in play, change 1 of your opponent's in-play Ninjas to injured status. As long as this Ninja remains in play, that injured Ninja cannot be healed.",
+      "Effect Text": "Valid: When this Ninja is put in play, change 1 of your opponent's in-play Ninjas to injured status. As long as this Ninja remains in play, that Ninja cannot be healed.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n365e.webp"
+      "image_path": "set_10_lineage_of_the_legends/n365e.webp"
     },
     {
       "Card ID": "n366",
@@ -39644,7 +39644,7 @@
       "Effect Text": "When this Ninja is put in play, you can draw 1 card. In that case move 1 card from your hand to the bottom of your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n424.webp"
+      "image_path": "set_11_approaching_wind/n424.webp"
     },
     {
       "Card ID": "n425",
@@ -40364,7 +40364,7 @@
       "Effect Text": "During your Mission Phase, if you have 3 or less Chakras, you can select and move 1 card with a \"Water\" symbol in your Discard Pile to your Chakra area.\nAt the end of your turn, if your opponent has 3 or more Chakras in their Chakra area, select and discard 1 of them.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n454.webp"
+      "image_path": "set_11_approaching_wind/n454.webp"
     },
     {
       "Card ID": "n455",
@@ -43366,7 +43366,7 @@
       "Effect Text": "When this Ninja is put in play, you can search for 1 \"Puppet\" Ninja card in your Deck, show it to your opponent and place it in your hand. Then, shuffle your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n488.webp"
+      "image_path": "set_12_a_new_chronicle/n488.webp"
     },
     {
       "Card ID": "n489",
@@ -47760,7 +47760,7 @@
       "Effect Text": "During your Mission Phase, you can discard 1 of your Chakras. In that case, look at the top 3 cards of your opponent's Deck, discard 1 of them and return the rest in any order.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n560.webp"
+      "image_path": "set_13_fateful_reunion/n560.webp"
     },
     {
       "Card ID": "n561",
@@ -51746,7 +51746,7 @@
       "Effect Text": "When this Ninja is sent out to Battle, you can remove 1 Ninja Blade coin of any kind from play.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n635.webp"
+      "image_path": "set_14_emerging_alliance/n635.webp"
     },
     {
       "Card ID": "n636",
@@ -54940,7 +54940,7 @@
       "Effect Text": "Your opponent cannot search for any cards.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n657.webp"
+      "image_path": "set_15_fortold_prophecy/n657.webp"
     },
     {
       "Card ID": "n658",
@@ -54964,7 +54964,7 @@
       "Effect Text": "When this Ninja is put in play, randomly select 1 card in your opponent hand and discard it.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n658.webp"
+      "image_path": "set_15_fortold_prophecy/n658.webp"
     },
     {
       "Card ID": "n659",
@@ -55372,7 +55372,7 @@
       "Effect Text": "When this Ninja is deployed, you can search for up to 2 cards in your Deck that include \"Make Out\" in their names and move them(it) to your Chakra area. Then, shuffle your Deck.\nValid: During the Exchange of Jutsu, if you have 2 or more cards with \"Make Out\" in their names in your Discard Pile, you can move 1 of them to the bottom of your Deck. In that case, give 1 Damage to 1 Ninja Battling against this Ninja.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n675.webp"
+      "image_path": "set_15_fortold_prophecy/n675.webp"
     },
     {
       "Card ID": "n676",
@@ -59382,7 +59382,7 @@
       "Effect Text": "Valid: During the Exchange of Jutsu, you can discard 1 card from your hand. In that case, negate 1 Jutsu card being used by a Ninja with an Entrance cost of 3 or less.\nValid: Your \"Kakashi Hatake\" and/or \"Rin\" get +1/+1.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n711.webp"
+      "image_path": "set_16_broken_promise/n711.webp"
     },
     {
       "Card ID": "n712",
@@ -63488,7 +63488,7 @@
       "Effect Text": "Your opponent cannot search for any cards.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/n657.webp"
+      "image_path": "set_17_will_of_fire/n657.webp"
     },
     {
       "Card ID": "n784",
@@ -63505,7 +63505,7 @@
       "Healthy Support": 3.0,
       "Injured Combat": 7.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Curse/ Weapon",
+      "Combat Attribute": "Curse/Weapon",
       "Chakra Cost": null,
       "Characteristics": "Akatsuki, Rogue Ninja, Jonin, Male, Mental Power: -1, Name: Hidan, REINFORCEMENT",
       "Effect Title": "CURSE",
@@ -63529,7 +63529,7 @@
       "Healthy Support": 2.0,
       "Injured Combat": 6.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Curse/ Weapon",
+      "Combat Attribute": "Curse/Weapon",
       "Chakra Cost": null,
       "Characteristics": "Akatsuki, Rogue Ninja, Jonin, Male, Mental Power: -1",
       "Effect Title": "IMMORTAL",
@@ -63577,7 +63577,7 @@
       "Healthy Support": 2.0,
       "Injured Combat": 0.0,
       "Injured Support": 2.0,
-      "Combat Attribute": "Genjutsu/ Weapon",
+      "Combat Attribute": "Genjutsu/Weapon",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Chunin, Male, Mental Power: 1, Proctor",
       "Effect Title": "PERFECT COMBINATION",
@@ -63601,7 +63601,7 @@
       "Healthy Support": 2.0,
       "Injured Combat": 0.0,
       "Injured Support": 2.0,
-      "Combat Attribute": "Genjutsu/ Weapon",
+      "Combat Attribute": "Genjutsu/Weapon",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Chunin, Male, Mental Power: 1, Proctor",
       "Effect Title": "PERFECT COMBINATION",
@@ -63769,7 +63769,7 @@
       "Healthy Support": 0.0,
       "Injured Combat": 0.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Flame/ Weapon",
+      "Combat Attribute": "Flame/Weapon",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Ninja Academy Student, Male, Name: Sasuke Uchiha",
       "Effect Title": "HIGH POTENTIAL",
@@ -63841,7 +63841,7 @@
       "Healthy Support": 0.0,
       "Injured Combat": 7.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Taijutsu/ Weapon",
+      "Combat Attribute": "Taijutsu/Weapon",
       "Chakra Cost": null,
       "Characteristics": "Land of Fire, Male",
       "Effect Title": "BROKEN SEAL",
@@ -63985,7 +63985,7 @@
       "Healthy Support": 3.0,
       "Injured Combat": 1.0,
       "Injured Support": 3.0,
-      "Combat Attribute": "Bat/ Sound",
+      "Combat Attribute": "Bat/Sound",
       "Chakra Cost": null,
       "Characteristics": "Sound, Male, Mental Power: 3, Prisoner, AMBUSH",
       "Effect Title": "DETECTION",
@@ -64057,7 +64057,7 @@
       "Healthy Support": 0.0,
       "Injured Combat": 4.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Power/ Stone",
+      "Combat Attribute": "Power/Stone",
       "Chakra Cost": null,
       "Characteristics": "Land of Fire, Male, AMBUSH",
       "Effect Title": "HERCULEAN STRENGTH",
@@ -64081,7 +64081,7 @@
       "Healthy Support": 2.0,
       "Injured Combat": 0.0,
       "Injured Support": 2.0,
-      "Combat Attribute": "Labyrinth/ Genjutsu",
+      "Combat Attribute": "Labyrinth/Genjutsu",
       "Chakra Cost": null,
       "Characteristics": "Land of Fire, Female, Mental Power: 2, AMBUSH",
       "Effect Title": "LABYRINTH",
@@ -64105,7 +64105,7 @@
       "Healthy Support": 4.0,
       "Injured Combat": 4.0,
       "Injured Support": 2.0,
-      "Combat Attribute": "Weapon/ Taijutsu",
+      "Combat Attribute": "Weapon/Taijutsu",
       "Chakra Cost": null,
       "Characteristics": "Land of Fire, Jonin, Male, Mental Power: 2, Name: Kazuma, AMBUSH",
       "Effect Title": "DAWN",
@@ -64249,7 +64249,7 @@
       "Healthy Support": 0.0,
       "Injured Combat": 6.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Oil/ Ninjutsu",
+      "Combat Attribute": "Oil/Ninjutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Clone Status, GROWTH",
       "Effect Title": "TRUE ALLIES",
@@ -64273,7 +64273,7 @@
       "Healthy Support": 3.0,
       "Injured Combat": 9.0,
       "Injured Support": 4.0,
-      "Combat Attribute": "Oil/ Ninjutsu",
+      "Combat Attribute": "Oil/Ninjutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Sannin, Male, Clone Status, MASTERY, SQUAD",
       "Effect Title": "MASTER AND DISCIPLE",
@@ -64393,7 +64393,7 @@
       "Healthy Support": 2.0,
       "Injured Combat": 4.0,
       "Injured Support": 1.0,
-      "Combat Attribute": "Water/ Weapon",
+      "Combat Attribute": "Water/Weapon",
       "Chakra Cost": null,
       "Characteristics": "Akatsuki, Rogue Ninja, Jonin, Male, AMBUSH",
       "Effect Title": "WATER CLONE",
@@ -64417,7 +64417,7 @@
       "Healthy Support": 4.0,
       "Injured Combat": 3.0,
       "Injured Support": 1.0,
-      "Combat Attribute": "Water/ Weapon",
+      "Combat Attribute": "Water/Weapon",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Satoosa, Male, Mental Power: 2, MASTERY",
       "Effect Title": "SUPREMACY",
@@ -64561,7 +64561,7 @@
       "Healthy Support": 3.0,
       "Injured Combat": 0.0,
       "Injured Support": 2.0,
-      "Combat Attribute": "Medicine/ Weapon",
+      "Combat Attribute": "Medicine/Weapon",
       "Chakra Cost": null,
       "Characteristics": "Sound, Jonin, Male, Mental Power: 2, Medical, AMBUSH",
       "Effect Title": "RECYCLING",
@@ -64585,7 +64585,7 @@
       "Healthy Support": 0.0,
       "Injured Combat": 1.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Taijutsu/ Flame",
+      "Combat Attribute": "Taijutsu/Flame",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Sharingan Eye, GROWTH",
       "Effect Title": "THE ONLY MOTIVE TO FIGHT",
@@ -64705,7 +64705,7 @@
       "Healthy Support": 1.0,
       "Injured Combat": 0.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Weapon/ Ice",
+      "Combat Attribute": "Weapon/Ice",
       "Chakra Cost": null,
       "Characteristics": "Mist, Male, Mental Power: 2, Name: Haku, AMBUSH",
       "Effect Title": null,
@@ -64753,7 +64753,7 @@
       "Healthy Support": 2.0,
       "Injured Combat": 4.0,
       "Injured Support": 1.0,
-      "Combat Attribute": "Weapon/ Snake",
+      "Combat Attribute": "Weapon/Snake",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Special Jonin, Female, Mental Power: 1, Proctor",
       "Effect Title": "PANG",
@@ -64849,7 +64849,7 @@
       "Healthy Support": 3.0,
       "Injured Combat": 0.0,
       "Injured Support": 2.0,
-      "Combat Attribute": "Medicine/ Taijutsu",
+      "Combat Attribute": "Medicine/Taijutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Chunin, Female, Mental Power: 3, Medical, GROWTH",
       "Effect Title": "WOMEN'S LIFE",
@@ -64945,7 +64945,7 @@
       "Healthy Support": 1.0,
       "Injured Combat": 4.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Fang/ Ninjutsu",
+      "Combat Attribute": "Fang/Ninjutsu",
       "Chakra Cost": null,
       "Characteristics": "Cloud, Jonin, Female, Tailed Beast Form",
       "Effect Title": "RAGE",
@@ -65041,7 +65041,7 @@
       "Healthy Support": 0.0,
       "Injured Combat": 2.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Bee/ Insect",
+      "Combat Attribute": "Bee/Insect",
       "Chakra Cost": null,
       "Characteristics": "Rock, Insect",
       "Effect Title": "POISONOUS STING",
@@ -65353,7 +65353,7 @@
       "Healthy Support": 0.0,
       "Injured Combat": 6.0,
       "Injured Support": 0.0,
-      "Combat Attribute": "Oil/ Ninjutsu",
+      "Combat Attribute": "Oil/Ninjutsu",
       "Chakra Cost": null,
       "Characteristics": "Leaf, Genin, Male, Clone Status, GROWTH",
       "Effect Title": "RELIANCE",
@@ -68357,12 +68357,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Food",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Ninja Academy Student, Male, Name: Choji Akimichi, Growth",
+      "Characteristics": "Leaf, Ninja Academy Student, Male, Name: Choji Akimichi, GROWTH",
       "Effect Title": "SNACK TIME",
       "Effect Text": "When this Ninja is sent out to Attack, you can move 1 card from your Discard Pile to the bottom of your Deck. In that case, this Ninja gets +1/+1 during this turn.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n864.webp"
+      "image_path": "set_195_tournament_pack_1/n864.webp"
     },
     {
       "Card ID": "n865",
@@ -68381,12 +68381,12 @@
       "Injured Support": 1.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Ninja Academy Student, Female, Mental Power: 1, Name: Hinata Hyuga, Byakugan, Main Branch, Growth",
+      "Characteristics": "Leaf, Ninja Academy Student, Female, Mental Power: 1, Name: Hinata Hyuga, Byakugan, Main Branch, GROWTH",
       "Effect Title": "CUTE",
       "Effect Text": "Valid: When this Ninja is discarded due to the Showdown, move it to your Chakra area instead. In that case, randomly discard 1 card from your opponent's hand.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n865.webp"
+      "image_path": "set_195_tournament_pack_1/n865.webp"
     },
     {
       "Card ID": "n866",
@@ -68405,12 +68405,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Shadow",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Ninja Academy Student, Male, Mental Power: 3, Name: Shikamaru Nara, Growth",
+      "Characteristics": "Leaf, Ninja Academy Student, Male, Mental Power: 3, Name: Shikamaru Nara, GROWTH",
       "Effect Title": "DREAMING OF THE DRIFTING CLOUDS",
       "Effect Text": "At the beginning of your turn, you can discard 1 card from your hand. In that case, draw 1 card at the end of this turn. If you did not discard a card with an Earth Symbol due to this effect, this Ninja cannot be sent out to Attack during this turn.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n866.webp"
+      "image_path": "set_195_tournament_pack_1/n866.webp"
     },
     {
       "Card ID": "n867",
@@ -68429,12 +68429,12 @@
       "Injured Support": 1.0,
       "Combat Attribute": "Ninjutsu/Weapon",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Anbu, Male, Mental Power: 2, Ambush",
+      "Characteristics": "Leaf, Anbu, Male, Mental Power: 2, AMBUSH",
       "Effect Title": "CAPTAIN OF THE ANBU",
       "Effect Text": "Valid: Your other \"Anbu\" Ninjas get +0/+1 and +1 Mental Power.\nYour opponent can't play Mission cards with an Entrance Cost less than the number of your in-play \"Anbu\" Ninjas.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n867.webp"
+      "image_path": "set_195_tournament_pack_1/n867.webp"
     },
     {
       "Card ID": "n868",
@@ -68453,12 +68453,12 @@
       "Injured Support": 3.0,
       "Combat Attribute": "Genjutsu/Weapon",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Anbu, Jonin, Male, Name: Itachi Uchiha, Sharingan Eye, Ambush",
+      "Characteristics": "Leaf, Anbu, Jonin, Male, Name: Itachi Uchiha, Sharingan Eye, AMBUSH",
       "Effect Title": "LEAF POLICE FORCE",
       "Effect Text": "When this Ninja is deployed, you can discard all in-play non-Ninja cards.\nWhile this Ninja card is in your Discard Pile, if your opponent has more cards in their Discard Pile than in their Deck, you can deploy this Ninja card during your Mission Phase without paying it's Hand cost.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n868.webp"
+      "image_path": "set_195_tournament_pack_1/n868.webp"
     },
     {
       "Card ID": "n869",
@@ -68477,12 +68477,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Fang",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Ninja Academy Student, Male, Name: Kiba Inuzuka, Animal, Growth",
+      "Characteristics": "Leaf, Ninja Academy Student, Male, Name: Kiba Inuzuka, Animal, GROWTH",
       "Effect Title": "PLAY TIME",
       "Effect Text": "When this Ninja is sent out to Attack, you can discard 2 cards from the top or bottom of your opponent's Deck. In that case, this Ninja gets +1/+0 during this turn.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n869.webp"
+      "image_path": "set_195_tournament_pack_1/n869.webp"
     },
     {
       "Card ID": "n870",
@@ -68501,12 +68501,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Oil/Weapon",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Animal, Ninja Toad, Mastery",
+      "Characteristics": "Leaf, Animal, Ninja Toad, MASTERY",
       "Effect Title": "HEAD OF THE GAMA CLAN",
       "Effect Text": "When this Ninja is put in play, you can move up to X cards from your hand to your Chakra area. Then, move the same number of cards from the top of your Deck to your hand. X = the number of your Ninjas with a \"Lightning\" Symbol.\nValid: While your opponent has less Chakras than you, this Ninja and your Turn Marker are unaffected by your opponent's Ninja and Jutsu effects.",
       "Keywords": "Mastery",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n870.webp"
+      "image_path": "set_195_tournament_pack_1/n870.webp"
     },
     {
       "Card ID": "n871",
@@ -68525,12 +68525,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Ninjutsu/Weapon",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Genin, Female, Male, Mental Power: 4, Name: Konohamaru, Name: Moegi, Name: Udon, Clone Status, Growth",
+      "Characteristics": "Leaf, Genin, Female, Male, Mental Power: 4, Name: Konohamaru, Name: Moegi, Name: Udon, Clone Status, GROWTH",
       "Effect Title": "SUCCESSORS TO THE WILL OF FIRE",
       "Effect Text": "When this Ninja is put in play, reveal the top card of your Deck. Then, move that card to your hand.\nValid: Other \"Leaf\" Ninjas in this Ninja's Team cannot be affected by the effects of your opponent's Ninjas.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n871.webp"
+      "image_path": "set_195_tournament_pack_1/n871.webp"
     },
     {
       "Card ID": "n872",
@@ -68549,12 +68549,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Ninja Academy Student, Male, Name: Rock Lee, Growth",
+      "Characteristics": "Leaf, Ninja Academy Student, Male, Name: Rock Lee, GROWTH",
       "Effect Title": "MOTTO OF HARD WORK",
       "Effect Text": "Valid: While you have less Battle Rewards than your opponent, this Ninja gets +1/+1.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n872.webp"
+      "image_path": "set_195_tournament_pack_1/n872.webp"
     },
     {
       "Card ID": "n873",
@@ -68573,12 +68573,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Insect/Sound",
       "Chakra Cost": null,
-      "Characteristics": "Sound, Insect, Ambush",
+      "Characteristics": "Sound, Insect, AMBUSH",
       "Effect Title": "RAIN OF SPIDERS",
       "Effect Text": "Valid: When this Ninja is discarded due to the Showdown, you can remove all coins from 1 Ninja or Mission card.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n873.webp"
+      "image_path": "set_195_tournament_pack_1/n873.webp"
     },
     {
       "Card ID": "n874",
@@ -68597,12 +68597,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Weapon/Sound",
       "Chakra Cost": null,
-      "Characteristics": "Sound, Rashomon, Ambush",
+      "Characteristics": "Sound, Rashomon, AMBUSH",
       "Effect Title": "WALL",
       "Effect Text": "During the Exchange of Jutsu, you can discard 2 of your Chakras with a Water Symbol. In that case, during this turn, when your opponent wins an Outstanding Victory/Outstanding Battle Reward, it becomes a Victory/Battle Reward instead, respectively.\nValid: This Ninja cannot be sent out to Attack and cannot be included in a Team with any other Ninja.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n874.webp"
+      "image_path": "set_195_tournament_pack_1/n874.webp"
     },
     {
       "Card ID": "n875",
@@ -68621,12 +68621,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Mist/Weapon",
       "Chakra Cost": null,
-      "Characteristics": "Mist, Anbu, Jonin, Male, Name: Zabuza Momochi, Ambush",
+      "Characteristics": "Mist, Anbu, Jonin, Male, Name: Zabuza Momochi, AMBUSH",
       "Effect Title": "EMOTIONLESS",
       "Effect Text": "When this Ninja's Team wins any Victory, you can injure 1 opposing Back Ninja.\nWhen this Ninja's Team wins any Battle Reward, you can discard 1 in-play non-Ninja card.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n875.webp"
+      "image_path": "set_195_tournament_pack_1/n875.webp"
     },
     {
       "Card ID": "n876",
@@ -68650,7 +68650,7 @@
       "Effect Text": "When this Ninja is deployed, search your Deck for 1 Ninja card that includes \"Childhood\" in their name, reveal it, and place it in your hand. Then, shuffle your Deck.\nWhen you put a Ninja in play by \"Growth\", heal it.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n876.webp"
+      "image_path": "set_195_tournament_pack_1/n876.webp"
     },
     {
       "Card ID": "n877",
@@ -68669,12 +68669,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Sand",
       "Chakra Cost": null,
-      "Characteristics": "Sand, Male, Name: Gaara of the Desert, Surge",
+      "Characteristics": "Sand, Male, Name: Gaara of the Desert, SURGE",
       "Effect Title": "LONELINESS",
       "Effect Text": "When this Ninja is put in play, draw 1 card.\nValid: When this Ninja is discarded due to the Showdown, discard 1 card from your hand.",
       "Keywords": "Surge",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n877.webp"
+      "image_path": "set_195_tournament_pack_1/n877.webp"
     },
     {
       "Card ID": "n878",
@@ -68693,12 +68693,12 @@
       "Injured Support": 3.0,
       "Combat Attribute": "Manipulation",
       "Chakra Cost": null,
-      "Characteristics": "Akatsuki, Rogue Ninja, Jonin, Male, Mental Power: 3, Puppet Master, Ambush",
+      "Characteristics": "Akatsuki, Rogue Ninja, Jonin, Male, Mental Power: 3, Puppet Master, AMBUSH",
       "Effect Title": "CREATING THE MASTERPIECE",
       "Effect Text": "When one of your opponent's Ninja would be discarded, you can discard X of your Chakras, where X is the Entrance cost of that Ninja. In that case, move that Ninja cards to your Village instead.\nValid: During your Mission Phase, you can discard this Ninja. In that case, you can put in play 1 \"Puppet Master\" Ninja card from your Reinforcement Deck.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n878.webp"
+      "image_path": "set_195_tournament_pack_1/n878.webp"
     },
     {
       "Card ID": "n879",
@@ -68717,12 +68717,12 @@
       "Injured Support": 1.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Chunin, Female, Mental Power: 1, Byakugan, Main Branch, Growth",
+      "Characteristics": "Leaf, Chunin, Female, Mental Power: 1, Byakugan, Main Branch, GROWTH",
       "Effect Title": "FOR THE ONE SHE ADMIRES",
       "Effect Text": "Valid: When your opponent searches or draws any cards due to a Ninja or Ninja card, you can discard 1 card from their hand at random. Then, you can draw 1 card and discard 1 card.",
       "Keywords": "Growth",
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_195_tournament_pack_2/n879e.webp"
+      "image_path": "set_195_tournament_pack_1/n879e.webp"
     },
     {
       "Card ID": "n880",
@@ -68741,12 +68741,12 @@
       "Injured Support": 2.0,
       "Combat Attribute": "Tree",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Anbu, Male, Mental Power: 2, Ambush",
+      "Characteristics": "Leaf, Anbu, Male, Mental Power: 2, AMBUSH",
       "Effect Title": "THE POWER OF THE FIRST HOKAGE",
       "Effect Text": "During the Exchange of Jutsu, while this Ninja is on the Battlefield, you can select 1 Battling Ninja. In that case, the selected Ninja becomes a Stand-by Ninja unless your opponent discards 1 card from their hand or Chakra area.",
       "Keywords": "Ambush",
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_195_tournament_pack_2/n880e.webp"
+      "image_path": "set_195_tournament_pack_1/n880e.webp"
     },
     {
       "Card ID": "n881",
@@ -68770,7 +68770,7 @@
       "Effect Text": null,
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n881.webp"
+      "image_path": "set_195_tournament_pack_1/n881.webp"
     },
     {
       "Card ID": "n882",
@@ -68789,12 +68789,12 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Ninjutsu/Weapon",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Genin, Male, Clone Status, Growth",
+      "Characteristics": "Leaf, Genin, Male, Clone Status, GROWTH",
       "Effect Title": "AMBITIOUS YOUTH",
       "Effect Text": "Valid: When any of your Ninjas or Missions with a \"Lightning\" Symbol would be removed from play by your opponent's effects, you can move this Ninja to your Chakra area. In that case, move 1 of those cards to its owner's hand.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/n882.webp"
+      "image_path": "set_195_tournament_pack_1/n882.webp"
     },
     {
       "Card ID": "nus006b",
@@ -73567,7 +73567,7 @@
       "Healthy Support": 3.0,
       "Injured Combat": 1.0,
       "Injured Support": 1.0,
-      "Combat Attribute": "Manipulation/ Medicine",
+      "Combat Attribute": "Manipulation/Medicine",
       "Chakra Cost": null,
       "Characteristics": "Sand, Female, Medical, Puppet Master, Mental Power: 1",
       "Effect Title": "SACRIFICE",
@@ -91036,7 +91036,7 @@
       "Effect Text": "Effect: Everytime you heal 1 of your injured Ninjas, draw 1 card.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_4_revenge_and_rebirth/c019.webp"
+      "image_path": "set_235_tournament_pack_4/c019.webp"
     },
     {
       "Card ID": "c032",
@@ -100059,7 +100059,7 @@
       "Hand Cost": 0.0,
       "Healthy Combat": 2.0,
       "Healthy Support": 0.0,
-      "Injured Combat": 0.0,
+      "Injured Combat": 1.0,
       "Injured Support": 0.0,
       "Combat Attribute": "Taijutsu",
       "Chakra Cost": null,
