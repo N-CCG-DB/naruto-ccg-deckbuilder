@@ -630,7 +630,6 @@
     let currentDeck = { main: {}, reinf: {}, side: {} };
 
     let activeAddTarget = 'main';
-    let currentInspectedCardId = null;
     let lastInspectedCard = null;
     let decklistRenderPending = false;
 
@@ -1062,13 +1061,15 @@
     }
 
     // ---------- Inspector ----------
+    // Inspector selection is per database record/printing, not per deck key.
+    // Different set entries can share a lowercased Card ID.
     function inspectCard(card) {
       if (!card) return;
-      const key = cardKey(card);
-      if (currentInspectedCardId === key) return;
-      currentInspectedCardId = key;
-      lastInspectedCard = card;
-      renderInspector();
+      if (lastInspectedCard !== card) {
+        lastInspectedCard = card;
+        renderInspector();
+      }
+      // Switch to the inspector even when the same card is clicked again on mobile.
       if (window.innerWidth <= 820) setMobileView('inspector');
     }
 

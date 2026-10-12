@@ -233,6 +233,12 @@ Card Browser (center), Decklist (right).
 - Builds the set dropdown from the union of `image_path` folders,
   taking the display name from each card's `Set` field
 
+### Inspector Selection Identity
+
+The inspector selects a specific database record/printing, not just a deck identity. Multiple entries from different sets can share the same lowercased Card ID, so inspectCard() must not use cardKey() to decide that the inspector is already showing the selected record. The current implementation compares the selected card object by identity and skips a render only for the exact same database record. On mobile, clicking a card always switches to the Inspector tab, even if that same record is already selected.
+
+Keep cardKey() as the deck-pool and import/export key; this fix does not change how deck quantities group cards.
+
 ### Field map (F)
 
 All master-DB keys are referenced through a single `F` object at the
