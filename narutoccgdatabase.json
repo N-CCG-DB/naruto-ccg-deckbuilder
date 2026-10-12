@@ -43923,8 +43923,8 @@
     {
       "Card ID": "n512",
       "Collector Number": "N-512",
-      "Printed Name": "Ninja Dog Squad (All Gathered",
-      "Display Name": "Ninja Dog Squad (All Gathered",
+      "Printed Name": "Ninja Dog Squad (All Gathered)",
+      "Display Name": "Ninja Dog Squad (All Gathered)",
       "Type": "Ninja",
       "Set": "A New Chronicle",
       "Year": 2009,
@@ -63771,10 +63771,10 @@
       "Injured Support": 0.0,
       "Combat Attribute": "Flame/Weapon",
       "Chakra Cost": null,
-      "Characteristics": "Leaf, Ninja Academy Student, Male, Name: Sasuke Uchiha",
+      "Characteristics": "Leaf, Ninja Academy Student, Male, Name: Sasuke Uchiha, GROWTH",
       "Effect Title": "HIGH POTENTIAL",
       "Effect Text": "Valid: When this Ninja is discarded due to the Showdown, move this Ninja to its owner's Chakra area instead. In that case, discard 3 cards from the top of your opponent's Deck.",
-      "Keywords": null,
+      "Keywords": "Growth",
       "Errata": null,
       "image_path": "set_17_will_of_fire/n795.webp"
     },
