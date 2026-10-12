@@ -68362,7 +68362,7 @@
       "Effect Text": "When this Ninja is sent out to Attack, you can move 1 card from your Discard Pile to the bottom of your Deck. In that case, this Ninja gets +1/+1 during this turn.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n864.webp"
+      "image_path": "set_175_tournament_pack_1/n864.webp"
     },
     {
       "Card ID": "n865",
@@ -68386,7 +68386,7 @@
       "Effect Text": "Valid: When this Ninja is discarded due to the Showdown, move it to your Chakra area instead. In that case, randomly discard 1 card from your opponent's hand.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n865.webp"
+      "image_path": "set_175_tournament_pack_1/n865.webp"
     },
     {
       "Card ID": "n866",
@@ -68410,7 +68410,7 @@
       "Effect Text": "At the beginning of your turn, you can discard 1 card from your hand. In that case, draw 1 card at the end of this turn. If you did not discard a card with an Earth Symbol due to this effect, this Ninja cannot be sent out to Attack during this turn.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n866.webp"
+      "image_path": "set_175_tournament_pack_1/n866.webp"
     },
     {
       "Card ID": "n867",
@@ -68434,7 +68434,7 @@
       "Effect Text": "Valid: Your other \"Anbu\" Ninjas get +0/+1 and +1 Mental Power.\nYour opponent can't play Mission cards with an Entrance Cost less than the number of your in-play \"Anbu\" Ninjas.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n867.webp"
+      "image_path": "set_175_tournament_pack_1/n867.webp"
     },
     {
       "Card ID": "n868",
@@ -68458,7 +68458,7 @@
       "Effect Text": "When this Ninja is deployed, you can discard all in-play non-Ninja cards.\nWhile this Ninja card is in your Discard Pile, if your opponent has more cards in their Discard Pile than in their Deck, you can deploy this Ninja card during your Mission Phase without paying it's Hand cost.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n868.webp"
+      "image_path": "set_175_tournament_pack_1/n868.webp"
     },
     {
       "Card ID": "n869",
@@ -68482,7 +68482,7 @@
       "Effect Text": "When this Ninja is sent out to Attack, you can discard 2 cards from the top or bottom of your opponent's Deck. In that case, this Ninja gets +1/+0 during this turn.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n869.webp"
+      "image_path": "set_175_tournament_pack_1/n869.webp"
     },
     {
       "Card ID": "n870",
@@ -68506,7 +68506,7 @@
       "Effect Text": "When this Ninja is put in play, you can move up to X cards from your hand to your Chakra area. Then, move the same number of cards from the top of your Deck to your hand. X = the number of your Ninjas with a \"Lightning\" Symbol.\nValid: While your opponent has less Chakras than you, this Ninja and your Turn Marker are unaffected by your opponent's Ninja and Jutsu effects.",
       "Keywords": "Mastery",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n870.webp"
+      "image_path": "set_175_tournament_pack_1/n870.webp"
     },
     {
       "Card ID": "n871",
@@ -68530,7 +68530,7 @@
       "Effect Text": "When this Ninja is put in play, reveal the top card of your Deck. Then, move that card to your hand.\nValid: Other \"Leaf\" Ninjas in this Ninja's Team cannot be affected by the effects of your opponent's Ninjas.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n871.webp"
+      "image_path": "set_175_tournament_pack_1/n871.webp"
     },
     {
       "Card ID": "n872",
@@ -68554,7 +68554,7 @@
       "Effect Text": "Valid: While you have less Battle Rewards than your opponent, this Ninja gets +1/+1.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n872.webp"
+      "image_path": "set_175_tournament_pack_1/n872.webp"
     },
     {
       "Card ID": "n873",
@@ -68578,7 +68578,7 @@
       "Effect Text": "Valid: When this Ninja is discarded due to the Showdown, you can remove all coins from 1 Ninja or Mission card.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n873.webp"
+      "image_path": "set_175_tournament_pack_1/n873.webp"
     },
     {
       "Card ID": "n874",
@@ -68602,7 +68602,7 @@
       "Effect Text": "During the Exchange of Jutsu, you can discard 2 of your Chakras with a Water Symbol. In that case, during this turn, when your opponent wins an Outstanding Victory/Outstanding Battle Reward, it becomes a Victory/Battle Reward instead, respectively.\nValid: This Ninja cannot be sent out to Attack and cannot be included in a Team with any other Ninja.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n874.webp"
+      "image_path": "set_175_tournament_pack_1/n874.webp"
     },
     {
       "Card ID": "n875",
@@ -68626,7 +68626,7 @@
       "Effect Text": "When this Ninja's Team wins any Victory, you can injure 1 opposing Back Ninja.\nWhen this Ninja's Team wins any Battle Reward, you can discard 1 in-play non-Ninja card.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n875.webp"
+      "image_path": "set_175_tournament_pack_1/n875.webp"
     },
     {
       "Card ID": "n876",
@@ -68650,7 +68650,7 @@
       "Effect Text": "When this Ninja is deployed, search your Deck for 1 Ninja card that includes \"Childhood\" in their name, reveal it, and place it in your hand. Then, shuffle your Deck.\nWhen you put a Ninja in play by \"Growth\", heal it.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n876.webp"
+      "image_path": "set_175_tournament_pack_1/n876.webp"
     },
     {
       "Card ID": "n877",
@@ -68674,7 +68674,7 @@
       "Effect Text": "When this Ninja is put in play, draw 1 card.\nValid: When this Ninja is discarded due to the Showdown, discard 1 card from your hand.",
       "Keywords": "Surge",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n877.webp"
+      "image_path": "set_175_tournament_pack_1/n877.webp"
     },
     {
       "Card ID": "n878",
@@ -68698,7 +68698,7 @@
       "Effect Text": "When one of your opponent's Ninja would be discarded, you can discard X of your Chakras, where X is the Entrance cost of that Ninja. In that case, move that Ninja cards to your Village instead.\nValid: During your Mission Phase, you can discard this Ninja. In that case, you can put in play 1 \"Puppet Master\" Ninja card from your Reinforcement Deck.",
       "Keywords": "Ambush",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n878.webp"
+      "image_path": "set_175_tournament_pack_1/n878.webp"
     },
     {
       "Card ID": "n879",
@@ -68722,7 +68722,7 @@
       "Effect Text": "Valid: When your opponent searches or draws any cards due to a Ninja or Ninja card, you can discard 1 card from their hand at random. Then, you can draw 1 card and discard 1 card.",
       "Keywords": "Growth",
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_195_tournament_pack_1/n879e.webp"
+      "image_path": "set_175_tournament_pack_1/n879e.webp"
     },
     {
       "Card ID": "n880",
@@ -68746,7 +68746,7 @@
       "Effect Text": "During the Exchange of Jutsu, while this Ninja is on the Battlefield, you can select 1 Battling Ninja. In that case, the selected Ninja becomes a Stand-by Ninja unless your opponent discards 1 card from their hand or Chakra area.",
       "Keywords": "Ambush",
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_195_tournament_pack_1/n880e.webp"
+      "image_path": "set_175_tournament_pack_1/n880e.webp"
     },
     {
       "Card ID": "n881",
@@ -68770,7 +68770,7 @@
       "Effect Text": null,
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n881.webp"
+      "image_path": "set_175_tournament_pack_1/n881.webp"
     },
     {
       "Card ID": "n882",
@@ -68794,7 +68794,7 @@
       "Effect Text": "Valid: When any of your Ninjas or Missions with a \"Lightning\" Symbol would be removed from play by your opponent's effects, you can move this Ninja to your Chakra area. In that case, move 1 of those cards to its owner's hand.",
       "Keywords": "Growth",
       "Errata": null,
-      "image_path": "set_195_tournament_pack_1/n882.webp"
+      "image_path": "set_175_tournament_pack_1/n882.webp"
     },
     {
       "Card ID": "nus006b",
