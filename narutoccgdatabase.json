@@ -68962,7 +68962,7 @@
       "Effect Text": "Target: 1 of your opponent's Battle Rewards\nEffect: Turn the target face up. Then, randomly discard up to X cards from your opponent's hand. X = the number of Symbols on the target.\n(The target remains face up.)",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/j696b.webp"
+      "image_path": "set_175_tournament_pack_1/j696b.webp"
     },
     {
       "Card ID": "j697",
@@ -68986,7 +68986,7 @@
       "Effect Text": "Target: 1 Ninja with a Combat value less than or equal to the user's Combat value\nEffect: The target becomes a Stand-By Ninja. Then, if the user has an Earth Symbol, it is unaffected by your opponent's Jutsu cards during this turn.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/j697.webp"
+      "image_path": "set_175_tournament_pack_1/j697.webp"
     },
     {
       "Card ID": "j698",
@@ -69010,7 +69010,7 @@
       "Effect Text": "Target: 1 Ninja Battling against the user\nEffect: Give 1 Damage to the target. Then, if the user has a Fire Symbol, discard 4 cards from the top or bottom of your opponent's Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/j698.webp"
+      "image_path": "set_175_tournament_pack_1/j698.webp"
     },
     {
       "Card ID": "j699",
@@ -69034,7 +69034,7 @@
       "Effect Text": "Requirement: Printed Entrance cost of 4 or more\nTarget: 1 Ninja\nEffect: The target gets -4/-4 during this turn. If the user's Team wins any Victory during this turn, you win 1 Battle Reward.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/j699.webp"
+      "image_path": "set_175_tournament_pack_1/j699.webp"
     },
     {
       "Card ID": "j700",
@@ -69058,7 +69058,7 @@
       "Effect Text": "Target: User\nEffect: You can exchange all the cards in your hand with the same number of cards from the top of your Deck. Then, reveal your hand, the target gets +1/+0 for each revealed Jutsu card.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/j700.webp"
+      "image_path": "set_175_tournament_pack_1/j700.webp"
     },
     {
       "Card ID": "j701",
@@ -69082,7 +69082,7 @@
       "Effect Text": "Target: User\nEffect: The target gets +2/+0 during this turn. The next Jutsu card the target uses during this turn cannot be affected by your opponent's effects.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/j701.webp"
+      "image_path": "set_175_tournament_pack_1/j701.webp"
     },
     {
       "Card ID": "j702",
@@ -69106,7 +69106,7 @@
       "Effect Text": "Target: Jutsu card being played or 1 Ninja's effect text\nEffect: Your opponent flips a coin twice. If they get tails only once, negate the target. This Jutsu card can be used while it is in your Chakra area.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/j702.webp"
+      "image_path": "set_175_tournament_pack_1/j702.webp"
     },
     {
       "Card ID": "j703",
@@ -69130,7 +69130,7 @@
       "Effect Text": "Target: 1 Back Ninja Battling against the user\nEffect: The target's Power and Mental Power cannot be added to its Team during the Showdown of this turn. This Jutsu card can be used while it is in your Chakra area.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/j703.webp"
+      "image_path": "set_175_tournament_pack_1/j703.webp"
     },
     {
       "Card ID": "j704",
@@ -69154,7 +69154,7 @@
       "Effect Text": "Target: 1 injured Ninja\nEffect: Heal the target and draw 1 card. Then, If the user has a \"Medicine\" Combat Attribute, you can move 1 card from your Discard Pile to your hand.",
       "Keywords": null,
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_195_tournament_pack_2/j704e.webp"
+      "image_path": "set_175_tournament_pack_1/j704e.webp"
     },
     {
       "Card ID": "j705",
@@ -69178,7 +69178,7 @@
       "Effect Text": "Target: 1 Ninja\nEffect: The target gets +0/+3.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/j705.webp"
+      "image_path": "set_175_tournament_pack_1/j705.webp"
     },
     {
       "Card ID": "m665",
@@ -69202,7 +69202,7 @@
       "Effect Text": "Target: 1 of your Ninjas\nEffect: The target's Team and Team Battling against it performs a Mental Power Battle during this turn. At the end of this turn, if the target was sent out to Battle this turn and is still in your Village, draw 2 cards.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/m665.webp"
+      "image_path": "set_175_tournament_pack_1/m665.webp"
     },
     {
       "Card ID": "m666",
@@ -69226,7 +69226,7 @@
       "Effect Text": "Effect: Search your Deck for 1 Ninja or Client card with an Entrance cost less than the number of cards in your Chakra area, reveal it, and place it in your hand. Then, shuffle your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/m666.webp"
+      "image_path": "set_175_tournament_pack_1/m666.webp"
     },
     {
       "Card ID": "m667",
@@ -69250,7 +69250,7 @@
       "Effect Text": "Effect: The Combat, Support, and Mental Power of all Ninjas becomes 0 and cannot be changed by the effect of non-Jutsu cards during this turn. At the end of this turn, draw 1 card for each of your Teams that won a Victory or Battle Reward during this turn.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/m667.webp"
+      "image_path": "set_175_tournament_pack_1/m667.webp"
     },
     {
       "Card ID": "m668",
@@ -69274,7 +69274,7 @@
       "Effect Text": "Counter Permanent (3)\nTarget: 1 Ninja\nEffect: Attach this card to the target. The effect text of the target is negated.\nEffect: When your opponent draws 1 or more cards due to an effect, you can draw 1 card.",
       "Keywords": null,
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_195_tournament_pack_2/m668e.webp"
+      "image_path": "set_175_tournament_pack_1/m668e.webp"
     },
     {
       "Card ID": "m669",
@@ -69298,7 +69298,7 @@
       "Effect Text": "Effect: Draw 2 cards. Then, move 1 card from your hand to your Chakra area.\nEffect: During your Mission Phase, if this card is in your Chakra area, you can remove it from game, in that case, place 1 Growth coin on a \"Sand\" or \"Leaf\" Ninja.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_195_tournament_pack_2/m669.webp"
+      "image_path": "set_175_tournament_pack_1/m669.webp"
     }
   ],
   "18 Fangs of the Snake": [
@@ -90580,7 +90580,7 @@
       "Effect Text": "Target: Every Ninja with a \"Water\" symbol Battling against the user\nEffect: Remove the target from its Team. The target becomes a Stand-by Ninja.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_7_quest_for_power/j214.webp"
+      "image_path": "set_235_tournament_pack_4/j214.webp"
     },
     {
       "Card ID": "j268",
@@ -90604,7 +90604,7 @@
       "Effect Text": "Requirements: \"Sand\" Combat Attribute +\n\"An Entrance cost of 4 or more\"\nTarget: Every Ninja in 1 of your opponent's Teams\nEffect: Injure the target",
       "Keywords": null,
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_8_battle_for_destiny/j268e.webp"
+      "image_path": "set_235_tournament_pack_4/j268e.webp"
     },
     {
       "Card ID": "j462",
@@ -90772,7 +90772,7 @@
       "Effect Text": "Requirements: \"Sasuke Uchiha\" or \"Kakashi Hatake\"\nTarget: User\nEffect: The target gets +5/+0 during this turn. Additionally, if the target's Team wins a Victory or an Outstanding Victory, give 1 Damage to 1 of your opponent's Healthy Stand-By Ninjas.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_9_the_chosen/jus065.webp"
+      "image_path": "set_235_tournament_pack_4/jus065.webp"
     },
     {
       "Card ID": "m080",
@@ -91060,7 +91060,7 @@
       "Effect Text": "Effect: Each time your Ninja with \"Uchiha\" in its name is put in play, draw 1 card.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_8_battle_for_destiny/c032.webp"
+      "image_path": "set_235_tournament_pack_4/c032.webp"
     },
     {
       "Card ID": "c048",
