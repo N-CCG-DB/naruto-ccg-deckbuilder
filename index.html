@@ -210,7 +210,7 @@
       flex-direction: column;
       gap: 12px;
       flex: 1;
-      overflow: hidden;
+      overflow-y: auto;
       min-width: 0;
     }
 
@@ -308,12 +308,9 @@
     .target-btn[data-target="side"].active { background-color: var(--color-side); color: #000; }
 
     .deck-items {
-      flex: 1;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      min-height: 0;
     }
 
     .deck-section-title {
@@ -434,7 +431,7 @@
       .decklist-sidebar.collapsed { width: 100% !important; border-bottom-width: 1px; }
 
       .card-inspector,
-      .decklist-sidebar { display: none; }
+      .decklist-sidebar { display: none; overflow-y: auto !important; -webkit-overflow-scrolling: touch; }
 
       .app-container[data-mobile-view="inspector"] .card-inspector { display: flex; }
       .app-container[data-mobile-view="inspector"] .card-browser,
@@ -624,7 +621,7 @@
     };
 
     let cardDatabase = [];        // flat array of master-DB card objects
-    let cardIndex = new Map();    // lowercased Card ID -> card
+    let cardIndex = new Map();    // unique compound card key -> card
     let setFolders = [];          // [{folder, display}] derived from image_path
 
     let currentDeck = { main: {}, reinf: {}, side: {} };
@@ -737,10 +734,12 @@
       return `./cards_database/${rel}`;
     }
 
-    // Stable key for deck pools: lowercased Card ID
+    // Stable key for deck pools: compound key of lowercased Card ID + set folder to prevent collisions across multiple sets sharing IDs
     function cardKey(card) {
+      if (!card) return '';
       const id = card[F.cardId];
-      return id ? String(id).toLowerCase() : '';
+      const folder = getSetFolder(card);
+      return id ? `${String(id).toLowerCase()}__${folder}` : '';
     }
 
     // ---------- Load & normalize ----------
@@ -760,7 +759,7 @@
           cardDatabase = raw;
         }
 
-        // Build lookup by lowercased Card ID
+        // Build lookup by unique card key
         cardIndex = new Map();
         cardDatabase.forEach(c => {
           const k = cardKey(c);

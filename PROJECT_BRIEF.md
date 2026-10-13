@@ -272,9 +272,7 @@ Never write a raw master-DB key string elsewhere in the file. Use `F`.
 
 ### Deck key convention
 
-Deck pools (`currentDeck.main` / `.reinf` / `.side`) are keyed by
-lowercased `Card ID`. Everything that adds, removes, or looks up a
-card goes through `cardKey(card)`.
+Deck pools (`currentDeck.main` / `.reinf` / `.side`) are keyed by a compound key consisting of the lowercased `Card ID` plus the set folder (e.g., `cardid__setfolder`). This ensures cards sharing the same Card ID across different sets are tracked uniquely without colliding. Everything that adds, removes, or looks up a card goes through `cardKey(card)`.
 
 ### Inspector
 
