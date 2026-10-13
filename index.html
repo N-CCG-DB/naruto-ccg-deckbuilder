@@ -549,7 +549,10 @@
         min-height: 0;
       }
 
-      /* Generous bottom padding and safe area allowance for mobile scrolling */
+      /* Generous bottom padding to clear mobile toolbars and gesture bars completely for browser, inspector, and decklist */
+      .card-browser {
+        padding-bottom: 180px !important;
+      }
       .card-inspector {
         padding-bottom: 180px !important;
       }
