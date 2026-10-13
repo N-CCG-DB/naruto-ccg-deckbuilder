@@ -542,6 +542,13 @@
       .app-container[data-mobile-view="browser"] .card-inspector,
       .app-container[data-mobile-view="browser"] .decklist-sidebar { display: none; }
 
+      .app-container[data-mobile-view="inspector"] .card-inspector,
+      .app-container[data-mobile-view="deck"] .decklist-sidebar,
+      .app-container[data-mobile-view="browser"] .card-browser {
+        flex: 1;
+        min-height: 0;
+      }
+
       .card-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
 
       .resize-handle { display: none; }
@@ -935,12 +942,13 @@
       return `./cards_database/${rel}`;
     }
 
-    // Stable key for deck pools: compound key of lowercased Card ID + set folder to prevent collisions across multiple sets sharing IDs
+    // Stable key for deck pools: compound key incorporating Card ID, set folder, and unique image path to correctly distinguish multiple versions/sets sharing IDs
     function cardKey(card) {
       if (!card) return '';
-      const id = card[F.cardId];
+      const id = card[F.cardId] || '';
+      const path = card[F.imagePath] || '';
       const folder = getSetFolder(card);
-      return id ? `${String(id).toLowerCase()}__${folder}` : '';
+      return `${String(id).toLowerCase()}__${folder}__${String(path).toLowerCase()}`;
     }
 
     // ---------- Load & normalize ----------
@@ -964,7 +972,7 @@
         cardIndex = new Map();
         cardDatabase.forEach(c => {
           const k = cardKey(c);
-          if (k && !cardIndex.has(k)) cardIndex.set(k, c);
+          if (k) cardIndex.set(k, c);
         });
 
         buildSetFolders();
