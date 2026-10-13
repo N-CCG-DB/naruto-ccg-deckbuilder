@@ -342,8 +342,29 @@ the bottom, also hidden when blank. Nothing else changes.
 - Panels stack vertically. A `.mobile-tabs` bar at the top switches
   between Cards, Inspector, and Deck views via `data-mobile-view`
   on `.app-container`.
+- The mobile header keeps Search and a Filters button on one compact
+  row. Scope, Type, Set, and Sort are in a bottom-sheet panel opened
+  by the Filters button; its backdrop, close button, and Escape key
+  dismiss it. A badge shows the number of non-default filters when any
+  are active. Desktop filter controls remain inline.
 - Card grid shrinks to `minmax(120px, 1fr)`.
 - Clicking any card auto-switches to the Inspector view.
+
+### Deck entry ordering
+
+All three zones use one shared sort for the decklist and exports:
+
+1. Type order: Ninja, Jutsu, Mission, Client.
+2. Ninja, Mission, and Client: Entrance Cost ascending, then Display
+   Name, then Collector Number.
+3. Jutsu: Display Name, then Collector Number.
+
+String comparisons use natural, case-insensitive ordering, so values
+such as `N-2` sort before `N-10`. Blank or invalid entrance costs sort
+after numeric costs. Client follows the cost-first rule because its
+cards also have Entrance Cost values. Remaining exact ties use Set and
+Card ID for stable output. Changing this helper updates the visible
+decklist, TTS JSON card order, and text export together.
 
 ### Filter scroll reset
 
@@ -365,22 +386,31 @@ Matches, case-insensitively, against:
 Standard Tabletop Simulator `DeckCustom` save object with one
 `ObjectStates` entry per non-empty zone (Mainboard, Reinforcements,
 Sideboard). Card `Description` is the lowercased `Card ID`. Image
-URLs point at `{origin}/cards_database/{image_path}`.
+URLs point at `{origin}/cards_database/{image_path}`. Each zone's
+`ContainedObjects` is written in the shared deck-entry order described
+above, with repeated copies kept together.
 
 Format is unchanged from the old build - old exports still load.
 
 ### Text export (exportTextDeck)
 
-    // Mainboard
-    3x Card Name [cardid]
+    Naruto CCG Decklist
+    ===================
 
-    // Reinforcements
-    1x Card Name [cardid]
+    // Mainboard — 40 cards
 
-    // Sideboard
-    2x Card Name [cardid]
+    NINJAS — 20 cards
+      2x Card Name — Entrance Cost: 1 | N-001 | Set Name [cardid]
 
-Only non-empty sections are written.
+    JUTSU — 10 cards
+      3x Jutsu Name — J-001 | Set Name [cardid]
+
+The export groups each zone by type, includes copy totals and
+human-readable card number/set details, and follows the shared sort.
+Reinforcements and Sideboard are omitted when empty. The trailing
+`[cardid]` remains the import key; the more descriptive lines and
+headings are accepted by the existing text importer. Older lines such
+as `3x Name [cardid]` remain supported.
 
 ### TTS import (importJSONDeck)
 
@@ -586,13 +616,12 @@ one or two <option> entries to #sort-select.
 
 ### Header Layout
 
-The header now contains five filter groups, in this order:
-Search, In (scope), Type, Set, Sort. On desktop they wrap into up
-to two rows. On mobile (<=820px) each group takes a full row via
-the existing 1 1 100% flex rule and the inputs stretch to full
-width. Do not reorder these groups without a specific reason; the
-current order mirrors the flow of "what am I searching for -> in
-which field -> what type -> in which set -> in what order".
+The header owns five controls, in this order: Search, In (scope),
+Type, Set, Sort. On desktop they remain inline/wrappable. On mobile
+(<=820px), Search and a Filters button share the compact top row; In,
+Type, Set, and Sort are shown in the Filters bottom sheet. Keep this
+control order because it mirrors the flow of "what am I searching for
+-> in which field -> what type -> in which set -> in what order".
 
 ## Addendum: TTS Export Zone Separation
 
