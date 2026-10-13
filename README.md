@@ -25,7 +25,11 @@ Live site: https://n-ccg-db.github.io/naruto-ccg-deckbuilder/
 - **Collapsible Decklist.** Click "Hide ▶" in the deck header to
   collapse the panel, and "◀ Show Deck" to bring it back.
 - **Responsive mobile layout.** On phones the panels stack and a
-  bottom tab bar switches between Cards, Inspector, and Deck.
+  bottom tab bar switches between Cards, Inspector, and Deck. Search
+  stays visible while the other filters open in a compact bottom sheet.
+- **Sorted decklists and exports.** Cards are ordered by type and then
+  by their relevant cost/name/card-number rules in the deck view, TTS
+  JSON, and readable text export.
 - **Filters reset scroll.** Changing the set, type, or search
   automatically jumps the card browser back to the top.
 
@@ -36,7 +40,8 @@ starts in a consistent state.
 
 Just open the live site. No install, no sign-up.
 
-1. Find cards with the search bar and filters at the top
+1. Find cards with the search bar; on phones, tap **Filters** for the
+   search scope, type, set, and sorting controls
 2. Click a card to inspect it in the left panel
 3. Use + / - on any card to add/remove from your deck
 4. Switch target zone with the Mainboard / Reinforcements / Sideboard
