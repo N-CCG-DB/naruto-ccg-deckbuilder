@@ -406,12 +406,109 @@
       border-color: var(--accent-color);
     }
 
+    .filter-options { display: contents; }
+    .filter-options-header { display: none; }
+    .mobile-filter-toggle { display: none; }
+    .mobile-filter-count {
+      display: inline-flex;
+      min-width: 18px;
+      height: 18px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 5px;
+      border-radius: 10px;
+      background: var(--accent-color);
+      color: #000;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    .mobile-filter-count[hidden] { display: none; }
+    .mobile-filter-backdrop { display: none; }
+
     @media (max-width: 820px) {
-      header { padding: 8px 10px; gap: 8px; }
-      header .filter-group { flex: 1 1 100%; }
-      header .filter-group input,
-      header .filter-group select { width: 100%; }
+      header {
+        padding: 8px 10px;
+        gap: 8px;
+        flex-wrap: nowrap;
+      }
+      header .search-group {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      header .search-group label { display: none; }
+      header .search-group input { width: 100%; }
       #search-input { min-width: 0; }
+
+      .mobile-filter-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        flex: 0 0 auto;
+        white-space: nowrap;
+        padding: 8px 11px;
+      }
+
+      .filter-options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: fixed;
+        z-index: 1001;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        max-height: min(82vh, 680px);
+        max-height: min(82dvh, 680px);
+        overflow-y: auto;
+        padding: 16px 14px calc(16px + env(safe-area-inset-bottom, 0px));
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-bottom: 0;
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -8px 28px rgba(0, 0, 0, 0.5);
+        transform: translateY(105%);
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 180ms ease, visibility 0s linear 180ms;
+      }
+      .filter-options.open {
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+        transition: transform 180ms ease, visibility 0s;
+      }
+      .filter-options-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2px;
+      }
+      .filter-options-header h3 { font-size: 18px; }
+      .mobile-filter-close {
+        min-width: 36px;
+        min-height: 36px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background: #2a2a2a;
+        color: var(--text-color);
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .filter-options .filter-group {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+      .filter-options .filter-group input,
+      .filter-options .filter-group select { width: 100%; }
+      .mobile-filter-backdrop:not([hidden]) {
+        display: block;
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.62);
+      }
 
       .app-container { flex-direction: column; }
 
@@ -431,21 +528,7 @@
       .decklist-sidebar.collapsed { width: 100% !important; border-bottom-width: 1px; }
 
       .card-inspector,
-      .decklist-sidebar { 
-        display: none; 
-        overflow-y: auto !important; 
-        -webkit-overflow-scrolling: touch; 
-        padding-bottom: 120px !important; 
-      }
-
-      .decklist-sidebar > .decklist-inner {
-        overflow-y: visible !important; 
-        padding-bottom: 60px;
-      }
-
-      .card-browser {
-        padding-bottom: 120px !important; 
-      }
+      .decklist-sidebar { display: none; overflow-y: auto !important; -webkit-overflow-scrolling: touch; }
 
       .app-container[data-mobile-view="inspector"] .card-inspector { display: flex; }
       .app-container[data-mobile-view="inspector"] .card-browser,
@@ -459,6 +542,21 @@
       .app-container[data-mobile-view="browser"] .card-inspector,
       .app-container[data-mobile-view="browser"] .decklist-sidebar { display: none; }
 
+      .app-container[data-mobile-view="inspector"] .card-inspector,
+      .app-container[data-mobile-view="deck"] .decklist-sidebar,
+      .app-container[data-mobile-view="browser"] .card-browser {
+        flex: 1;
+        min-height: 0;
+      }
+
+      /* Generous bottom padding and safe area allowance for mobile scrolling */
+      .card-inspector {
+        padding-bottom: 50px !important;
+      }
+      .decklist-sidebar > .decklist-inner {
+        padding-bottom: calc(50px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+
       .card-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
 
       .resize-handle { display: none; }
@@ -470,69 +568,89 @@
 <body>
 
   <header>
-    <div class="filter-group">
+    <div class="filter-group search-group">
       <label for="search-input">Search:</label>
       <input type="text" id="search-input" placeholder="Type to search..." oninput="filterCards()" />
     </div>
 
-    <div class="filter-group">
-      <label for="scope-filter">In:</label>
-      <select id="scope-filter" onchange="filterCards()">
-        <option value="ALL">All fields</option>
-        <option value="name">Name</option>
-        <option value="number">Card Number</option>
-        <option value="type">Type</option>
-        <option value="symbols">Symbols</option>
-        <option value="characteristics">Characteristics</option>
-        <option value="effectTitle">Effect Title</option>
-        <option value="effectText">Effect Text</option>
-        <option value="keywords">Keywords</option>
-        <option value="combatAttribute">Combat Attribute</option>
-        <option value="entranceCost">Entrance Cost</option>
-        <option value="handCost">Hand Cost</option>
-        <option value="chakraCost">Chakra Cost</option>
-        <option value="printedName">Printed Name</option>
-      </select>
-    </div>
+    <button
+      type="button"
+      class="mobile-filter-toggle btn btn-secondary"
+      id="mobile-filter-toggle"
+      aria-expanded="false"
+      aria-controls="filter-options"
+      aria-label="Open card filters"
+      onclick="toggleMobileFilters()"
+    >
+      Filters <span id="mobile-filter-count" class="mobile-filter-count" hidden></span>
+    </button>
 
-    <div class="filter-group">
-      <label for="type-filter">Type:</label>
-      <select id="type-filter" onchange="filterCards()">
-        <option value="ALL">All Types</option>
-        <option value="Ninja">Ninja</option>
-        <option value="Jutsu">Jutsu</option>
-        <option value="Mission">Mission</option>
-        <option value="Client">Client</option>
-      </select>
-    </div>
+    <div class="filter-options" id="filter-options">
+      <div class="filter-options-header">
+        <h3>Card filters</h3>
+        <button type="button" class="mobile-filter-close" id="mobile-filter-close" aria-label="Close filters" onclick="closeMobileFilters()">×</button>
+      </div>
 
-    <div class="filter-group">
-      <label for="set-filter">Set:</label>
-      <select id="set-filter" onchange="filterCards()">
-        <option value="ALL">All Sets</option>
-      </select>
-    </div>
+      <div class="filter-group">
+        <label for="scope-filter">In:</label>
+        <select id="scope-filter" onchange="filterCards()">
+          <option value="ALL">All fields</option>
+          <option value="name">Name</option>
+          <option value="number">Card Number</option>
+          <option value="type">Type</option>
+          <option value="symbols">Symbols</option>
+          <option value="characteristics">Characteristics</option>
+          <option value="effectTitle">Effect Title</option>
+          <option value="effectText">Effect Text</option>
+          <option value="keywords">Keywords</option>
+          <option value="combatAttribute">Combat Attribute</option>
+          <option value="entranceCost">Entrance Cost</option>
+          <option value="handCost">Hand Cost</option>
+          <option value="chakraCost">Chakra Cost</option>
+          <option value="printedName">Printed Name</option>
+        </select>
+      </div>
 
-    <div class="filter-group">
-      <label for="sort-select">Sort:</label>
-      <select id="sort-select" onchange="filterCards()">
-        <option value="number-asc" selected>Card Number (asc)</option>
-        <option value="number-desc">Card Number (desc)</option>
-        <option value="name-asc">Name (A–Z)</option>
-        <option value="name-desc">Name (Z–A)</option>
-        <option value="entranceCost-asc">Entrance Cost (low→high)</option>
-        <option value="entranceCost-desc">Entrance Cost (high→low)</option>
-        <option value="handCost-asc">Hand Cost (low→high)</option>
-        <option value="handCost-desc">Hand Cost (high→low)</option>
-        <option value="healthyCombat-asc">Combat (Healthy) (low→high)</option>
-        <option value="healthyCombat-desc">Combat (Healthy) (high→low)</option>
-        <option value="healthySupport-asc">Support (Healthy) (low→high)</option>
-        <option value="healthySupport-desc">Support (Healthy) (high→low)</option>
-        <option value="type-asc">Type</option>
-        <option value="setFolder-asc">Set</option>
-      </select>
+      <div class="filter-group">
+        <label for="type-filter">Type:</label>
+        <select id="type-filter" onchange="filterCards()">
+          <option value="ALL">All Types</option>
+          <option value="Ninja">Ninja</option>
+          <option value="Jutsu">Jutsu</option>
+          <option value="Mission">Mission</option>
+          <option value="Client">Client</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="set-filter">Set:</label>
+        <select id="set-filter" onchange="filterCards()">
+          <option value="ALL">All Sets</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="sort-select">Sort:</label>
+        <select id="sort-select" onchange="filterCards()">
+          <option value="number-asc" selected>Card Number (asc)</option>
+          <option value="number-desc">Card Number (desc)</option>
+          <option value="name-asc">Name (A–Z)</option>
+          <option value="name-desc">Name (Z–A)</option>
+          <option value="entranceCost-asc">Entrance Cost (low→high)</option>
+          <option value="entranceCost-desc">Entrance Cost (high→low)</option>
+          <option value="handCost-asc">Hand Cost (low→high)</option>
+          <option value="handCost-desc">Hand Cost (high→low)</option>
+          <option value="healthyCombat-asc">Combat (Healthy) (low→high)</option>
+          <option value="healthyCombat-desc">Combat (Healthy) (high→low)</option>
+          <option value="healthySupport-asc">Support (Healthy) (low→high)</option>
+          <option value="healthySupport-desc">Support (Healthy) (high→low)</option>
+          <option value="type-asc">Type</option>
+          <option value="setFolder-asc">Set</option>
+        </select>
+      </div>
     </div>
   </header>
+  <div class="mobile-filter-backdrop" id="mobile-filter-backdrop" hidden onclick="closeMobileFilters()"></div>
 
   <div class="mobile-tabs">
     <button data-view="browser" class="active" onclick="setMobileView('browser')">Cards</button>
@@ -679,6 +797,90 @@
     }
     window.setMobileView = setMobileView;
 
+    // ---------- Compact mobile filters ----------
+    function updateMobileFilterButton() {
+      const countEl = document.getElementById('mobile-filter-count');
+      const button = document.getElementById('mobile-filter-toggle');
+      if (!countEl || !button) return;
+
+      const activeCount = [
+        document.getElementById('scope-filter').value !== 'ALL',
+        document.getElementById('type-filter').value !== 'ALL',
+        document.getElementById('set-filter').value !== 'ALL',
+        document.getElementById('sort-select').value !== 'number-asc',
+      ].filter(Boolean).length;
+
+      countEl.textContent = activeCount ? String(activeCount) : '';
+      countEl.hidden = activeCount === 0;
+      button.setAttribute(
+        'aria-label',
+        activeCount ? `Open card filters, ${activeCount} active` : 'Open card filters'
+      );
+    }
+
+    function toggleMobileFilters() {
+      const panel = document.getElementById('filter-options');
+      if (panel.classList.contains('open')) closeMobileFilters();
+      else openMobileFilters();
+    }
+
+    function openMobileFilters() {
+      if (window.innerWidth > 820) return;
+      const panel = document.getElementById('filter-options');
+      const backdrop = document.getElementById('mobile-filter-backdrop');
+      panel.classList.add('open');
+      panel.setAttribute('role', 'dialog');
+      panel.setAttribute('aria-modal', 'true');
+      panel.setAttribute('aria-label', 'Card filters');
+      backdrop.hidden = false;
+      document.getElementById('mobile-filter-toggle').setAttribute('aria-expanded', 'true');
+      document.getElementById('mobile-filter-close').focus();
+      document.addEventListener('keydown', handleMobileFilterKeydown);
+    }
+
+    function closeMobileFilters(restoreFocus = true) {
+      const panel = document.getElementById('filter-options');
+      const backdrop = document.getElementById('mobile-filter-backdrop');
+      if (!panel || !backdrop) return;
+      panel.classList.remove('open');
+      panel.removeAttribute('role');
+      panel.removeAttribute('aria-modal');
+      panel.removeAttribute('aria-label');
+      backdrop.hidden = true;
+      const button = document.getElementById('mobile-filter-toggle');
+      button.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('keydown', handleMobileFilterKeydown);
+      if (restoreFocus && window.innerWidth <= 820) button.focus();
+    }
+
+    function handleMobileFilterKeydown(event) {
+      if (event.key === 'Escape') {
+        closeMobileFilters();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      const panel = document.getElementById('filter-options');
+      const focusable = Array.from(panel.querySelectorAll(
+        'button:not([disabled]), select:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )).filter(el => el.offsetParent !== null);
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 820) closeMobileFilters(false);
+    });
+
     // ---------- Collapsible decklist ----------
     function toggleDecklist() {
       const panel = document.getElementById('panel-deck');
@@ -748,12 +950,13 @@
       return `./cards_database/${rel}`;
     }
 
-    // Stable key for deck pools: compound key of lowercased Card ID + set folder to prevent collisions across multiple sets sharing IDs
+    // Stable key for deck pools: compound key incorporating Card ID, set folder, and unique image path to correctly distinguish multiple versions/sets sharing IDs
     function cardKey(card) {
       if (!card) return '';
-      const id = card[F.cardId];
+      const id = card[F.cardId] || '';
+      const path = card[F.imagePath] || '';
       const folder = getSetFolder(card);
-      return id ? `${String(id).toLowerCase()}__${folder}` : '';
+      return `${String(id).toLowerCase()}__${folder}__${String(path).toLowerCase()}`;
     }
 
     // ---------- Load & normalize ----------
@@ -777,7 +980,7 @@
         cardIndex = new Map();
         cardDatabase.forEach(c => {
           const k = cardKey(c);
-          if (k && !cardIndex.has(k)) cardIndex.set(k, c);
+          if (k) cardIndex.set(k, c);
         });
 
         buildSetFolders();
@@ -934,6 +1137,53 @@
       return naturalCollator.compare(a, b);
     }
 
+    // Shared order for the deck UI and every export. Clients use the same
+    // entrance-cost ordering as Ninja/Mission because they have that stat too.
+    const DECK_TYPE_ORDER = ['Ninja', 'Jutsu', 'Mission', 'Client'];
+    const DECK_TYPE_LABELS = {
+      Ninja: 'NINJAS',
+      Jutsu: 'JUTSU',
+      Mission: 'MISSIONS',
+      Client: 'CLIENTS',
+    };
+
+    function compareDeckEntries(a, b) {
+      const [keyA, entryA] = a;
+      const [keyB, entryB] = b;
+      const cardA = entryA.card;
+      const cardB = entryB.card;
+      const typeA = String(cardA[F.type] || '').trim();
+      const typeB = String(cardB[F.type] || '').trim();
+      const orderA = DECK_TYPE_ORDER.indexOf(typeA);
+      const orderB = DECK_TYPE_ORDER.indexOf(typeB);
+      const typeOrderA = orderA === -1 ? DECK_TYPE_ORDER.length : orderA;
+      const typeOrderB = orderB === -1 ? DECK_TYPE_ORDER.length : orderB;
+      if (typeOrderA !== typeOrderB) return typeOrderA - typeOrderB;
+
+      if (typeA !== 'Jutsu') {
+        const costA = isBlank(cardA[F.entranceCost]) ? null : Number(cardA[F.entranceCost]);
+        const costB = isBlank(cardB[F.entranceCost]) ? null : Number(cardB[F.entranceCost]);
+        const validCostA = costA !== null && Number.isFinite(costA);
+        const validCostB = costB !== null && Number.isFinite(costB);
+        if (validCostA && validCostB && costA !== costB) return costA - costB;
+        if (validCostA !== validCostB) return validCostA ? -1 : 1;
+      }
+
+      const nameOrder = naturalCmp(cardA[F.name] || '', cardB[F.name] || '');
+      if (nameOrder !== 0) return nameOrder;
+
+      const numberOrder = naturalCmp(cardA[F.collectorNumber] || '', cardB[F.collectorNumber] || '');
+      if (numberOrder !== 0) return numberOrder;
+
+      const setOrder = naturalCmp(cardA[F.set] || '', cardB[F.set] || '');
+      if (setOrder !== 0) return setOrder;
+      return naturalCmp(keyA, keyB);
+    }
+
+    function getSortedDeckEntries(zone) {
+      return Object.entries(zone).sort(compareDeckEntries);
+    }
+
     // Compares two cards by the active sort key. Nulls always sort last
     // regardless of direction. Falls back to Collector Number ascending.
     function makeComparator(spec) {
@@ -991,6 +1241,7 @@
     }
 
     function filterCards() {
+      updateMobileFilterButton();
       renderCards(getFilteredCards());
       scrollBrowserToTop();
     }
@@ -1232,13 +1483,13 @@
 
       const groups = { 'Ninja': [], 'Jutsu': [], 'Mission': [], 'Client': [] };
 
-      Object.entries(currentDeck.main).forEach(([key, entry]) => {
+      getSortedDeckEntries(currentDeck.main).forEach(([key, entry]) => {
         mainTotal += entry.count;
         const t = (entry.card[F.type] || '').trim();
         if (groups[t]) groups[t].push([key, entry]);
       });
 
-      ['Ninja', 'Jutsu', 'Mission', 'Client'].forEach(type => {
+      DECK_TYPE_ORDER.forEach(type => {
         const entries = groups[type];
         if (entries.length === 0) return;
         const catCount = entries.reduce((sum, [, e]) => sum + e.count, 0);
@@ -1255,7 +1506,7 @@
         });
       });
 
-      const reinfEntries = Object.entries(currentDeck.reinf);
+      const reinfEntries = getSortedDeckEntries(currentDeck.reinf);
       reinfTotal = reinfEntries.reduce((sum, [, e]) => sum + e.count, 0);
       if (reinfEntries.length > 0 || activeAddTarget === 'reinf') {
         const header = document.createElement('div');
@@ -1271,7 +1522,7 @@
         });
       }
 
-      const sideEntries = Object.entries(currentDeck.side);
+      const sideEntries = getSortedDeckEntries(currentDeck.side);
       sideTotal = sideEntries.reduce((sum, [, e]) => sum + e.count, 0);
       if (sideEntries.length > 0 || activeAddTarget === 'side') {
         const header = document.createElement('div');
@@ -1306,7 +1557,7 @@
     // so they don't stack on top of each other in Tabletop Simulator.
     function exportToTTS() {
       const allMainCards = [];
-      Object.values(currentDeck.main).forEach(entry => {
+      getSortedDeckEntries(currentDeck.main).forEach(([, entry]) => {
         for (let i = 0; i < entry.count; i++) allMainCards.push(entry.card);
       });
 
@@ -1362,13 +1613,13 @@
       const objectStates = [createTTSDeckObject(allMainCards, "Mainboard", 0)];
 
       const reinfCards = [];
-      Object.values(currentDeck.reinf).forEach(entry => {
+      getSortedDeckEntries(currentDeck.reinf).forEach(([, entry]) => {
         for (let i = 0; i < entry.count; i++) reinfCards.push(entry.card);
       });
       if (reinfCards.length > 0) objectStates.push(createTTSDeckObject(reinfCards, "Reinforcements", 3));
 
       const sideCards = [];
-      Object.values(currentDeck.side).forEach(entry => {
+      getSortedDeckEntries(currentDeck.side).forEach(([, entry]) => {
         for (let i = 0; i < entry.count; i++) sideCards.push(entry.card);
       });
       if (sideCards.length > 0) objectStates.push(createTTSDeckObject(sideCards, "Sideboard", 6));
@@ -1386,27 +1637,44 @@
 
     // ---------- Export: plain text ----------
     function exportTextDeck() {
-      let textData = "// Mainboard\n";
-      Object.entries(currentDeck.main).forEach(([key, entry]) => {
-        const n = entry.card[F.name] || entry.card[F.collectorNumber] || key;
-        textData += `${entry.count}x ${n} [${key}]\n`;
-      });
+      const lines = ['Naruto CCG Decklist', '==================='];
+      const appendZone = (zone, title) => {
+        const entries = getSortedDeckEntries(zone);
+        const total = entries.reduce((sum, [, entry]) => sum + entry.count, 0);
+        lines.push('', `// ${title} — ${total} cards`);
 
+        DECK_TYPE_ORDER.forEach(type => {
+          const typedEntries = entries.filter(([, entry]) =>
+            String(entry.card[F.type] || '').trim() === type
+          );
+          if (typedEntries.length === 0) return;
+
+          const typeTotal = typedEntries.reduce((sum, [, entry]) => sum + entry.count, 0);
+          lines.push('', `${DECK_TYPE_LABELS[type]} — ${typeTotal} cards`);
+          typedEntries.forEach(([key, entry]) => {
+            const card = entry.card;
+            const details = [];
+            if (!isBlank(card[F.entranceCost])) {
+              details.push(`Entrance Cost: ${fmtNum(card[F.entranceCost])}`);
+            }
+            if (card[F.collectorNumber]) details.push(card[F.collectorNumber]);
+            if (card[F.set]) details.push(card[F.set]);
+            const metadata = details.length ? ` — ${details.join(' | ')}` : '';
+            const name = card[F.name] || card[F.collectorNumber] || key;
+            lines.push(`  ${entry.count}x ${name}${metadata} [${key}]`);
+          });
+        });
+      };
+
+      appendZone(currentDeck.main, 'Mainboard');
       if (Object.keys(currentDeck.reinf).length > 0) {
-        textData += "\n// Reinforcements\n";
-        Object.entries(currentDeck.reinf).forEach(([key, entry]) => {
-          const n = entry.card[F.name] || entry.card[F.collectorNumber] || key;
-          textData += `${entry.count}x ${n} [${key}]\n`;
-        });
+        appendZone(currentDeck.reinf, 'Reinforcements');
+      }
+      if (Object.keys(currentDeck.side).length > 0) {
+        appendZone(currentDeck.side, 'Sideboard');
       }
 
-      if (Object.keys(currentDeck.side).length > 0) {
-        textData += "\n// Sideboard\n";
-        Object.entries(currentDeck.side).forEach(([key, entry]) => {
-          const n = entry.card[F.name] || entry.card[F.collectorNumber] || key;
-          textData += `${entry.count}x ${n} [${key}]\n`;
-        });
-      }
+      const textData = `${lines.join('\n')}\n`;
 
       const blob = new Blob([textData], { type: 'text/plain;charset=utf-8' });
       const anchor = document.createElement('a');
