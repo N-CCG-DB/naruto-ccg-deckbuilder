@@ -9,8 +9,8 @@ A static web app hosted on GitHub Pages that lets users:
 1. Browse a database of Naruto CCG (2006) cards
 2. Filter by name, type, and set
 3. Build a deck (Mainboard / Reinforcements / Sideboard)
-4. Export the deck as Tabletop Simulator JSON or a plain text decklist
-5. Import decks back from either format
+4. Export the deck as Tabletop Simulator JSON or a clean plain text decklist via a popup modal
+5. Import decks back from either format (via JSON file upload or text modal)
 
 Repo: https://github.com/N-CCG-DB/naruto-ccg-deckbuilder
 
@@ -311,6 +311,11 @@ Rules baked into the renderer:
 `MINIMAL_INSPECTOR = false` appends Year, Keywords, Errata rows at
 the bottom, also hidden when blank. Nothing else changes.
 
+### Image Corner Styling & Visual Polish
+
+- **Card Browser Grid Items (`.card-item img`):** Feature a subtle radius (`border-radius: 4px 4px 0 0`) to keep grid tiles looking clean and natural without an overly aggressive curve.
+- **Card Inspector Image (`.inspector-img`):** Features a more pronounced radius (`border-radius: 16px`) to fully clip out stubborn transparent/white corner artifacts.
+
 ### Layout and resizing
 
 - Only the Card Inspector is user-resizable via a drag handle on its
@@ -383,14 +388,11 @@ Matches, case-insensitively, against:
 
 Standard Tabletop Simulator `DeckCustom` save object with one
 `ObjectStates` entry per non-empty zone (Mainboard, Reinforcements,
-Sideboard). Card `Description` is the lowercased `Card ID`. Image
-URLs point at `{origin}/cards_database/{image_path}`. Each zone's
-`ContainedObjects` is written in the shared deck-entry order described
-above, with repeated copies kept together.
+Sideboard). Card `Description` contains a clean, minimal summary (Card Number + Cost) omitting ugly internal paths. Image URLs point at `{origin}/cards_database/{image_path}`. Each zone's `ContainedObjects` is written in the shared deck-entry order described above, with repeated copies kept together.
 
-Format is unchanged from the old build - old exports still load.
+### Text export / import Modals (`exportTextDeck` & `openImportTextModal`)
 
-### Text export (exportTextDeck)
+Text export and import use sleek popup modal boxes with a copy-to-clipboard button and close buttons, replacing raw file downloads and tiny browser prompts.
 
     Naruto CCG Decklist
     ===================
@@ -398,50 +400,16 @@ Format is unchanged from the old build - old exports still load.
     // Mainboard — 40 cards
 
     NINJAS — 20 cards
-      2x Card Name — Entrance Cost: 1 | N-001 | Set Name [cardid]
+      2x Card Name — [N-001] | Entrance Cost: 1
 
     JUTSU — 10 cards
-      3x Jutsu Name — J-001 | Set Name [cardid]
+      3x Jutsu Name — [J-001] | Cost: L L 1
 
-The export groups each zone by type, includes copy totals and
-human-readable card number/set details, and follows the shared sort.
-Reinforcements and Sideboard are omitted when empty. The trailing
-`[cardid]` remains the import key; the more descriptive lines and
-headings are accepted by the existing text importer. Older lines such
-as `3x Name [cardid]` remain supported.
+The export groups each zone by type, includes copy totals, card name, card number, and entrance/jutsu cost, omitting verbose set and path info. The text importer robustly parses quantity, card name, and collector number brackets/metadata.
 
 ### TTS import (importJSONDeck)
 
-Walks `ContainedObjects`, reads `Description` (lowercased), matches
-against `cardIndex`. Falls back silently if no match. Section is
-selected by `Nickname` on the parent deck object.
-
-### Text import (importTextDeckPrompt)
-
-Accepts `3x Name [id]` or `3 Name [id]` or `3x Name`. Matching order:
-
-1. Lowercased `Card ID` (from brackets)
-2. Lowercased `Collector Number` (from brackets)
-3. Lowercased `Display Name`
-
-Section headers detected by substring: reinforcement, sideboard, main.
-
-Backwards compatible with old decklists that used lowercase IDs like
-`nus001` / `jus001`, because those are still the lowercased `Card ID`
-values.
-
-## Known Issues / TODO
-
-- ~129 promo cards may still have sparse data (missing Effect Text,
-  missing Chakra Cost). No longer a type problem - `Type` is always
-  populated in the new DB.
-- Cards that reference missing image files will render a broken img.
-  There is no placeholder fallback. If you add one, use a neutral
-  background and no text.
-- `cards.json` and `sets.json` are still in the repo for rollback but
-  nothing references them. Deleting them is safe but not required.
-- `PROJECT_HANDOFF.md` documents the old Excel to master-DB pipeline.
-  It does not describe the current site.
+Walks `ContainedObjects`, reads `Description` or matches `Nickname`/`Collector Number` against `cardIndex`. Section is selected by `Nickname` on the parent deck object.
 
 ## Rules for AI Assistants Working on This Project
 
@@ -650,6 +618,5 @@ the same position. If more zones are added later, continue the
 pattern (posX: 9 for a fourth zone, etc.).
 
 The TTS save structure (ObjectStates array with DeckCustom entries)
-is otherwise unchanged. Card Description remains the lowercased
-Card ID. Image URLs and card back URL are unchanged. Existing
+is otherwise unchanged. Card Description remains a clean summary (Card Number + Cost). Image URLs and card back URL are unchanged. Existing
 exports remain importable.
