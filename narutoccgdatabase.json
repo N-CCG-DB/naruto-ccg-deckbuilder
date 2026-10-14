@@ -45382,7 +45382,7 @@
       "Effect Text": "Requirements: \"Oil\" Combat Attribute\nEffect: Search for 1 \"Ninja Toad\" Ninja card in your Deck, show it to your opponent, and place it in your hand. Then, shuffle your Deck. If your Turn Marker is equal to or higher than the Entrance cost of that \"Ninja Toad\" Ninja card, you can place it in the user's Team in any position ignoring the Entrance requirements.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/j437.webp"
+      "image_path": "set_12_a_new_chronicle/j437.webp"
     },
     {
       "Card ID": "j438",
@@ -46342,7 +46342,7 @@
       "Effect Text": "Effect: Draw 3 cards and then discard 2 cards.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_17_will_of_fire/m391.webp"
+      "image_path": "set_12_a_new_chronicle/m391.webp"
     },
     {
       "Card ID": "m392",
@@ -48768,7 +48768,7 @@
       "Effect Text": "Requirements: \"Akatsuki\"\nEffect: If you have 2 or more \"Akatsuki\" Ninjas in play, discard up to 2 of your opponent's Battle Rewards.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/j462.webp"
+      "image_path": "set_13_fateful_reunion/j462.webp"
     },
     {
       "Card ID": "j463",
@@ -49584,7 +49584,7 @@
       "Effect Text": "Effect: Look at all the cards in your opponent's Battle Rewards. If there is 1 or more Ninja cards among them, you can select 1 of them and deploy it.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/m412.webp"
+      "image_path": "set_13_fateful_reunion/m412.webp"
     },
     {
       "Card ID": "m413",
@@ -50640,7 +50640,7 @@
       "Effect Text": "During your Mission Phase, you can move this in-play Client card to your Chakra area. In that case, you can exchange all the cards in your hand with the same number of cards from the top of your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/c048.webp"
+      "image_path": "set_13_fateful_reunion/c048.webp"
     }
   ],
   "14 Emerging Alliance": [
@@ -52970,7 +52970,7 @@
       "Effect Text": "Requirements: \"Sharingan Eye\"\nTarget: 1 Jutsu card being used\nEffect: Change the effect of the target to the following: The Power of the user becomes 0/0 during this turn and the Mental Power of the user becomes 0 during this turn.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/j537.webp"
+      "image_path": "set_14_emerging_alliance/j537.webp"
     },
     {
       "Card ID": "j538",
@@ -52994,7 +52994,7 @@
       "Effect Text": "Requirements: \"Naruto Uzumaki\" + \"Printed Entrance cost of 3 or more\"\nTarget: X number of Ninjas Battling against the user\nEffect: Remove the target from game.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_15_fortold_prophecy/j538.webp"
+      "image_path": "set_14_emerging_alliance/j538.webp"
     },
     {
       "Card ID": "j539",
@@ -56188,7 +56188,7 @@
       "Effect Text": "Target: 1 Ninja Battling against the user\nEffect: The Combat of the target becomes 0 during this turn.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_1_path_of_the_hokage/j032.webp"
+      "image_path": "set_15_fortold_prophecy/j032.webp"
     },
     {
       "Card ID": "j067",
@@ -56212,7 +56212,7 @@
       "Effect Text": "Target: 1 Ninja Battling against the user\nEffect: If the target does not become the user of a Jutsu card during this turn, the target receives 1 Damage at the end of the Exchange of Jutsu.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_2_coils_of_the_snake/j067.webp"
+      "image_path": "set_15_fortold_prophecy/j067.webp"
     },
     {
       "Card ID": "j332",
@@ -57820,7 +57820,7 @@
       "Effect Text": "Permanent (3)\nEffect: Draw 1 card every time your opponent deploys a Ninja. This effect cannot be duplicated.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_2_coils_of_the_snake/m051.webp"
+      "image_path": "set_15_fortold_prophecy/m051.webp"
     },
     {
       "Card ID": "mus077",
@@ -57844,7 +57844,7 @@
       "Effect Text": "Effect: Reveal the top 4 cards of your Deck. Then, select 1 Ninja card among the cards, if there is any, show it to your opponent, and place it in your hand. Then, return the rest and shuffle your Deck.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_9_the_chosen/mus077.webp"
+      "image_path": "set_15_fortold_prophecy/mus077.webp"
     },
     {
       "Card ID": "mus086",
@@ -57868,7 +57868,7 @@
       "Effect Text": "Permanent (2)\nEffect: During your Mission Phase, you can exchange all the cards in your hand with the same amount of cards from the top of your Deck. In that case, shuffle your Deck and draw 1 card.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_9_the_chosen/mus086.webp"
+      "image_path": "set_15_fortold_prophecy/mus086.webp"
     },
     {
       "Card ID": "m118",
@@ -57916,7 +57916,7 @@
       "Effect Text": "Effect: Each player can search for 1 \"Ninja Toad,\" \"Snake,\" or \"Slug\" Ninja in their Deck, show it to the other player, and place it in their hand. Then, shuffle both Decks.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_5_dream_legacy/m193.webp"
+      "image_path": "set_15_fortold_prophecy/m193.webp"
     },
     {
       "Card ID": "m209",
@@ -57940,7 +57940,7 @@
       "Effect Text": "Permanent (3)\nEffect: At the beginning of your turn, if you have 2 or less cards in your hand, draw card(s) until you have 3 cards in your hand.",
       "Keywords": null,
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_7_quest_for_power/m209e.webp"
+      "image_path": "set_15_fortold_prophecy/m209e.webp"
     },
     {
       "Card ID": "m272",
@@ -57964,7 +57964,7 @@
       "Effect Text": "Effect: Select either \"Ninja card\" or \"Jutsu or Mission card\" and reveal the top 4 cards of your Deck. If you have 1 or more selected type cards among the revealed cards, select 1 of the selected type cards among them, place it in your hand, return the rest to your Deck and shuffle it. If not, discard all the cards revealed by this effect.",
       "Keywords": null,
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_9_the_chosen/m272e.webp"
+      "image_path": "set_15_fortold_prophecy/m272e.webp"
     },
     {
       "Card ID": "m356",
@@ -59236,7 +59236,7 @@
       "Effect Text": "Effect: Each time your Ninja with \"Uchiha\" in its name is put in play, draw 1 card.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_8_battle_for_destiny/c032.webp"
+      "image_path": "set_15_fortold_prophecy/c032.webp"
     },
     {
       "Card ID": "c049",
@@ -62166,7 +62166,7 @@
       "Effect Text": "Effect: If all of your Ninjas are \"Leaf\" and you have 3 or less cards in your hand, draw until you have 4 cards in your hand.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_17_will_of_fire/m585.webp"
+      "image_path": "set_16_broken_promise/m585.webp"
     },
     {
       "Card ID": "m586",
@@ -65432,7 +65432,7 @@
       "Effect Text": "Target: 1 Ninja\nEffect: The target's Power is changed to it's printed value and cannot be changed during this turn.",
       "Keywords": null,
       "Errata": "Errata scan used as authoritative source",
-      "image_path": "set_1_path_of_the_hokage/j020e.webp"
+      "image_path": "set_17_will_of_fire/j020e.webp"
     },
     {
       "Card ID": "jUS059",
@@ -65456,7 +65456,7 @@
       "Effect Text": "Target: User\nEffect: The user gets +2/+2 during this turn. Additionally, if the target is in injured status at the end of this turn, heal the target.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_9_the_chosen/jus059.webp"
+      "image_path": "set_17_will_of_fire/jus059.webp"
     },
     {
       "Card ID": "j066",
@@ -65480,7 +65480,7 @@
       "Effect Text": "Target: Every Ninja in the user's Team\nEffect: The target cannot be the target of your opponent's Jutsu cards during this turn.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_2_coils_of_the_snake/j066.webp"
+      "image_path": "set_17_will_of_fire/j066.webp"
     },
     {
       "Card ID": "j645",
@@ -67856,7 +67856,7 @@
       "Effect Text": "Effect: If an effect discards 2 or more cards from your Deck, reveal them, and move 1 of them to your hand. In that case, discard 1 card from your hand.\nEffect: Your Discard Pile cannot be affected by effects.",
       "Keywords": null,
       "Errata": null,
-      "image_path": "set_235_tournament_pack_4/c059.webp"
+      "image_path": "set_17_will_of_fire/c059.webp"
     }
   ],
   "17.5 Tournament Pack 1": [
