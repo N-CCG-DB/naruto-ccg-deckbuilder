@@ -94,7 +94,7 @@
       width: 100%;
       height: auto;
       margin: 0 auto;
-      border-radius: 8px;
+      border-radius: 12px;
       box-shadow: 0 6px 12px rgba(0,0,0,0.6);
       display: block;
     }
@@ -135,7 +135,7 @@
 
     .card-item {
       background-color: var(--panel-bg);
-      border-radius: 6px;
+      border-radius: 12px;
       overflow: hidden;
       border: 1px solid var(--border-color);
       display: flex;
@@ -154,7 +154,7 @@
       object-fit: cover;
       display: block;
       pointer-events: none;
-      border-radius: 6px;
+      border-radius: 12px 12px 0 0;
     }
 
     .card-controls {
@@ -698,12 +698,12 @@
         </div>
 
         <div class="btn-row">
-          <label class="btn btn-secondary" style="font-size: 11px; padding: 6px;">
+          <label class="btn btn-secondary" style="font-size: 11px; padding: 6px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;">
             Import JSON
             <input type="file" id="json-import-input" accept=".json" onchange="importJSONDeck(event)" style="display: none;" />
           </label>
 
-          <button onclick="importTextDeckPrompt()" class="btn btn-secondary" style="font-size: 11px; padding: 6px;">
+          <button onclick="openImportTextModal()" class="btn btn-secondary" style="font-size: 11px; padding: 6px;">
             Import Text
           </button>
         </div>
@@ -725,6 +725,21 @@
       <div style="display: flex; gap: 10px; justify-content: flex-end;">
         <button onclick="copyExportText()" class="btn">Copy to Clipboard</button>
         <button onclick="closeExportModal()" class="btn btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Modal -->
+  <div id="import-modal" style="display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.7); align-items: center; justify-content: center;">
+    <div style="background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; width: 90%; max-width: 600px; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="color: var(--accent-color); margin: 0;">Import Decklist</h3>
+        <button onclick="closeImportModal()" style="background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer;">&times;</button>
+      </div>
+      <textarea id="import-textarea" placeholder="Paste your decklist here (supports section headers like // Sideboard)..." style="width: 100%; height: 260px; background: #121212; color: #e0e0e0; border: 1px solid var(--border-color); border-radius: 4px; padding: 10px; font-family: monospace; font-size: 12px; resize: vertical; user-select: text; -webkit-user-select: text;"></textarea>
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button onclick="processTextImport()" class="btn">Import Deck</button>
+        <button onclick="closeImportModal()" class="btn btn-secondary">Close</button>
       </div>
     </div>
   </div>
@@ -1774,9 +1789,18 @@
       reader.readAsText(file);
     }
 
-    // ---------- Import: text ----------
-    function importTextDeckPrompt() {
-      const input = prompt("Paste your decklist here (supports section headers like // Sideboard):");
+    // ---------- Import: text (Popup Modal) ----------
+    function openImportTextModal() {
+      document.getElementById('import-textarea').value = '';
+      document.getElementById('import-modal').style.display = 'flex';
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-modal').style.display = 'none';
+    }
+
+    function processTextImport() {
+      const input = document.getElementById('import-textarea').value;
       if (!input) return;
 
       currentDeck = { main: {}, reinf: {}, side: {} };
@@ -1821,7 +1845,12 @@
       });
 
       updateUI();
+      closeImportModal();
     }
+
+    window.openImportTextModal = openImportTextModal;
+    window.closeImportModal = closeImportModal;
+    window.processTextImport = processTextImport;
 
     window.onload = initApp;
   </script>
