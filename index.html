@@ -135,7 +135,7 @@
 
     .card-item {
       background-color: var(--panel-bg);
-      border-radius: 12px;
+      border-radius: 6px;
       overflow: hidden;
       border: 1px solid var(--border-color);
       display: flex;
@@ -154,7 +154,7 @@
       object-fit: cover;
       display: block;
       pointer-events: none;
-      border-radius: 12px 12px 0 0;
+      border-radius: 4px 4px 0 0;
     }
 
     .card-controls {
@@ -1767,7 +1767,18 @@
               if (deckObj.ContainedObjects) {
                 deckObj.ContainedObjects.forEach(obj => {
                   const desc = (obj.Description || '').toLowerCase();
-                  const matched = cardIndex.get(desc);
+                  // Try matching description directly first, or parse ID from description
+                  let matched = cardIndex.get(desc);
+                  if (!matched && obj.Description) {
+                    const parts = obj.Description.split('|');
+                    const numPart = parts[0] ? parts[0].trim().toLowerCase() : '';
+                    matched = cardDatabase.find(c => (c[F.collectorNumber] || '').toLowerCase() === numPart);
+                  }
+                  if (!matched && obj.Nickname) {
+                    const nick = obj.Nickname.toLowerCase();
+                    matched = cardDatabase.find(c => (c[F.name] || '').toLowerCase() === nick);
+                  }
+
                   if (matched) {
                     const key = cardKey(matched);
                     const pool = currentDeck[targetKey];
@@ -1809,25 +1820,34 @@
 
       lines.forEach(line => {
         const cleanLine = line.trim();
-        if (!cleanLine) return;
+        if (!cleanLine || cleanLine.startsWith('//') || cleanLine.startsWith('=')) {
+          const lower = cleanLine.toLowerCase();
+          if (lower.includes('reinforcement')) currentSection = 'reinf';
+          else if (lower.includes('sideboard')) currentSection = 'side';
+          else if (lower.includes('main')) currentSection = 'main';
+          return;
+        }
 
-        const lower = cleanLine.toLowerCase();
-        if (lower.includes('reinforcement')) { currentSection = 'reinf'; return; }
-        if (lower.includes('sideboard'))     { currentSection = 'side';  return; }
-        if (lower.includes('main'))          { currentSection = 'main';  return; }
-
-        const match = cleanLine.match(/^(\d+)x?\s+(.+?)(?:\s+\[(.*?)\])?$/i);
+        // Matches lines like "3x Card Name — [N-001] | Entrance Cost: 0" or just "3x Card Name"
+        const match = cleanLine.match(/^(\d+)x?\s+(.+?)(?:\s+[—–-]\s+\[(.*?)\]|\s+\[(.*?)\])?/i);
         if (!match) return;
 
         const qty = parseInt(match[1], 10);
-        const namePart = match[2].trim().toLowerCase();
-        const idPart = match[3] ? match[3].trim().toLowerCase() : null;
+        let namePart = match[2].trim();
+        // Remove trailing metadata if captured into namePart
+        const dashIdx = namePart.indexOf('—');
+        if (dashIdx !== -1) namePart = namePart.slice(0, dashIdx).trim();
+        const altDashIdx = namePart.indexOf('–');
+        if (altDashIdx !== -1) namePart = namePart.slice(0, altDashIdx).trim();
+        
+        const idPart = (match[3] || match[4] || '').trim().toLowerCase();
+        namePart = namePart.toLowerCase();
 
         let matched = null;
-        if (idPart) matched = cardIndex.get(idPart);
-        if (!matched && idPart) {
-          matched = cardDatabase.find(c =>
-            (c[F.collectorNumber] || '').toLowerCase() === idPart
+        if (idPart) {
+          matched = cardDatabase.find(c => 
+            (c[F.collectorNumber] || '').toLowerCase() === idPart ||
+            (c[F.cardId] || '').toLowerCase() === idPart
           );
         }
         if (!matched) {
